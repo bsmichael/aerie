@@ -36,4 +36,9 @@ public class FindByRFIDResponse {
      */
     private Boolean admin;
 
+    /**
+     * RosterId.
+     */
+    private Long rosterId;
+
 }

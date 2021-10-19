@@ -17,6 +17,8 @@
 package org.eaa690.aerie.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,6 +52,7 @@ public class TinyURLData {
     /**
      * TinyURL.
      */
+    @JsonProperty("tiny_url")
     private String tinyUrl;
 
 }

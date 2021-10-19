@@ -137,6 +137,23 @@ public class AdminController {
     }
 
     /**
+     * Updates Member Repository.
+     */
+    @PostMapping(path = {"/member/update"})
+    public void updateMemberRespository() {
+        rosterService.update();
+    }
+
+    /**
+     * Sends Membership Renewal Messages.
+     */
+    @PostMapping(path = {"/member/renew"})
+    public void sendMembershipRenewalMessages() {
+        rosterService.sendMembershipRenewalMessages();
+        communicationService.processQueue();
+    }
+
+    /**
      * Sets SlackSession.
      *
      * @param value SlackSession

@@ -127,6 +127,7 @@ public class RosterController {
         final FindByRFIDResponse rfidResponse = new FindByRFIDResponse();
         rfidResponse.setId(member.getId());
         rfidResponse.setAdmin(Boolean.FALSE); // TODO
+        rfidResponse.setRosterId(member.getRosterId());
         return rfidResponse;
     }
 
