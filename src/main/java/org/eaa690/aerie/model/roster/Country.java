@@ -14,53 +14,32 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
+package org.eaa690.aerie.model.roster;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-/**
- * QueuedMessage.
- */
-@Entity
-@Table(name = "QUEUED_MESSAGE")
-@Getter
-@Setter
-@NoArgsConstructor
-public class QueuedMessage extends BaseEntity {
+public enum Country {
 
     /**
-     * MessageType.
+     * United States of America.
      */
-    private MessageType messageType;
+    USA;
 
     /**
-     * Recipient Address.
+     * Converts to displayable string.
+     *
+     * @param country Country
+     * @return displayable string
      */
-    private String recipientAddress;
+    public static String toDisplayString(final Country country) {
+        return "USA";
+    }
 
     /**
-     * Email template ID.
+     * Converts from displayable string.
+     *
+     * @param displayString displayable string
+     * @return Country
      */
-    private String templateIdKey;
-
-    /**
-     * Email Subject.
-     */
-    private String subjectKey;
-
-    /**
-     * Member ID.
-     */
-    private Long memberId;
-
-    /**
-     * Body.
-     */
-    private String body;
-
+    public static Country fromDisplayString(final String displayString) {
+        return USA;
+    }
 }

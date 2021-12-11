@@ -14,39 +14,41 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
+package org.eaa690.aerie.model.roster;
 
-import org.springframework.data.repository.Repository;
-
-import java.util.List;
-import java.util.Optional;
-
-/**
- * QueuedMessageRepository.
- */
-public interface QueuedMessageRepository extends Repository<QueuedMessage, Long> {
+public enum Gender {
 
     /**
-     * Gets all QueuedMessage.
-     *
-     * @return all QueuedMessage
+     * Male.
      */
-    Optional<List<QueuedMessage>> findAll();
+    MALE,
 
     /**
-     * Saves a QueuedMessage.
-     *
-     * @param queuedMessage QueuedMessage
-     * @return QueuedMessage
+     * Female.
      */
-    QueuedMessage save(QueuedMessage queuedMessage);
+    FEMALE,
 
     /**
-     * Saves a QueuedMessage.
-     *
-     * @param queuedMessage QueuedMessage
-     * @return QueuedMessage
+     * Unknown.
      */
-    QueuedMessage delete(QueuedMessage queuedMessage);
+    UNKNOWN;
 
+    public static String getDisplayString(final Gender gender) {
+        if (MALE.equals(gender)) {
+            return "Male";
+        } else if (FEMALE.equals(gender)) {
+            return "Female";
+        } else {
+            return "Unknown";
+        }
+    }
+
+    public static Gender fromDisplayString(final String displayString) {
+        if ("Male".equalsIgnoreCase(displayString)) {
+            return MALE;
+        } else if ("Female".equalsIgnoreCase(displayString)) {
+            return FEMALE;
+        }
+        return UNKNOWN;
+    }
 }

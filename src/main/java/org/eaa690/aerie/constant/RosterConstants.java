@@ -22,6 +22,26 @@ package org.eaa690.aerie.constant;
 public class RosterConstants {
 
     /**
+     * Base URL for EAA Chapters.
+     */
+    public static final String EAA_CHAPTERS_SITE_BASE = "https://www.eaachapters.org";
+
+    /**
+     * Empty string constant.
+     */
+    public static final String EMPTY_STRING = "";
+
+    /**
+     * Ampersand.
+     */
+    public static final String AMPERSAND = "&";
+
+    /**
+     * Equals.
+     */
+    public static final String EQUALS = "=";
+
+    /**
      * eaachapters.org username variable.
      */
     public static final String USERNAME = "ctl00$txtID";
@@ -155,6 +175,11 @@ public class RosterConstants {
      * eaachapters.org search button variable.
      */
     public static final String SEARCH_BUTTON = "ctl00$ContentPlaceHolder1$btnSearch=Search";
+
+    /**
+     * eaachapters.org search button variable.
+     */
+    public static final String SHOW_MEMBER_ADD_PANEL_BUTTON = "ctl00$ContentPlaceHolder1$btnShowMemberAddPanel";
 
     /**
      * ADD_NEW_MEMBER_BUTTON.
@@ -302,9 +327,19 @@ public class RosterConstants {
     public static final String YOUNG_EAGLE_PILOT = "ctl00$ContentPlaceHolder1$cbxYoungEaglePilot";
 
     /**
+     * eaachapters.org young eagle volunteer variable.
+     */
+    public static final String YOUNG_EAGLE_VOLUNTEER = "ctl00$ContentPlaceHolder1$cbxYoungEagleVolunteer";
+
+    /**
      * eaachapters.org eagle pilot variable.
      */
     public static final String EAGLE_PILOT = "ctl00$ContentPlaceHolder1$cbxEaglePilot";
+
+    /**
+     * eaachapters.org eagle flight volunteer variable.
+     */
+    public static final String EAGLE_FLIGHT_VOLUNTEER = "ctl00$ContentPlaceHolder1$cbxEagleFlightVolunteer";
 
     /**
      * eaachapters.org photo variable.

@@ -14,38 +14,18 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
-
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+package org.eaa690.aerie.model.roster;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.eaa690.aerie.model.roster.CellPhoneProvider;
-import org.eaa690.aerie.model.roster.Country;
-import org.eaa690.aerie.model.roster.Gender;
-import org.eaa690.aerie.model.roster.MemberType;
-import org.eaa690.aerie.model.roster.State;
-import org.eaa690.aerie.model.roster.Status;
-import org.eaa690.aerie.model.roster.WebAdminAccess;
+import lombok.ToString;
 
-/**
- * Member.
- */
-@Entity
-@Table(name = "MEMBER")
+import java.util.Date;
+
+@ToString
 @Getter
 @Setter
-public class Member extends BaseEntity {
-
-    /**
-     * Date representing the beginning of dates.
-     */
-    private static final Date ZERO_DATE = new Date(0);
+public class Person implements Comparable<Person> {
 
     /**
      * Roster management system ID.
@@ -150,8 +130,8 @@ public class Member extends BaseEntity {
     /**
      * Other Information.
      *
-     * "RFID=[ABC123ZXY43221]; Slack=[@brian]; Family=[Jennifer Michael, Billy Michael]; # of Family=[2]; Additional "
-     * "Info=[some random text]"
+     * "RFID=[ABC123ZXY43221]; Slack=[@brian]; Family=[Jennifer Michael, Billy Michael]; # of Family=[2];
+     * Additional Info=[some random text]"
      */
     private String otherInfo;
 
@@ -256,29 +236,19 @@ public class Member extends BaseEntity {
     private String cellPhone;
 
     /**
-     * Cell Phone Provider.
-     */
-    @Enumerated(EnumType.STRING)
-    private CellPhoneProvider cellPhoneProvider;
-
-    /**
      * Membership Expiration.
      */
     private Date expiration;
 
     /**
-     * Email Enabled Flag.
+     * {@inheritDoc} Required implementation.
      */
-    private boolean emailEnabled = false;
-
-    /**
-     * SMS Enabled Flag.
-     */
-    private boolean smsEnabled = false;
-
-    /**
-     * Slack Enabled Flag.
-     */
-    private boolean slackEnabled = false;
+    @Override
+    public int compareTo(final Person other) {
+        if (equals(other)) {
+            return 0;
+        }
+        return 1;
+    }
 
 }

@@ -33,11 +33,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.Member;
-import org.eaa690.aerie.model.MessageType;
-import org.eaa690.aerie.model.QueuedMessage;
-import org.eaa690.aerie.service.CommunicationService;
+import org.eaa690.aerie.service.EmailService;
 import org.eaa690.aerie.service.MailChimpService;
+import org.eaa690.aerie.service.PropertyService;
 import org.eaa690.aerie.service.RosterService;
+import org.eaa690.aerie.service.SMSService;
+import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -72,6 +73,11 @@ public class AdminController {
     private static final String SEND_MSG_MESSAGE = "Sending %s %s to %s %s at %s";
 
     /**
+     * PropertyService.
+     */
+    private PropertyService propertyService;
+
+    /**
      * RosterService.
      */
     private RosterService rosterService;
@@ -84,7 +90,17 @@ public class AdminController {
     /**
      * EmailService.
      */
-    private CommunicationService communicationService;
+    private EmailService emailService;
+
+    /**
+     * SMSService.
+     */
+    private SMSService smsService;
+
+    /**
+     * SlackService.
+     */
+    private SlackService slackService;
 
     /**
      * MailChimpService.
@@ -122,8 +138,8 @@ public class AdminController {
      * @param value EmailService
      */
     @Autowired
-    public void setCommunicationService(final CommunicationService value) {
-        communicationService = value;
+    public void setEmailService(final EmailService value) {
+        emailService = value;
     }
 
     /**
@@ -150,7 +166,6 @@ public class AdminController {
     @PostMapping(path = {"/member/renew"})
     public void sendMembershipRenewalMessages() {
         rosterService.sendMembershipRenewalMessages();
-        communicationService.processQueue();
     }
 
     /**
@@ -175,29 +190,12 @@ public class AdminController {
             @PathVariable("rosterId") final Long rosterId,
             @RequestBody final String textBody) throws ResourceNotFoundException {
         final Member member = rosterService.getMemberByRosterID(rosterId);
-        final QueuedMessage queuedMessage = new QueuedMessage();
-        queuedMessage.setRecipientAddress(member.getCellPhone());
-        queuedMessage.setMemberId(member.getId());
-        queuedMessage.setBody(textBody);
-        queuedMessage.setMessageType(MessageType.SMS);
-        communicationService.queueMsg(queuedMessage);
-    }
-
-    /**
-     * Gets queued email count.
-     *
-     * @return queue count
-     */
-    @Operation(summary = "Email queue count",
-            description = "The current number of emails in the email queue waiting to be sent",
-            tags = {"admin"})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "successful operation")
-    })
-    @GetMapping(path = {"/email/queue-count"})
-    public int getQueuedEmailCount() {
-        return communicationService.getQueuedMsgCount();
+        smsService.sendSMSMessage(member.getCellPhone(),
+                member.getCellPhoneProvider(),
+                propertyService.get("SUBJECT").getValue(),
+                textBody,
+                propertyService.get("FROM").getValue(),
+                propertyService.get("PASSWORD").getValue());
     }
 
     /**
@@ -211,7 +209,7 @@ public class AdminController {
         final Member member = rosterService.getMemberByRosterID(rosterId);
         LOGGER.info(String.format(SEND_MSG_MESSAGE, "renew-membership", "sms",
                 member.getFirstName(), member.getLastName(), member.getCellPhone()));
-        communicationService.sendRenewMembershipMsg(member);
+        //emailService.sendRenewMembershipMsg(member);
     }
 
     /**
@@ -225,7 +223,7 @@ public class AdminController {
         final Member member = rosterService.getMemberByRosterID(rosterId);
         LOGGER.info(String.format(SEND_MSG_MESSAGE, "new-membership", "sms",
                 member.getFirstName(), member.getLastName(), member.getCellPhone()));
-        communicationService.sendNewMembershipMsg(member);
+        //emailService.sendNewMembershipMsg(member);
     }
 
     /**
@@ -235,15 +233,6 @@ public class AdminController {
     @PostMapping(path = {"/roster/process-membership-renewals"})
     public void processMembershipRenewals() {
         rosterService.sendMembershipRenewalMessages();
-    }
-
-    /**
-     * Processes queued messages.
-     * Note: Typically this is run automatically every 10 minutes.
-     */
-    @PostMapping(path = {"/process-message-queue"})
-    public void processMessageQueue() {
-        communicationService.processQueue();
     }
 
     /**
@@ -262,7 +251,7 @@ public class AdminController {
         String timestamp = "";
         SlackMessagePosted messagePosted = new SlackMessagePosted(textBody, slackBot, slackUser,
                 slackChannel, timestamp, SlackMessagePosted.MessageSubType.MESSAGE_REPLIED);
-        communicationService.onEvent(messagePosted, slackSession);
+        slackService.onEvent(messagePosted, slackSession);
     }
 
     /**
@@ -281,7 +270,7 @@ public class AdminController {
     })
     @GetMapping(path = {"/slack/users"})
     public List<String> getAllSlackUsers() throws ResourceNotFoundException {
-        return communicationService.allSlackUsers();
+        return slackService.allSlackUsers();
     }
 
     /**

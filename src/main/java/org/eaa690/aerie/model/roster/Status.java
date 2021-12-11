@@ -14,7 +14,23 @@
  *  limitations under the License.
  */
 
-/**
- * Communication classes.
- */
-package org.eaa690.aerie.communication;
+package org.eaa690.aerie.model.roster;
+
+public enum Status {
+    /**
+     * Active.
+     */
+    ACTIVE,
+    /**
+     * Inactive.
+     */
+    INACTIVE;
+
+    public static String getDisplayString(final Status status) {
+        if (ACTIVE.equals(status)) {
+            return "Active";
+        } else {
+            return "Inactive";
+        }
+    }
+}

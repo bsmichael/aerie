@@ -17,16 +17,16 @@
 package org.eaa690.aerie;
 
 import com.github.javafaker.Faker;
-import io.github.bsmichael.rostermanagement.model.Country;
-import io.github.bsmichael.rostermanagement.model.Gender;
-import io.github.bsmichael.rostermanagement.model.MemberType;
-import io.github.bsmichael.rostermanagement.model.State;
-import io.github.bsmichael.rostermanagement.model.Status;
-import io.github.bsmichael.rostermanagement.model.WebAdminAccess;
 import org.eaa690.aerie.constant.CommonConstants;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.Property;
 import org.eaa690.aerie.model.WeatherProduct;
+import org.eaa690.aerie.model.roster.Country;
+import org.eaa690.aerie.model.roster.Gender;
+import org.eaa690.aerie.model.roster.MemberType;
+import org.eaa690.aerie.model.roster.State;
+import org.eaa690.aerie.model.roster.Status;
+import org.eaa690.aerie.model.roster.WebAdminAccess;
 
 /**
  * TestDataFactory.
@@ -36,7 +36,7 @@ public class TestDataFactory {
     /**
      * Test data faker.
      */
-    private static Faker faker = new Faker();
+    private static final Faker faker = new Faker();
 
     /**
      * Initializes an instance of <code>TestDataFactory</code> with the default data.
@@ -54,7 +54,7 @@ public class TestDataFactory {
      */
     public static Property getProperty(final String key, final String value) {
         final Property property = new Property();
-        property.setId(Long.valueOf(1L));
+        property.setId(1L);
         property.setKey(key);
         property.setValue(value);
         return property;
@@ -67,7 +67,7 @@ public class TestDataFactory {
      */
     public static WeatherProduct getWeatherProduct() {
         final WeatherProduct weatherProduct = new WeatherProduct();
-        weatherProduct.setId(Long.valueOf(1L));
+        weatherProduct.setId(1L);
         weatherProduct.setKey(CommonConstants.ID);
         weatherProduct.setValue(CommonConstants.ID);
         return weatherProduct;

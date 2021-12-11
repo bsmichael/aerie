@@ -18,19 +18,17 @@ package org.eaa690.aerie.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.alexanderwe.bananaj.connection.MailChimpConnection;
-import com.sendgrid.SendGrid;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
-import io.github.bsmichael.rostermanagement.RosterManager;
 import org.eaa690.aerie.constant.CommonConstants;
 import org.eaa690.aerie.constant.PropertyKeyConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.WeatherProductRepository;
-import org.eaa690.aerie.service.CommunicationService;
 import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.MailChimpService;
 import org.eaa690.aerie.service.PropertyService;
 import org.eaa690.aerie.service.RosterService;
+import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.TinyURLService;
 import org.eaa690.aerie.service.WeatherService;
 import org.eaa690.aerie.ssl.SSLUtilities;
@@ -101,20 +99,6 @@ public class ServiceConfig {
     }
 
     /**
-     * RosterManager.
-     *
-     * @param propertyService PropertyService
-     * @return RosterManager
-     * @throws ResourceNotFoundException when things go wrong
-     */
-    @Bean
-    public RosterManager rosterManager(final PropertyService propertyService) throws ResourceNotFoundException {
-        return new RosterManager(
-                propertyService.get(PropertyKeyConstants.ROSTER_USER_KEY).getValue(),
-                propertyService.get(PropertyKeyConstants.ROSTER_PASS_KEY).getValue());
-    }
-
-    /**
      * ObjectMapper.
      *
      * @return ObjectMapper
@@ -136,19 +120,6 @@ public class ServiceConfig {
             throws ResourceNotFoundException {
         return new MailChimpConnection(propertyService
                 .get(PropertyKeyConstants.MAILCHIMP_API_KEY).getValue());
-    }
-
-    /**
-     * SendGrid.
-     *
-     * @param propertyService PropertyService
-     * @return SendGrid
-     * @throws ResourceNotFoundException when things go wrong
-     */
-    @Bean
-    public SendGrid sendGrid(final PropertyService propertyService) throws ResourceNotFoundException {
-        return new SendGrid(propertyService
-                .get(PropertyKeyConstants.SEND_GRID_EMAIL_API_KEY).getValue());
     }
 
     /**
@@ -205,20 +176,20 @@ public class ServiceConfig {
      * SlackSession.
      *
      * @param propertyService PropertyService
-     * @param communicationService SlackService
+     * @param slackService SlackService
      * @return SlackSession
      * @throws IOException when things go wrong
      * @throws ResourceNotFoundException when things go wrong
      */
     @Bean
     public SlackSession slackSession(final PropertyService propertyService,
-                                     final CommunicationService communicationService)
+                                     final SlackService slackService)
             throws IOException, ResourceNotFoundException {
         final SlackSession slackSession = SlackSessionFactory
                 .createWebSocketSlackSession(
                         propertyService.get(PropertyKeyConstants.SLACK_TOKEN_KEY).getValue());
         slackSession.connect();
-        slackSession.addMessagePostedListener(communicationService);
+        slackSession.addMessagePostedListener(slackService);
         return slackSession;
     }
 

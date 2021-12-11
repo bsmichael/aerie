@@ -37,13 +37,12 @@ import org.eaa690.aerie.constant.PropertyKeyConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.JotForm;
 import org.eaa690.aerie.model.Member;
-import org.eaa690.aerie.model.OtherInfoBuilder;
+import org.eaa690.aerie.model.roster.OtherInfoBuilder;
+import org.eaa690.aerie.model.roster.State;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import io.github.bsmichael.rostermanagement.model.State;
 
 /**
  * Retrieves form submissions to JotForm.
@@ -94,12 +93,6 @@ public class JotFormService {
     private RosterService rosterService;
 
     /**
-     * EmailService.
-     */
-    @Autowired
-    private CommunicationService communicationService;
-
-    /**
      * Sets TinyURLService.
      * Note: mostly used for unit test mocks
      *
@@ -130,17 +123,6 @@ public class JotFormService {
     @Autowired
     public void setRosterService(final RosterService value) {
         rosterService = value;
-    }
-
-    /**
-     * Sets EmailService.
-     * Note: mostly used for unit test mocks
-     *
-     * @param value EmailService
-     */
-    @Autowired
-    public void setCommunicationService(final CommunicationService value) {
-        communicationService = value;
     }
 
     /**
@@ -263,7 +245,7 @@ public class JotFormService {
                 if (SUBMISSIONS_CACHE.getIfPresent(key) == null) {
                     final Member member = rosterService.saveNewMember(entry.getValue());
                     SUBMISSIONS_CACHE.put(key, key);
-                    communicationService.sendNewMembershipMsg(member);
+                    //communicationService.sendNewMembershipMsg(member);
                 }
             }
         }

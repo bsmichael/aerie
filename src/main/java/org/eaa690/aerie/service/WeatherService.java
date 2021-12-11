@@ -44,7 +44,6 @@ import org.eaa690.aerie.model.wx.Temperature;
 import org.eaa690.aerie.model.wx.Visibility;
 import org.eaa690.aerie.model.wx.Wind;
 import org.eaa690.aerie.ssl.SSLUtilities;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -273,7 +272,6 @@ public class WeatherService {
      * @param props JSONObject
      * @return METAR
      */
-    @NotNull
     private METAR parseMetar(final JSONObject props) {
         final METAR metar = new METAR();
         metar.setIcao(props.getString(WeatherConstants.ID));
