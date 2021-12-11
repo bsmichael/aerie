@@ -16,6 +16,8 @@
 
 package org.eaa690.aerie.service;
 
+import org.eaa690.aerie.constant.PropertyKeyConstants;
+import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.roster.CellPhoneProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,12 @@ public class SMSService {
      */
     @Autowired
     private EmailService emailService;
+
+    /**
+     * PropertyService.
+     */
+    @Autowired
+    private PropertyService propertyService;
 
     /**
      * Sets EmailService. Note: mostly used for unit test mocks
@@ -54,14 +62,17 @@ public class SMSService {
                                 final String subject,
                                 final String body,
                                 final String from,
-                                final String password) {
-            emailService.sendEmailMessage(
-                    String.format("%s@%s", recipientAddress, cellPhoneProvider.getCellPhoneProviderEmailDomain()),
-                    subject,
-                    body,
-                    from,
-                    password,
-                    null);
+                                final String password) throws ResourceNotFoundException {
+        if (Boolean.parseBoolean(propertyService.get(PropertyKeyConstants.SMS_ENABLED_KEY).getValue())) {
+            return;
+        }
+        emailService.sendEmailMessage(
+                String.format("%s@%s", recipientAddress, cellPhoneProvider.getCellPhoneProviderEmailDomain()),
+                subject,
+                body,
+                from,
+                password,
+                null);
     }
 
 }

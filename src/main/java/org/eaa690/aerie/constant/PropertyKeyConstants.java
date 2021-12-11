@@ -102,6 +102,31 @@ public class PropertyKeyConstants {
     public static final String SEND_GRID_EMAIL_API_KEY = "email.sendgrid.api-key";
 
     /**
+     * RENEW_MEMBERSHIP_SUBJECT_KEY.
+     */
+    public static final String RENEW_MEMBERSHIP_SUBJECT_KEY = "RENEW_MEMBERSHIP_SUBJECT";
+
+    /**
+     * RENEW_MEMBERSHIP_BODY_KEY.
+     */
+    public static final String RENEW_MEMBERSHIP_BODY_KEY = "RENEW_MEMBERSHIP_BODY";
+
+    /**
+     * MEMBERSHIP_EMAIL_PASSWORD_KEY.
+     */
+    public static final String MEMBERSHIP_EMAIL_PASSWORD_KEY = "MEMBERSHIP_EMAIL_PASSWORD";
+
+    /**
+     * MEMBERSHIP_EMAIL_USERNAME_KEY.
+     */
+    public static final String MEMBERSHIP_EMAIL_USERNAME_KEY = "MEMBERSHIP_EMAIL_USERNAME";
+
+    /**
+     * EMAIL_LETTERHEAD_KEY.
+     */
+    public static final String EMAIL_LETTERHEAD_KEY = "EMAIL_LETTERHEAD";
+
+    /**
      * SEND_GRID_FIRST_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID.
      */
     public static final String SEND_GRID_FIRST_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID =

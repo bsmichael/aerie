@@ -19,6 +19,8 @@ package org.eaa690.aerie.service;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
+import org.eaa690.aerie.constant.PropertyKeyConstants;
+import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,12 @@ public class SlackService implements SlackMessagePostedListener {
      */
     @Autowired
     private SlackSession slackSession;
+
+    /**
+     * PropertyService.
+     */
+    @Autowired
+    private PropertyService propertyService;
 
     /**
      * Sets SlackSession. Note: mostly used for unit test mocks
@@ -86,7 +94,10 @@ public class SlackService implements SlackMessagePostedListener {
      * @param slackId Slack ID for recipient
      * @param body message to be delivered
      */
-    public void sendSlackMessage(final String slackId, final String body) {
+    public void sendSlackMessage(final String slackId, final String body) throws ResourceNotFoundException {
+        if (Boolean.parseBoolean(propertyService.get(PropertyKeyConstants.SLACK_ENABLED_KEY).getValue())) {
+            return;
+        }
         LOGGER.info(String.format("Sending Slack message [%s] to [%s]", body, slackId));
         slackSession.sendMessageToUser(slackSession.findUserByUserName(slackId), body, null);
     }

@@ -16,8 +16,11 @@
 
 package org.eaa690.aerie.service;
 
+import org.eaa690.aerie.constant.PropertyKeyConstants;
+import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.activation.DataHandler;
@@ -42,6 +45,12 @@ import java.util.Properties;
 public class EmailService {
 
     /**
+     * PropertyService.
+     */
+    @Autowired
+    private PropertyService propertyService;
+
+    /**
      * Logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
@@ -61,7 +70,10 @@ public class EmailService {
                                  final String body,
                                  final String from,
                                  final String password,
-                                 final String img) {
+                                 final String img) throws ResourceNotFoundException {
+        if (!Boolean.parseBoolean(propertyService.get(PropertyKeyConstants.EMAIL_ENABLED_KEY).getValue())) {
+            return;
+        }
         final Properties props = new Properties();
         props.put("mail.smtp.host", "mail.eaa690.org");
         props.put("mail.smtp.socketFactory.port", "465");

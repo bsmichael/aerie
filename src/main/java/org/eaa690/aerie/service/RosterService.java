@@ -29,6 +29,7 @@ import java.util.Optional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eaa690.aerie.constant.CommonConstants;
+import org.eaa690.aerie.constant.PropertyKeyConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.MemberRepository;
@@ -212,11 +213,15 @@ public class RosterService {
                             try {
                                 if (m.isEmailEnabled()) {
                                     emailService.sendEmailMessage(m.getEmail(),
-                                            propertyService.get("SUBJECT").getValue(),
-                                            personalizeBody(m, propertyService.get("BODY").getValue()),
-                                            propertyService.get("FROM").getValue(),
-                                            propertyService.get("PASSWORD").getValue(),
-                                            propertyService.get("IMG").getValue());
+                                            propertyService.get(
+                                                    PropertyKeyConstants.RENEW_MEMBERSHIP_SUBJECT_KEY).getValue(),
+                                            personalizeBody(m, propertyService.get(
+                                                    PropertyKeyConstants.RENEW_MEMBERSHIP_BODY_KEY).getValue()),
+                                            propertyService.get(
+                                                    PropertyKeyConstants.MEMBERSHIP_EMAIL_USERNAME_KEY).getValue(),
+                                            propertyService.get(
+                                                    PropertyKeyConstants.MEMBERSHIP_EMAIL_PASSWORD_KEY).getValue(),
+                                            propertyService.get(PropertyKeyConstants.EMAIL_LETTERHEAD_KEY).getValue());
                                 }
                                 if (m.isSlackEnabled()) {
                                     slackService

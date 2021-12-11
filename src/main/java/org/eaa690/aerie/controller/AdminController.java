@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eaa690.aerie.constant.PropertyKeyConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.service.EmailService;
@@ -192,10 +193,10 @@ public class AdminController {
         final Member member = rosterService.getMemberByRosterID(rosterId);
         smsService.sendSMSMessage(member.getCellPhone(),
                 member.getCellPhoneProvider(),
-                propertyService.get("SUBJECT").getValue(),
+                propertyService.get(PropertyKeyConstants.RENEW_MEMBERSHIP_SUBJECT_KEY).getValue(),
                 textBody,
-                propertyService.get("FROM").getValue(),
-                propertyService.get("PASSWORD").getValue());
+                propertyService.get(PropertyKeyConstants.MEMBERSHIP_EMAIL_USERNAME_KEY).getValue(),
+                propertyService.get(PropertyKeyConstants.MEMBERSHIP_EMAIL_PASSWORD_KEY).getValue());
     }
 
     /**
