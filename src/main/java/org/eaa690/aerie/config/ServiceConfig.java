@@ -24,6 +24,7 @@ import org.eaa690.aerie.constant.CommonConstants;
 import org.eaa690.aerie.constant.PropertyKeyConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.WeatherProductRepository;
+import org.eaa690.aerie.roster.RosterManager;
 import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.MailChimpService;
 import org.eaa690.aerie.service.PropertyService;
@@ -86,6 +87,19 @@ public class ServiceConfig {
         weatherService.setSSLUtilities(sslUtilities);
         weatherService.setWeatherProductRepository(wpRepository);
         return weatherService;
+    }
+
+    /**
+     * RosterManager.
+     *
+     * @param propertyService PropertyService
+     * @return RosterManager
+     * @throws ResourceNotFoundException when properties are not found
+     */
+    @Bean
+    public RosterManager rosterManager(final PropertyService propertyService) throws ResourceNotFoundException {
+        return new RosterManager(propertyService.get(PropertyKeyConstants.ROSTER_USER_KEY).getValue(),
+                propertyService.get(PropertyKeyConstants.ROSTER_PASS_KEY).getValue());
     }
 
     /**
