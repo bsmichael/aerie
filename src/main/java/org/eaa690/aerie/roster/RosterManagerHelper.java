@@ -20,11 +20,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eaa690.aerie.constant.CommonConstants;
 import org.eaa690.aerie.constant.RosterConstants;
+import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.roster.Country;
 import org.eaa690.aerie.model.roster.Gender;
 import org.eaa690.aerie.model.roster.MemberType;
 import org.eaa690.aerie.model.roster.OtherInfo;
-import org.eaa690.aerie.model.roster.Person;
 import org.eaa690.aerie.model.roster.State;
 import org.eaa690.aerie.model.roster.Status;
 import org.eaa690.aerie.model.roster.WebAdminAccess;
@@ -43,7 +43,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,11 +55,6 @@ public class RosterManagerHelper {
      * Logger.
      */
     private static final Log LOGGER = LogFactory.getLog(RosterManagerHelper.class);
-
-    /**
-     * Date representing the beginning of dates.
-     */
-    private static final Date ZERO_DATE = new Date(0);
 
     /**
      * Date formatter.
@@ -208,10 +202,10 @@ public class RosterManagerHelper {
      * @param httpClient HttpClient
      * @param headers Map of Headers
      * @param viewState ViewState
-     * @param person Person
+     * @param person Member
      */
     public void addMember(final HttpClient httpClient, final Map<String, String> headers,
-                          final String viewState, final Person person) {
+                          final String viewState, final Member person) {
         try {
             final String uriStr = RosterConstants.EAA_CHAPTERS_SITE_BASE + "/searchmembers.aspx";
             final HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -229,9 +223,6 @@ public class RosterManagerHelper {
             headers.put("sec-fetch-mode", "navigate");
             headers.put("sec-fetch-user", "?1");
             headers.put("sec-fetch-dest", "document");
-            //for (final String key : headers.keySet()) {
-            //    builder.setHeader(key, headers.get(key));
-            //}
             final HttpRequest request = builder.build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -248,9 +239,9 @@ public class RosterManagerHelper {
      *
      * @param httpClient HttpClient
      * @param headers Map of Headers
-     * @param person Person
+     * @param person Member
      */
-    public void updateMember(final HttpClient httpClient, final Map<String, String> headers, final Person person) {
+    public void updateMember(final HttpClient httpClient, final Map<String, String> headers, final Member person) {
         LOGGER.info("Updating existing entry");
     }
 
@@ -533,7 +524,7 @@ public class RosterManagerHelper {
         return addDataFromHeaders(headers, sb, data);
     }
 
-    private HttpRequest.BodyPublisher buildNewUserRequestBodyString(final Person person, final String viewState) {
+    private HttpRequest.BodyPublisher buildNewUserRequestBodyString(final Member person, final String viewState) {
         final Map<Object, Object> data = new HashMap<>();
         data.put(RosterConstants.EVENT_TARGET, RosterConstants.EMPTY_STRING);
         data.put(RosterConstants.EVENT_ARGUMENT, RosterConstants.EMPTY_STRING);
@@ -752,8 +743,8 @@ public class RosterManagerHelper {
      * @param data data
      * @return list of parsed values
      */
-    public List<Person> parseRecords(final String data) {
-        final List<Person> records = new ArrayList<>();
+    public List<Member> parseRecords(final String data) {
+        final List<Member> records = new ArrayList<>();
         final Document doc = Jsoup.parse(data);
         final Elements tableRecords = doc.getElementsByTag("tr");
         int rowCount = 0;
@@ -762,7 +753,7 @@ public class RosterManagerHelper {
                 try {
                     final Elements columns = tr.getElementsByTag("td");
                     int columnCount = 0;
-                    final Person person = new Person();
+                    final Member person = new Member();
                     for (Element column : columns) {
                         processColumn(columnCount, person, column);
                         columnCount++;
@@ -785,7 +776,7 @@ public class RosterManagerHelper {
      * @param column Column
      * @throws ParseException when data is invalid
      */
-    private void processColumn(final int columnCount, final Person person, final Element column) throws ParseException {
+    private void processColumn(final int columnCount, final Member person, final Element column) throws ParseException {
         switch (columnCount) {
             case 0:
                 person.setRosterId(Long.parseLong(column.text().trim()));
@@ -930,7 +921,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void setEagleVolunteer(final Person person, final Element column) {
+    private void setEagleVolunteer(final Member person, final Element column) {
         if ("yes".equalsIgnoreCase(column.text().trim())) {
             person.setEagleVolunteer(Boolean.TRUE);
         } else {
@@ -944,7 +935,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void setEaglePilot(final Person person, final Element column) {
+    private void setEaglePilot(final Member person, final Element column) {
         if ("yes".equalsIgnoreCase(column.text().trim())) {
             person.setEaglePilot(Boolean.TRUE);
         } else {
@@ -958,7 +949,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void setYeVolunteer(final Person person, final Element column) {
+    private void setYeVolunteer(final Member person, final Element column) {
         if ("yes".equalsIgnoreCase(column.text().trim())) {
             person.setYeVolunteer(Boolean.TRUE);
         } else {
@@ -972,7 +963,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void setYePilot(final Person person, final Element column) {
+    private void setYePilot(final Member person, final Element column) {
         if ("yes".equalsIgnoreCase(column.text().trim())) {
             person.setYePilot(Boolean.TRUE);
         } else {
@@ -986,7 +977,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void setVmcClub(final Person person, final Element column) {
+    private void setVmcClub(final Member person, final Element column) {
         if ("yes".equalsIgnoreCase(column.text().trim())) {
             person.setVmcClub(Boolean.TRUE);
         } else {
@@ -1000,7 +991,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void setImcClub(final Person person, final Element column) {
+    private void setImcClub(final Member person, final Element column) {
         if ("yes".equalsIgnoreCase(column.text().trim())) {
             person.setImcClub(Boolean.TRUE);
         } else {
@@ -1014,7 +1005,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void setCellPhone(final Person person, final Element column) {
+    private void setCellPhone(final Member person, final Element column) {
         person.setCellPhone(column
                 .text()
                 .trim()
@@ -1030,7 +1021,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void setHomePhone(final Person person, final Element column) {
+    private void setHomePhone(final Member person, final Element column) {
         person.setHomePhone(column
                 .text()
                 .trim()
@@ -1046,7 +1037,7 @@ public class RosterManagerHelper {
      * @param person Person
      * @param column Column
      */
-    private void handleOtherInfo(final Person person, final Element column) {
+    private void handleOtherInfo(final Member person, final Element column) {
         final OtherInfo otherInfo = new OtherInfo(column.text().trim());
         person.setRfid(otherInfo.getRfid());
         person.setSlack(otherInfo.getSlack());
@@ -1069,7 +1060,7 @@ public class RosterManagerHelper {
      * @param users list of all Slack users
      * @param person Member
      */
-    private void setSlack(final List<String> users, final Person person) {
+    private void setSlack(final List<String> users, final Member person) {
         final String username = person.getFirstName() + " " + person.getLastName();
         users.forEach(str -> {
             final String[] split = str.split("\\|");

@@ -119,12 +119,12 @@ public class EmailService {
         multipart.addBodyPart(messageBodyPart1);
 
         final BodyPart messageBodyPart2 = new MimeBodyPart();
-        messageBodyPart2.setContent("<img src='cid:image_id'>", "text/html");
+        messageBodyPart2.setContent(body, "text/html");
         multipart.addBodyPart(messageBodyPart2);
 
-        final BodyPart messageBodyPart3 = new MimeBodyPart();
-        messageBodyPart3.setText(body);
-        multipart.addBodyPart(messageBodyPart3);
+        //final BodyPart messageBodyPart3 = new MimeBodyPart();
+        //messageBodyPart3.setContent(body);
+        //multipart.addBodyPart(messageBodyPart3);
 
         return multipart;
     }

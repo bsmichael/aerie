@@ -16,6 +16,7 @@
 
 package org.eaa690.aerie.service;
 
+import com.ullink.slack.simpleslackapi.SlackPreparedMessage;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
@@ -98,8 +99,14 @@ public class SlackService implements SlackMessagePostedListener {
         if (Boolean.parseBoolean(propertyService.get(PropertyKeyConstants.SLACK_ENABLED_KEY).getValue())) {
             return;
         }
-        LOGGER.info(String.format("Sending Slack message [%s] to [%s]", body, slackId));
-        slackSession.sendMessageToUser(slackSession.findUserByUserName(slackId), body, null);
+        try {
+            LOGGER.info(String.format("Sending Slack message [%s] to [%s]", body, slackId));
+            SlackPreparedMessage.SlackPreparedMessageBuilder builder = SlackPreparedMessage.builder();
+            builder.message(body);
+            slackSession.sendMessageToUser(slackId, builder.build());
+        } catch (Exception e) {
+            LOGGER.info("Unable to send slack message to [" + slackId + "] due to [" + e.getMessage() + "]");
+        }
     }
 
 }

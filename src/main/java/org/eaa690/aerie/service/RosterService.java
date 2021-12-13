@@ -35,15 +35,10 @@ import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.MemberRepository;
 import org.eaa690.aerie.model.MembershipReport;
 import org.eaa690.aerie.model.roster.MemberType;
-import org.eaa690.aerie.model.roster.Person;
 import org.eaa690.aerie.model.roster.Status;
 import org.eaa690.aerie.roster.RosterManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import ma.glasnost.orika.MapperFacade;
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 /**
  * Logs into EAA's roster management system, downloads the EAA 690 records as an
@@ -170,20 +165,13 @@ public class RosterService {
     }
 
     /**
-     * MapperFactory.
-     */
-    private final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-
-    /**
      * Updates every 6 hours.
      *
      * second, minute, hour, day of month, month, day(s) of week
      */
     @Scheduled(cron = "0 0 0,6,12,18 * * *")
     public void update() {
-        mapperFactory.classMap(Person.class, Member.class).byDefault();
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        rosterManager.getAllEntries().stream().map(person -> mapper.map(person, Member.class))
+        rosterManager.getAllEntries()
                 .forEach(member -> {
                     memberRepository.findByRosterId(member.getRosterId())
                             .ifPresent(value -> member.setId(value.getId()));
@@ -205,13 +193,17 @@ public class RosterService {
                 .ifPresent(members -> members
                         .stream()
                         .filter(m -> m.getExpiration()
+                                .after(Date.from(Instant.now().minus(CommonConstants.THREE_HUNDRED_SIXTY_FIVE,
+                                        ChronoUnit.DAYS))))
+                        .filter(m -> m.getExpiration()
                                 .before(Date.from(Instant.now().plus(CommonConstants.THIRTY, ChronoUnit.DAYS))))
                         .filter(member -> member.getMemberType() == MemberType.Regular
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)
+                        .filter(m -> !"Cliff".equalsIgnoreCase(m.getFirstName()))
                         .forEach(m -> {
                             try {
-                                if (m.isEmailEnabled()) {
+                                if (m.getEmail() != null && !"".equals(m.getEmail())) {
                                     emailService.sendEmailMessage(m.getEmail(),
                                             propertyService.get(
                                                     PropertyKeyConstants.RENEW_MEMBERSHIP_SUBJECT_KEY).getValue(),
@@ -223,19 +215,23 @@ public class RosterService {
                                                     PropertyKeyConstants.MEMBERSHIP_EMAIL_PASSWORD_KEY).getValue(),
                                             propertyService.get(PropertyKeyConstants.EMAIL_LETTERHEAD_KEY).getValue());
                                 }
-                                if (m.isSlackEnabled()) {
-                                    slackService
-                                            .sendSlackMessage(m.getSlack(),
-                                                    personalizeBody(m, propertyService.get("BODY").getValue()));
+                                if (m.getSlack() != null && !"".equals(m.getSlack())) {
+                                    slackService.sendSlackMessage(m.getSlack(), personalizeBody(m,
+                                            propertyService.get(PropertyKeyConstants.RENEW_MEMBERSHIP_SHORT_BODY_KEY)
+                                                    .getValue()));
                                 }
-                                if (m.isSmsEnabled()) {
-                                    smsService.sendSMSMessage(m.getCellPhone(),
-                                            m.getCellPhoneProvider(),
-                                            propertyService.get("SUBJECT").getValue(),
-                                            personalizeBody(m, propertyService.get("BODY").getValue()),
-                                            propertyService.get("FROM").getValue(),
-                                            propertyService.get("PASSWORD").getValue());
-                                }
+//                                if (m.isSmsEnabled()) {
+//                                    smsService.sendSMSMessage(m.getCellPhone(),
+//                                            m.getCellPhoneProvider(),
+//                                            propertyService.get(PropertyKeyConstants.RENEW_MEMBERSHIP_SUBJECT_KEY)
+//                                                    .getValue(),
+//                                            personalizeBody(m, propertyService.get(
+//                                                    PropertyKeyConstants.RENEW_MEMBERSHIP_SHORT_BODY_KEY).getValue()),
+//                                            propertyService.get(PropertyKeyConstants.MEMBERSHIP_EMAIL_USERNAME_KEY)
+//                                                    .getValue(),
+//                                            propertyService.get(PropertyKeyConstants.MEMBERSHIP_EMAIL_PASSWORD_KEY)
+//                                                    .getValue());
+//                                }
                             } catch (ResourceNotFoundException rnfe) {
                                 // Do something
                             }
@@ -302,9 +298,7 @@ public class RosterService {
      */
     public Member saveNewMember(final Member member) {
         LOGGER.info("Saving new member: " + member);
-        mapperFactory.classMap(Member.class, Person.class);
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        rosterManager.savePerson(mapper.map(member, Person.class));
+        rosterManager.savePerson(member);
         return member;
     }
 
@@ -315,9 +309,7 @@ public class RosterService {
      */
     public void saveRenewingMember(final Member member) {
         LOGGER.info("Saving renewing member: " + member);
-        mapperFactory.classMap(Member.class, Person.class);
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        rosterManager.savePerson(mapper.map(member, Person.class));
+        rosterManager.savePerson(member);
     }
 
     /**

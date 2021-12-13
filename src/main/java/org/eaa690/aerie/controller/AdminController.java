@@ -16,41 +16,20 @@
 
 package org.eaa690.aerie.controller;
 
-import com.ullink.slack.simpleslackapi.SlackBot;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import com.ullink.slack.simpleslackapi.impl.SlackPersonaImpl;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eaa690.aerie.constant.PropertyKeyConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.Member;
-import org.eaa690.aerie.service.EmailService;
 import org.eaa690.aerie.service.MailChimpService;
-import org.eaa690.aerie.service.PropertyService;
 import org.eaa690.aerie.service.RosterService;
-import org.eaa690.aerie.service.SMSService;
-import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * AdminController.
@@ -74,11 +53,6 @@ public class AdminController {
     private static final String SEND_MSG_MESSAGE = "Sending %s %s to %s %s at %s";
 
     /**
-     * PropertyService.
-     */
-    private PropertyService propertyService;
-
-    /**
      * RosterService.
      */
     private RosterService rosterService;
@@ -89,29 +63,9 @@ public class AdminController {
     private WeatherService weatherService;
 
     /**
-     * EmailService.
-     */
-    private EmailService emailService;
-
-    /**
-     * SMSService.
-     */
-    private SMSService smsService;
-
-    /**
-     * SlackService.
-     */
-    private SlackService slackService;
-
-    /**
      * MailChimpService.
      */
     private MailChimpService mailChimpService;
-
-    /**
-     * SlackSession.
-     */
-    private SlackSession slackSession;
 
     /**
      * Sets RosterService.
@@ -131,16 +85,6 @@ public class AdminController {
     @Autowired
     public void setWeatherService(final WeatherService value) {
         weatherService = value;
-    }
-
-    /**
-     * Sets EmailService.
-     *
-     * @param value EmailService
-     */
-    @Autowired
-    public void setEmailService(final EmailService value) {
-        emailService = value;
     }
 
     /**
@@ -167,36 +111,6 @@ public class AdminController {
     @PostMapping(path = {"/member/renew"})
     public void sendMembershipRenewalMessages() {
         rosterService.sendMembershipRenewalMessages();
-    }
-
-    /**
-     * Sets SlackSession.
-     *
-     * @param value SlackSession
-     */
-    @Autowired
-    public void setSlackSession(final SlackSession value) {
-        slackSession = value;
-    }
-
-    /**
-     * Sends SMS Message to a member.
-     *
-     * @param rosterId RosterId of member.
-     * @param textBody SMS Body to be sent.
-     * @throws ResourceNotFoundException when member is not found
-     */
-    @PostMapping(path = {"/sms/{rosterId}"})
-    public void sendSMS(
-            @PathVariable("rosterId") final Long rosterId,
-            @RequestBody final String textBody) throws ResourceNotFoundException {
-        final Member member = rosterService.getMemberByRosterID(rosterId);
-        smsService.sendSMSMessage(member.getCellPhone(),
-                member.getCellPhoneProvider(),
-                propertyService.get(PropertyKeyConstants.RENEW_MEMBERSHIP_SUBJECT_KEY).getValue(),
-                textBody,
-                propertyService.get(PropertyKeyConstants.MEMBERSHIP_EMAIL_USERNAME_KEY).getValue(),
-                propertyService.get(PropertyKeyConstants.MEMBERSHIP_EMAIL_PASSWORD_KEY).getValue());
     }
 
     /**
@@ -234,44 +148,6 @@ public class AdminController {
     @PostMapping(path = {"/roster/process-membership-renewals"})
     public void processMembershipRenewals() {
         rosterService.sendMembershipRenewalMessages();
-    }
-
-    /**
-     * Processes response from Slack.
-     * Note: Typically only Slack would call this routine.
-     *
-     * @param user User sending Slack message
-     * @param textBody Body of message to be sent
-     */
-    @PostMapping(path = {"/slack/{slackUser}/response"})
-    public void processSlackResponse(@PathVariable("slackUser") final String user,
-                                     @RequestBody final String textBody) {
-        SlackBot slackBot = SlackPersonaImpl.builder().id("unknown").userName("unknown").build();
-        SlackUser slackUser = SlackPersonaImpl.builder().id(user).userName(user).build();
-        SlackChannel slackChannel = SlackChannel.builder().id("random").name("random").build();
-        String timestamp = "";
-        SlackMessagePosted messagePosted = new SlackMessagePosted(textBody, slackBot, slackUser,
-                slackChannel, timestamp, SlackMessagePosted.MessageSubType.MESSAGE_REPLIED);
-        slackService.onEvent(messagePosted, slackSession);
-    }
-
-    /**
-     * Gets all Slack users.
-     *
-     * @return All slack users
-     * @throws ResourceNotFoundException when member is not found
-     */
-    @Operation(summary = "All Slack users",
-            description = "List of all Slack users",
-            tags = {"admin"})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "successful operation",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class))))
-    })
-    @GetMapping(path = {"/slack/users"})
-    public List<String> getAllSlackUsers() throws ResourceNotFoundException {
-        return slackService.allSlackUsers();
     }
 
     /**

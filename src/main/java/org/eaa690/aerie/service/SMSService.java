@@ -19,11 +19,18 @@ package org.eaa690.aerie.service;
 import org.eaa690.aerie.constant.PropertyKeyConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.roster.CellPhoneProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SMSService {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(SMSService.class);
 
     /**
      * EmailService.
@@ -66,8 +73,10 @@ public class SMSService {
         if (Boolean.parseBoolean(propertyService.get(PropertyKeyConstants.SMS_ENABLED_KEY).getValue())) {
             return;
         }
+        final String to = String.format("%s@%s", recipientAddress, cellPhoneProvider.getCellPhoneProviderEmailDomain());
+        LOGGER.info(String.format("Sending Slack message [%s] to [%s]", body, to));
         emailService.sendEmailMessage(
-                String.format("%s@%s", recipientAddress, cellPhoneProvider.getCellPhoneProviderEmailDomain()),
+                to,
                 subject,
                 body,
                 from,

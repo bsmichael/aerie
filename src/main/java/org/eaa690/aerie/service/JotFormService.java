@@ -89,8 +89,8 @@ public class JotFormService {
     /**
      * RosterService.
      */
-    @Autowired
-    private RosterService rosterService;
+    //@Autowired
+    //private RosterService rosterService;
 
     /**
      * Sets TinyURLService.
@@ -120,10 +120,10 @@ public class JotFormService {
      *
      * @param value RosterService
      */
-    @Autowired
-    public void setRosterService(final RosterService value) {
-        rosterService = value;
-    }
+    //@Autowired
+    //public void setRosterService(final RosterService value) {
+    //    rosterService = value;
+    //}
 
     /**
      * Retrieves JotForm submissions.
@@ -215,7 +215,7 @@ public class JotFormService {
                 final String key = entry.getKey();
                 if (SUBMISSIONS_CACHE.getIfPresent(key) == null) {
                     SUBMISSIONS_CACHE.put(key, key);
-                    rosterService.saveRenewingMember(entry.getValue());
+                    //rosterService.saveRenewingMember(entry.getValue());
                 }
             }
         }
@@ -243,7 +243,7 @@ public class JotFormService {
             for (final Map.Entry<String, Member> entry : newMembersMap.entrySet()) {
                 final String key = entry.getKey();
                 if (SUBMISSIONS_CACHE.getIfPresent(key) == null) {
-                    final Member member = rosterService.saveNewMember(entry.getValue());
+                    //final Member member = rosterService.saveNewMember(entry.getValue());
                     SUBMISSIONS_CACHE.put(key, key);
                     //communicationService.sendNewMembershipMsg(member);
                 }

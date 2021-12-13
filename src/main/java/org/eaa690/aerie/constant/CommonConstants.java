@@ -244,6 +244,11 @@ public class CommonConstants {
     public static final int ONE_HUNDRED = 100;
 
     /**
+     * THREE_HUNDRED_SIXTY_FIVE.
+     */
+    public static final int THREE_HUNDRED_SIXTY_FIVE = 365;
+
+    /**
      * ONE_THOUSAND.
      */
     public static final int ONE_THOUSAND = 1000;

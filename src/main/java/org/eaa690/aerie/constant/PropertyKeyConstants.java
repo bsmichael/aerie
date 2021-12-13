@@ -22,19 +22,9 @@ package org.eaa690.aerie.constant;
 public class PropertyKeyConstants {
 
     /**
-     * CHECK_WX_URL_BASE_KEY.
-     */
-    public static final String CHECK_WX_URL_BASE_KEY = "weather.checkwx.url-base";
-
-    /**
      * ATLANTA_ICAO_PROPERTY_KEY.
      */
     public static final String ATLANTA_ICAO_CODES_PROPERTY_KEY = "weather.atlanta-icao-codes";
-
-    /**
-     * CHECK_WX_API_KEY_KEY.
-     */
-    public static final String CHECK_WX_API_KEY_KEY = "weather.checkwx.api-key";
 
     /**
      * JOTFORM_BASE_URL_KEY.
@@ -97,11 +87,6 @@ public class PropertyKeyConstants {
     public static final String TINY_URL_CREATE_API_KEY = "tiny-url.api.create";
 
     /**
-     * SEND_EMAIL_GRID_API_KEY.
-     */
-    public static final String SEND_GRID_EMAIL_API_KEY = "email.sendgrid.api-key";
-
-    /**
      * RENEW_MEMBERSHIP_SUBJECT_KEY.
      */
     public static final String RENEW_MEMBERSHIP_SUBJECT_KEY = "RENEW_MEMBERSHIP_SUBJECT";
@@ -127,72 +112,9 @@ public class PropertyKeyConstants {
     public static final String EMAIL_LETTERHEAD_KEY = "EMAIL_LETTERHEAD";
 
     /**
-     * SEND_GRID_FIRST_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID.
-     */
-    public static final String SEND_GRID_FIRST_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID =
-            "SEND_GRID_FIRST_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID";
-
-    /**
-     * SEND_GRID_SECOND_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID.
-     */
-    public static final String SEND_GRID_SECOND_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID =
-            "SEND_GRID_SECOND_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID";
-
-    /**
-     * SEND_GRID_THIRD_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID.
-     */
-    public static final String SEND_GRID_THIRD_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID =
-            "SEND_GRID_THIRD_MEMBERSHIP_RENEWAL_EMAIL_TEMPLATE_ID";
-
-    /**
-     * SEND_GRID_NEW_MEMBERSHIP_EMAIL_SUBJECT_KEY.
-     */
-    public static final String SEND_GRID_NEW_MEMBERSHIP_EMAIL_SUBJECT_KEY =
-            "SEND_GRID_NEW_MEMBERSHIP_EMAIL_SUBJECT_KEY";
-
-    /**
-     * SEND_GRID_NEW_MEMBERSHIP_EMAIL_TEMPLATE_ID.
-     */
-    public static final String SEND_GRID_NEW_MEMBERSHIP_EMAIL_TEMPLATE_ID =
-            "SEND_GRID_NEW_MEMBERSHIP_EMAIL_TEMPLATE_ID";
-
-    /**
-     * SEND_GRID_FROM_ADDRESS_KEY.
-     */
-    public static final String SEND_GRID_FROM_ADDRESS_KEY = "SEND_GRID_FROM_ADDRESS_KEY";
-
-    /**
-     * SEND_GRID_LIMIT.
-     */
-    public static final String SEND_GRID_LIMIT = "SEND_GRID_LIMIT";
-
-    /**
-     * SEND_GRID_FIRST_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY.
-     */
-    public static final String SEND_GRID_FIRST_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY =
-            "SEND_GRID_FIRST_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY";
-
-    /**
-     * SEND_GRID_SECOND_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY.
-     */
-    public static final String SEND_GRID_SECOND_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY =
-            "SEND_GRID_SECOND_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY";
-
-    /**
-     * SEND_GRID_THIRD_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY.
-     */
-    public static final String SEND_GRID_THIRD_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY =
-            "SEND_GRID_THIRD_MEMBERSHIP_RENEWAL_EMAIL_SUBJECT_KEY";
-
-    /**
      * EMAIL_ENABLED_KEY.
      */
     public static final String EMAIL_ENABLED_KEY = "EMAIL_ENABLED_KEY";
-
-    /**
-     * EMAIL_BCC_KEY.
-     */
-    public static final String EMAIL_BCC_KEY = "EMAIL_BCC_KEY";
 
     /**
      * SMS_ENABLED_KEY.
@@ -200,87 +122,12 @@ public class PropertyKeyConstants {
     public static final String SMS_ENABLED_KEY = "SMS_ENABLED_KEY";
 
     /**
-     * SMS_ACCOUNT_SID_KEY.
-     */
-    public static final String SMS_ACCOUNT_SID_KEY = "SMS_ACCOUNT_SID_KEY";
-
-    /**
-     * SMS_AUTH_ID_KEY.
-     */
-    public static final String SMS_AUTH_ID_KEY = "SMS_AUTH_ID_KEY";
-
-    /**
-     * SMS_FROM_ADDRESS_KEY.
-     */
-    public static final String SMS_FROM_ADDRESS_KEY = "SMS_FROM_ADDRESS_KEY";
-
-    /**
-     * SMS_NEW_MEMBER_MSG_KEY.
-     */
-    public static final String SMS_NEW_MEMBER_MSG_KEY = "SMS_NEW_MEMBER_MSG_KEY";
-
-    /**
-     * SMS_RENEW_MEMBER_MSG_KEY.
-     */
-    public static final String SMS_RENEW_MEMBER_MSG_KEY = "SMS_RENEW_MEMBER_MSG_KEY";
-
-    /**
      * SLACK_ENABLED_KEY.
      */
     public static final String SLACK_ENABLED_KEY = "SLACK_ENABLED_KEY";
 
     /**
-     * SLACK_NEW_MEMBER_MSG_KEY.
+     * RENEW_MEMBERSHIP_SHORT_BODY_KEY.
      */
-    public static final String SLACK_NEW_MEMBER_MSG_KEY = "SLACK_NEW_MEMBER_MSG_KEY";
-
-    /**
-     * SLACK_RENEW_MEMBER_MSG_KEY.
-     */
-    public static final String SLACK_RENEW_MEMBER_MSG_KEY = "SLACK_RENEW_MEMBER_MSG_KEY";
-
-    /**
-     * EMAIL_TEST_MODE_ENABLED_KEY.
-     */
-    public static final String EMAIL_TEST_MODE_ENABLED_KEY = "EMAIL_TEST_MODE_ENABLED_KEY";
-
-    /**
-     * SMS_TEST_MODE_ENABLED_KEY.
-     */
-    public static final String SMS_TEST_MODE_ENABLED_KEY = "SMS_TEST_MODE_ENABLED_KEY";
-
-    /**
-     * SLACK_TEST_MODE_ENABLED_KEY.
-     */
-    public static final String SLACK_TEST_MODE_ENABLED_KEY = "SLACK_TEST_MODE_ENABLED_KEY";
-
-    /**
-     * EMAIL_TEST_MODE_RECIPIENT_KEY.
-     */
-    public static final String EMAIL_TEST_MODE_RECIPIENT_KEY = "EMAIL_TEST_MODE_RECIPIENT_KEY";
-
-    /**
-     * SMS_TEST_MODE_RECIPIENT_KEY.
-     */
-    public static final String SMS_TEST_MODE_RECIPIENT_KEY = "SMS_TEST_MODE_RECIPIENT_KEY";
-
-    /**
-     * SLACK_TEST_MODE_RECIPIENT_KEY.
-     */
-    public static final String SLACK_TEST_MODE_RECIPIENT_KEY = "SLACK_TEST_MODE_RECIPIENT_KEY";
-
-    /**
-     * MEMBERSHIP_RENEWAL_FIRST_MSG_DAYS_KEY.
-     */
-    public static final String MEMBERSHIP_RENEWAL_FIRST_MSG_DAYS_KEY = "MEMBERSHIP_RENEWAL_FIRST_MSG_DAYS_KEY";
-
-    /**
-     * MEMBERSHIP_RENEWAL_SECOND_MSG_DAYS_KEY.
-     */
-    public static final String MEMBERSHIP_RENEWAL_SECOND_MSG_DAYS_KEY = "MEMBERSHIP_RENEWAL_SECOND_MSG_DAYS_KEY";
-
-    /**
-     * MEMBERSHIP_RENEWAL_THIRD_MSG_DAYS_KEY.
-     */
-    public static final String MEMBERSHIP_RENEWAL_THIRD_MSG_DAYS_KEY = "MEMBERSHIP_RENEWAL_THIRD_MSG_DAYS_KEY";
+    public static final String RENEW_MEMBERSHIP_SHORT_BODY_KEY = "RENEW_MEMBERSHIP_SHORT_BODY";
 }

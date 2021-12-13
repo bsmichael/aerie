@@ -29,7 +29,6 @@ import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.MailChimpService;
 import org.eaa690.aerie.service.PropertyService;
 import org.eaa690.aerie.service.RosterService;
-import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.TinyURLService;
 import org.eaa690.aerie.service.WeatherService;
 import org.eaa690.aerie.ssl.SSLUtilities;
@@ -190,20 +189,19 @@ public class ServiceConfig {
      * SlackSession.
      *
      * @param propertyService PropertyService
-     * @param slackService SlackService
      * @return SlackSession
      * @throws IOException when things go wrong
      * @throws ResourceNotFoundException when things go wrong
      */
     @Bean
-    public SlackSession slackSession(final PropertyService propertyService,
-                                     final SlackService slackService)
+    public SlackSession slackSession(final PropertyService propertyService /*,
+                                     final SlackService slackService */)
             throws IOException, ResourceNotFoundException {
         final SlackSession slackSession = SlackSessionFactory
                 .createWebSocketSlackSession(
                         propertyService.get(PropertyKeyConstants.SLACK_TOKEN_KEY).getValue());
         slackSession.connect();
-        slackSession.addMessagePostedListener(slackService);
+        //slackSession.addMessagePostedListener(slackService);
         return slackSession;
     }
 

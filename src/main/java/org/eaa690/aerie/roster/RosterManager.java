@@ -18,7 +18,7 @@ package org.eaa690.aerie.roster;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eaa690.aerie.model.roster.Person;
+import org.eaa690.aerie.model.Member;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -105,7 +105,7 @@ public class RosterManager {
      *
      * @return list of all members
      */
-    public List<Person> getAllEntries() {
+    public List<Member> getAllEntries() {
         final Map<String, String> headers = helper.getHttpHeaders(httpClient, username, password);
         if (!helper.isLoggedIn()) {
             helper.login(httpClient, headers);
@@ -124,7 +124,7 @@ public class RosterManager {
      * @param person to be created or updated
      * @return current member information
      */
-    public Person savePerson(final Person person) {
+    public Member savePerson(final Member person) {
         final Map<String, String> headers = helper.getHttpHeaders(httpClient, username, password);
         if (!helper.isLoggedIn()) {
             helper.login(httpClient, headers);
