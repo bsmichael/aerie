@@ -21,6 +21,9 @@ import lombok.Setter;
 
 import java.util.Date;
 
+/**
+ * MemberData.
+ */
 @Getter
 @Setter
 public class MemberData {

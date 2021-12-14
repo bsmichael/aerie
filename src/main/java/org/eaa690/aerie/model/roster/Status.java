@@ -16,6 +16,9 @@
 
 package org.eaa690.aerie.model.roster;
 
+/**
+ * Status.
+ */
 public enum Status {
     /**
      * Active.
@@ -26,6 +29,12 @@ public enum Status {
      */
     INACTIVE;
 
+    /**
+     * Display string.
+     *
+     * @param status Status
+     * @return display string
+     */
     public static String getDisplayString(final Status status) {
         if (ACTIVE.equals(status)) {
             return "Active";

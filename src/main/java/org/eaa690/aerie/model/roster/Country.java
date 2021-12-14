@@ -16,6 +16,9 @@
 
 package org.eaa690.aerie.model.roster;
 
+/**
+ * Country.
+ */
 public enum Country {
 
     /**

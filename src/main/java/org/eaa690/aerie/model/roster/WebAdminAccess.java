@@ -16,6 +16,9 @@
 
 package org.eaa690.aerie.model.roster;
 
+/**
+ * WebAdminAccess.
+ */
 public enum WebAdminAccess {
     /**
      * Chapter Admin.
@@ -30,6 +33,12 @@ public enum WebAdminAccess {
      */
     NO_ACCESS;
 
+    /**
+     * Display string.
+     *
+     * @param admin WebAdminAccess
+     * @return display string
+     */
     public static String getDisplayString(final WebAdminAccess admin) {
         if (CHAPTER_ADMIN.equals(admin)) {
             return "2";
@@ -39,6 +48,12 @@ public enum WebAdminAccess {
         return "4";
     }
 
+    /**
+     * WebAdminAccess from display string.
+     *
+     * @param displayString display string
+     * @return WebAdminAccess
+     */
     public static WebAdminAccess fromDisplayString(final String displayString) {
         if ("Chapter Admin".equalsIgnoreCase(displayString)) {
             return CHAPTER_ADMIN;

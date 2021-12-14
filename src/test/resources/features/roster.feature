@@ -13,7 +13,7 @@ Feature: Roster functions
     When I request the roster membership report
     Then The request should be successful
 
-  @expiration
+  @expiration @disabled
   Scenario: Retrieve member expiration
     Given I am an unauthenticated user
     When I request the expiration data for member with ID 42648
@@ -25,13 +25,13 @@ Feature: Roster functions
     When I request RFID data for all members
     Then The request should be successful
 
-  @rfid @update
+  @rfid @update @disabled
   Scenario: Update a member's RFID data
     Given I am an unauthenticated user
     When I update member 42648's RFID with ABC123
     Then The request should be successful
 
-  @rfid @findByID
+  @rfid @findByID @disabled
   Scenario: Find a member by their RFID data
     Given I am an unauthenticated user
     When I find a member by their RFID ABC123

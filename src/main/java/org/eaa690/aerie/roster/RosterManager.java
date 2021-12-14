@@ -30,6 +30,9 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Roster Manager.
+ */
 public class RosterManager {
 
     /**

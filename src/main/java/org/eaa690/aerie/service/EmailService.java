@@ -16,7 +16,6 @@
 
 package org.eaa690.aerie.service;
 
-import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.ssl.PasswordAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +63,7 @@ public class EmailService {
                                  final String body,
                                  final String from,
                                  final String password,
-                                 final String img) throws ResourceNotFoundException {
+                                 final String img) {
         final Properties props = new Properties();
         props.put("mail.smtp.host", "mail.eaa690.org");
         props.put("mail.smtp.socketFactory.port", "465");

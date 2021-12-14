@@ -50,7 +50,7 @@ Feature: admin
     When I request the weather data to be updated
     Then The request should be successful
 
-  @membership @auto @renewmember
+  @membership @auto @renewmember @disabled
   Scenario: Force run of automated send membership renewal messages
     Given I am an unauthenticated user
     When I request membership renewal messages be sent

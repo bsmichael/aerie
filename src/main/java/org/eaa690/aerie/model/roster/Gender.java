@@ -16,6 +16,9 @@
 
 package org.eaa690.aerie.model.roster;
 
+/**
+ * Gender.
+ */
 public enum Gender {
 
     /**
@@ -33,6 +36,12 @@ public enum Gender {
      */
     UNKNOWN;
 
+    /**
+     * Get Display string.
+     *
+     * @param gender Gender
+     * @return display string
+     */
     public static String getDisplayString(final Gender gender) {
         if (MALE.equals(gender)) {
             return "Male";
@@ -43,6 +52,12 @@ public enum Gender {
         }
     }
 
+    /**
+     * Gender from display string.
+     *
+     * @param displayString display string
+     * @return Gender
+     */
     public static Gender fromDisplayString(final String displayString) {
         if ("Male".equalsIgnoreCase(displayString)) {
             return MALE;

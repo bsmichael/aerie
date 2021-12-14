@@ -147,8 +147,10 @@ public class RosterService {
 
     /**
      * Sends membership renewal messages on a scheduled basis.
+     *
+     * second, minute, hour, day of month, month, day(s) of week
      */
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 9 10,20 * *")
     public void sendMembershipRenewalMessages() {
         memberRepository
                 .findAll()
@@ -162,20 +164,23 @@ public class RosterService {
                         .filter(member -> member.getMemberType() == MemberType.Regular
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)
-                        .forEach(m -> {
-                            try {
-                                if (m.getEmail() != null && !"".equals(m.getEmail())) {
-                                    emailService.sendEmailMessage(m.getEmail(),
-                                            membershipProperties.getSubject(),
-                                            personalizeBody(m, membershipProperties.getBody()),
-                                            membershipProperties.getUsername(),
-                                            membershipProperties.getPassword(),
-                                            membershipProperties.getLetterhead());
-                                }
-                            } catch (ResourceNotFoundException rnfe) {
-                                // Do something
-                            }
-                        }));
+                        .forEach(this::sendRenewMembershipMsg));
+    }
+
+    /**
+     * Sends membership renewal message to a specific member.
+     *
+     * @param member Member
+     */
+    public void sendRenewMembershipMsg(final Member member) {
+        if (member.getEmail() != null && !"".equals(member.getEmail())) {
+            emailService.sendEmailMessage(member.getEmail(),
+                    membershipProperties.getSubject(),
+                    personalizeBody(member, membershipProperties.getBody()),
+                    membershipProperties.getUsername(),
+                    membershipProperties.getPassword(),
+                    membershipProperties.getLetterhead());
+        }
     }
 
     /**

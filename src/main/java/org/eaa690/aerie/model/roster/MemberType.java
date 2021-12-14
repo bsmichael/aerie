@@ -16,6 +16,9 @@
 
 package org.eaa690.aerie.model.roster;
 
+/**
+ * MemberType.
+ */
 public enum MemberType {
 
     /**
@@ -61,19 +64,21 @@ public enum MemberType {
         this.value = v;
     }
 
+    /**
+     * Get Value.
+     *
+     * @return value
+     */
     public String getValue() {
         return value;
     }
 
-    public static MemberType fromString(final String text) {
-        for (MemberType b : MemberType.values()) {
-            if (b.value.equalsIgnoreCase(text)) {
-                return b;
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Display string.
+     *
+     * @param memberType MemberType
+     * @return display string
+     */
     public static String toDisplayString(final MemberType memberType) {
         if (Regular.equals(memberType)) {
             return "Regular";

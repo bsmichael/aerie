@@ -50,6 +50,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Roster Manager Helper.
+ */
 public class RosterManagerHelper {
 
     /**
@@ -89,6 +92,9 @@ public class RosterManagerHelper {
      */
     private boolean loggedIn = false;
 
+    /**
+     * Constructor.
+     */
     public RosterManagerHelper() {
         // Do nothing
     }
@@ -675,6 +681,12 @@ public class RosterManagerHelper {
         return ofFormData(data);
     }
 
+    /**
+     * Of form data.
+     *
+     * @param data map
+     * @return BodyPublisher
+     */
     public static HttpRequest.BodyPublisher ofFormData(final Map<Object, Object> data) {
         final StringBuilder builder = new StringBuilder();
         for (Map.Entry<Object, Object> entry : data.entrySet()) {

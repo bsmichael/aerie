@@ -124,30 +124,7 @@ public class AdminController {
         final Member member = rosterService.getMemberByRosterID(rosterId);
         LOGGER.info(String.format(SEND_MSG_MESSAGE, "renew-membership", "sms",
                 member.getFirstName(), member.getLastName(), member.getCellPhone()));
-        //emailService.sendRenewMembershipMsg(member);
-    }
-
-    /**
-     * Sends a new membership SMS, Email, and/or Slack message to the provided member.
-     *
-     * @param rosterId Member Roster ID
-     * @throws ResourceNotFoundException when member is not found
-     */
-    @PostMapping(path = {"/{rosterId}/new-membership"})
-    public void testNewMembership(@PathVariable("rosterId") final Long rosterId) throws ResourceNotFoundException {
-        final Member member = rosterService.getMemberByRosterID(rosterId);
-        LOGGER.info(String.format(SEND_MSG_MESSAGE, "new-membership", "sms",
-                member.getFirstName(), member.getLastName(), member.getCellPhone()));
-        //emailService.sendNewMembershipMsg(member);
-    }
-
-    /**
-     * Processes membership renewals and send out notices to members close to or needed to renew their membership.
-     * Note: Typically this is run automatically every day at 6am, noon, 6pm, and midnight.
-     */
-    @PostMapping(path = {"/roster/process-membership-renewals"})
-    public void processMembershipRenewals() {
-        rosterService.sendMembershipRenewalMessages();
+        rosterService.sendRenewMembershipMsg(member);
     }
 
     /**
