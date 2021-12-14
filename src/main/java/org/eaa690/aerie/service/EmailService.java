@@ -16,12 +16,10 @@
 
 package org.eaa690.aerie.service;
 
-import org.eaa690.aerie.constant.PropertyKeyConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
+import org.eaa690.aerie.ssl.PasswordAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -31,24 +29,20 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
 
-@Service
+/**
+ * Email Service.
+ */
 public class EmailService {
-
-    /**
-     * PropertyService.
-     */
-    @Autowired
-    private PropertyService propertyService;
 
     /**
      * Logger.
@@ -71,20 +65,13 @@ public class EmailService {
                                  final String from,
                                  final String password,
                                  final String img) throws ResourceNotFoundException {
-        if (!Boolean.parseBoolean(propertyService.get(PropertyKeyConstants.EMAIL_ENABLED_KEY).getValue())) {
-            return;
-        }
         final Properties props = new Properties();
         props.put("mail.smtp.host", "mail.eaa690.org");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "587");
-        final Authenticator auth = new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(from, password);
-            }
-        };
+        final Authenticator auth = new PasswordAuthenticator(from, password);
         final Session session = Session.getDefaultInstance(props, auth);
         try {
             final MimeMessage msg = new MimeMessage(session);
@@ -103,7 +90,7 @@ public class EmailService {
             }
             LOGGER.info("Sending email with subject[" + subject + "] to [" + to + "] from [" + from + "]");
             Transport.send(msg);
-        } catch (Exception e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
@@ -121,10 +108,6 @@ public class EmailService {
         final BodyPart messageBodyPart2 = new MimeBodyPart();
         messageBodyPart2.setContent(body, "text/html");
         multipart.addBodyPart(messageBodyPart2);
-
-        //final BodyPart messageBodyPart3 = new MimeBodyPart();
-        //messageBodyPart3.setContent(body);
-        //multipart.addBodyPart(messageBodyPart3);
 
         return multipart;
     }

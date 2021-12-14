@@ -16,11 +16,10 @@
 
 package org.eaa690.aerie.controller;
 
-import org.eaa690.aerie.constant.PropertyKeyConstants;
+import org.eaa690.aerie.config.WeatherProperties;
 import org.eaa690.aerie.model.wx.METAR;
 import org.eaa690.aerie.exception.InvalidPayloadException;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
-import org.eaa690.aerie.service.PropertyService;
 import org.eaa690.aerie.service.WeatherService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +52,6 @@ public class WeatherController {
                     + "Please provide an accepted station identifier";
 
     /**
-     * NO_STATION_MSG.
-     */
-    public static final String NO_STATION_MSG = "No station was provided";
-
-    /**
      * ATLANTA.
      */
     public static final String ATLANTA = "atlanta";
@@ -69,20 +63,10 @@ public class WeatherController {
     private WeatherService weatherService;
 
     /**
-     * PropertyService.
+     * WeatherProperties.
      */
     @Autowired
-    private PropertyService propertyService;
-
-    /**
-     * Sets WeatherProperties.
-     *
-     * @param value WeatherProperties
-     */
-    @Autowired
-    public void setPropertyService(final PropertyService value) {
-        propertyService = value;
-    }
+    private WeatherProperties weatherProperties;
 
     /**
      * Sets WeatherService.
@@ -92,6 +76,16 @@ public class WeatherController {
     @Autowired
     public void setWeatherService(final WeatherService value) {
         weatherService = value;
+    }
+
+    /**
+     * Sets WeatherProperties.
+     *
+     * @param value WeatherProperties
+     */
+    @Autowired
+    public void setWeatherProperties(final WeatherProperties value) {
+        weatherProperties = value;
     }
 
     /**
@@ -115,16 +109,10 @@ public class WeatherController {
             InvalidPayloadException {
         final List<METAR> metars = new ArrayList<>();
         if (ATLANTA.equalsIgnoreCase(icao)) {
-            metars
-                    .addAll(
-                            weatherService
-                                    .getMETARs(Arrays
-                                            .asList(propertyService
-                                                    .get(PropertyKeyConstants.ATLANTA_ICAO_CODES_PROPERTY_KEY)
-                                                    .getValue()
-                                                    .split(","))));
+            metars.addAll(weatherService.getMETARs(
+                    Arrays.asList(weatherProperties.getAtlantaIcaoCodes().split(","))));
         } else if (weatherService.isValidStation(icao.toUpperCase())) {
-            metars.addAll(Arrays.asList(weatherService.getMETAR(icao.toUpperCase())));
+            metars.addAll(List.of(weatherService.getMETAR(icao.toUpperCase())));
         }
         if (CollectionUtils.isNotEmpty(metars)) {
             return filterAttributes(metars, dataList);

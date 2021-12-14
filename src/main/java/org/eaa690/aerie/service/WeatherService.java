@@ -29,9 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eaa690.aerie.constant.CommonConstants;
-import org.eaa690.aerie.constant.PropertyKeyConstants;
-import org.eaa690.aerie.constant.WeatherConstants;
+import org.eaa690.aerie.config.CommonConstants;
+import org.eaa690.aerie.config.WeatherConstants;
+import org.eaa690.aerie.config.WeatherProperties;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.WeatherProduct;
 import org.eaa690.aerie.model.WeatherProductRepository;
@@ -73,7 +73,7 @@ public class WeatherService {
      * PropertyService.
      */
     @Autowired
-    private PropertyService propertyService;
+    private WeatherProperties weatherProperties;
 
     /**
      * SSLUtilities.
@@ -132,14 +132,14 @@ public class WeatherService {
     }
 
     /**
-     * Sets PropertyService.
+     * Sets WeatherProperties.
      * Note: mostly used for unit test mocks
      *
-     * @param value PropertyService
+     * @param value WeatherProperties
      */
     @Autowired
-    public void setPropertyService(final PropertyService value) {
-        propertyService = value;
+    public void setWeatherProperties(final WeatherProperties value) {
+        weatherProperties = value;
     }
 
     /**
@@ -215,16 +215,10 @@ public class WeatherService {
      *
      * @param station to be validated
      * @return if station is valid
-     * @throws ResourceNotFoundException when Atlanta ICAO codes property is not found
      */
-    public boolean isValidStation(final String station) throws ResourceNotFoundException {
+    public boolean isValidStation(final String station) {
         boolean response = false;
-        final List<String> validStationsList =
-                Arrays
-                        .asList(propertyService
-                                .get(PropertyKeyConstants.ATLANTA_ICAO_CODES_PROPERTY_KEY)
-                                .getValue()
-                                .split(","));
+        final List<String> validStationsList = Arrays.asList(weatherProperties.getAtlantaIcaoCodes().split(","));
         if (validStationsList.contains(station)) {
             response = true;
         }
@@ -235,7 +229,7 @@ public class WeatherService {
      * Queries AviationWeather.gov for METAR information.
      */
     private void getMETARsFromAviationWeather() {
-        LOGGER.info(String.format("Querying AviationWeather.gov for METAR information"));
+        LOGGER.info("Querying AviationWeather.gov for METAR information");
         final String url = "https://www.aviationweather.gov/cgi-bin/json/MetarJSON.php"
             + "?density=all&bbox=-85.6898,30.1588,-80.8209,35.1475";
         final HttpHeaders headers = new HttpHeaders();
@@ -247,7 +241,8 @@ public class WeatherService {
         try {
             final ResponseEntity<String> data =
                     restTemplate.exchange(url, HttpMethod.GET, headersEntity, String.class);
-            if (data.getStatusCodeValue() >= HttpStatus.OK.value()
+            if (data.getBody() != null
+                    && data.getStatusCodeValue() >= HttpStatus.OK.value()
                     && data.getStatusCodeValue() < HttpStatus.MULTIPLE_CHOICES.value()) {
                 JSONObject root = new JSONObject(new JSONTokener(data.getBody()));
                 JSONArray features = root.getJSONArray("features");

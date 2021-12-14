@@ -18,8 +18,8 @@ package org.eaa690.aerie.roster;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eaa690.aerie.constant.CommonConstants;
-import org.eaa690.aerie.constant.RosterConstants;
+import org.eaa690.aerie.config.CommonConstants;
+import org.eaa690.aerie.config.RosterConstants;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.roster.Country;
 import org.eaa690.aerie.model.roster.Gender;
@@ -33,6 +33,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -59,12 +60,12 @@ public class RosterManagerHelper {
     /**
      * Date formatter.
      */
-    private static final SimpleDateFormat MDY_SDF = new SimpleDateFormat("MM/dd/yyyy");
+    private final SimpleDateFormat mdySDF = new SimpleDateFormat("MM/dd/yyyy");
 
     /**
      * Date formatter.
      */
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * ViewStatePattern.
@@ -117,8 +118,8 @@ public class RosterManagerHelper {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(uriStr))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBodyStr));
-        for (final String key : headers.keySet()) {
-            builder.setHeader(key, headers.get(key));
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.setHeader(entry.getKey(), entry.getValue());
         }
         final HttpRequest request = builder.build();
 
@@ -152,8 +153,8 @@ public class RosterManagerHelper {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(uriStr))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBodyStr));
-        for (final String key : headers.keySet()) {
-            builder.setHeader(key, headers.get(key));
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.setHeader(entry.getKey(), entry.getValue());
         }
         final HttpRequest request = builder.build();
         try {
@@ -176,8 +177,8 @@ public class RosterManagerHelper {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(uriStr))
                 .GET();
-        for (final String key : headers.keySet()) {
-            builder.setHeader(key, headers.get(key));
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.setHeader(entry.getKey(), entry.getValue());
         }
         final HttpRequest request = builder.build();
 
@@ -191,7 +192,7 @@ public class RosterManagerHelper {
             viewStateMap.put(RosterConstants.VIEW_STATE_GENERATOR,
                     doc.getElementById(RosterConstants.VIEW_STATE_GENERATOR));
             headers.put(RosterConstants.VIEW_STATE, getViewStateValue(viewStateMap.get(RosterConstants.VIEW_STATE)));
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error("[Search Page] Error", e);
         }
     }
@@ -229,7 +230,7 @@ public class RosterManagerHelper {
             LOGGER.info("Received status code=" + response.statusCode());
             LOGGER.info("Received headers=" + response.headers());
             LOGGER.info("[Add member] response: " + response.body());
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error("[Add Member] Error", e);
         }
     }
@@ -267,8 +268,8 @@ public class RosterManagerHelper {
         headers.remove(RosterConstants.VIEW_STATE);
         headers.put(RosterConstants.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/"
                 + "webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-        for (final String key : headers.keySet()) {
-            builder.setHeader(key, headers.get(key));
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.setHeader(entry.getKey(), entry.getValue());
         }
         final HttpRequest request = builder.build();
 
@@ -278,7 +279,7 @@ public class RosterManagerHelper {
                     HttpResponse.BodyHandlers.ofString());
             LOGGER.debug("Received status code=" + response.statusCode());
             sb.append(response.body());
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error("[existsUser] Error", e);
         }
         return sb.toString().contains("lnkViewUpdateMember");
@@ -302,8 +303,8 @@ public class RosterManagerHelper {
         headers.remove(RosterConstants.VIEW_STATE);
         headers.put(RosterConstants.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/"
                 + "webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-        for (final String key : headers.keySet()) {
-            builder.setHeader(key, headers.get(key));
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.setHeader(entry.getKey(), entry.getValue());
         }
 
         try {
@@ -315,7 +316,7 @@ public class RosterManagerHelper {
             if (m.matches()) {
                 return m.group(1);
             }
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error("[startAddUser] Error", e);
         }
         return null;
@@ -337,8 +338,8 @@ public class RosterManagerHelper {
         headers.remove(RosterConstants.VIEW_STATE);
         headers.put(RosterConstants.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/"
                 + "webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-        for (final String key : headers.keySet()) {
-            builder.setHeader(key, headers.get(key));
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.setHeader(entry.getKey(), entry.getValue());
         }
         final HttpRequest request = builder.build();
 
@@ -348,7 +349,7 @@ public class RosterManagerHelper {
                     HttpResponse.BodyHandlers.ofString());
             LOGGER.info("Received status code=" + response.statusCode());
             sb.append(response.body());
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error("[fetchData] Error", e);
         }
         return sb.toString();
@@ -376,7 +377,7 @@ public class RosterManagerHelper {
             final HttpHeaders responseHeaders = response.headers();
             final String cookieStr = responseHeaders.firstValue("set-cookie").orElse("");
             headers.put("cookie", cookieStr.substring(0, cookieStr.indexOf(";")));
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error("[getHttpHeaders] Error", e);
         }
         headers.put(RosterConstants.EVENT_TARGET, "");
@@ -416,7 +417,8 @@ public class RosterManagerHelper {
         data.add(RosterConstants.USERNAME);
         data.add(RosterConstants.PASSWORD);
         data.add(RosterConstants.BUTTON);
-        for (final String key : headers.keySet()) {
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            final String key = entry.getKey();
             if (data.contains(key)) {
                 if (sb.length() > 0) {
                     sb.append("&");
@@ -430,12 +432,12 @@ public class RosterManagerHelper {
                 }
                 sb.append("=");
                 if (RosterConstants.VIEW_STATE.equals(key) || RosterConstants.EVENT_VALIDATION.equals(key)) {
-                    sb.append(headers.get(key)
+                    sb.append(entry.getValue()
                             .replaceAll("/", "%2F")
                             .replaceAll("=", "%3D")
                             .replaceAll("\\+", "%2B"));
                 } else {
-                    sb.append(headers.get(key));
+                    sb.append(entry.getValue());
                 }
             }
         }
@@ -450,7 +452,8 @@ public class RosterManagerHelper {
         data.add(RosterConstants.VIEW_STATE);
         data.add(RosterConstants.VIEW_STATE_GENERATOR);
         data.add(RosterConstants.EVENT_VALIDATION);
-        for (final String key : headers.keySet()) {
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            final String key = entry.getKey();
             if (data.contains(key)) {
                 if (sb.length() > 0) {
                     sb.append("&");
@@ -458,14 +461,14 @@ public class RosterManagerHelper {
                 sb.append(key);
                 sb.append("=");
                 if (RosterConstants.VIEW_STATE.equals(key) || RosterConstants.EVENT_VALIDATION.equals(key)) {
-                    sb.append(headers.get(key)
+                    sb.append(entry.getValue()
                             .replaceAll("/", "%2F")
                             .replaceAll("=", "%3D")
                             .replaceAll("\\+", "%2B"));
                 } else if (RosterConstants.EVENT_TARGET.equals(key)) {
                     sb.append("ctl00$lnkbtnLogoff");
                 } else {
-                    sb.append(headers.get(key));
+                    sb.append(entry.getValue());
                 }
             }
         }
@@ -601,7 +604,7 @@ public class RosterManagerHelper {
         }
         // Must be in mm/dd/yyyy format
         // Required Field
-        data.put(RosterConstants.EXPIRATION_DATE, MDY_SDF.format(person.getExpiration()));
+        data.put(RosterConstants.EXPIRATION_DATE, mdySDF.format(person.getExpiration()));
         if (person.getOtherInfo() != null) {
             data.put(RosterConstants.OTHER_INFO, person.getOtherInfo());
         } else {
@@ -693,7 +696,8 @@ public class RosterManagerHelper {
     private String addDataFromHeaders(final Map<String, String> headers,
                                       final StringBuilder sb,
                                       final List<String> data) {
-        for (final String key : headers.keySet()) {
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            final String key = entry.getKey();
             if (data.contains(key)) {
                 if (sb.length() > 0) {
                     sb.append("&");
@@ -711,12 +715,12 @@ public class RosterManagerHelper {
                 }
                 sb.append("=");
                 if (RosterConstants.VIEW_STATE.equals(key) || RosterConstants.EVENT_VALIDATION.equals(key)) {
-                    sb.append(headers.get(key)
+                    sb.append(entry.getValue()
                             .replaceAll("/", "%2F")
                             .replaceAll("=", "%3D")
                             .replaceAll("\\+", "%2B"));
                 } else {
-                    sb.append(headers.get(key));
+                    sb.append(entry.getValue());
                 }
             }
         }
@@ -842,7 +846,7 @@ public class RosterManagerHelper {
                 person.setJoined(column.text().trim());
                 break;
             case CommonConstants.TWENTY_ONE:
-                person.setExpiration(SDF.parse(column.text().trim()));
+                person.setExpiration(simpleDateFormat.parse(column.text().trim()));
                 break;
             case CommonConstants.TWENTY_TWO:
                 handleOtherInfo(person, column);

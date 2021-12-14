@@ -32,8 +32,8 @@ import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eaa690.aerie.constant.CommonConstants;
-import org.eaa690.aerie.constant.PropertyKeyConstants;
+import org.eaa690.aerie.config.CommonConstants;
+import org.eaa690.aerie.config.JotFormProperties;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.JotForm;
 import org.eaa690.aerie.model.Member;
@@ -76,21 +76,15 @@ public class JotFormService {
             CacheBuilder.newBuilder().expireAfterWrite(CommonConstants.THIRTY_SIX, TimeUnit.HOURS).build();
 
     /**
-     * PropertyService.
+     * JotForm Properties.
      */
     @Autowired
-    private PropertyService propertyService;
+    private JotFormProperties jotFormProperties;
 
     /**
      * TinyURLService.
      */
     private TinyURLService tinyUrlService;
-
-    /**
-     * RosterService.
-     */
-    //@Autowired
-    //private RosterService rosterService;
 
     /**
      * Sets TinyURLService.
@@ -104,26 +98,15 @@ public class JotFormService {
     }
 
     /**
-     * Sets PropertyService.
+     * Sets JotFormProperties.
      * Note: mostly used for unit test mocks
      *
-     * @param value PropertyService
+     * @param value JotFormProperties
      */
     @Autowired
-    public void setPropertyService(final PropertyService value) {
-        propertyService = value;
+    public void setJotFormProperties(final JotFormProperties value) {
+        jotFormProperties = value;
     }
-
-    /**
-     * Sets RosterService.
-     * Note: mostly used for unit test mocks
-     *
-     * @param value RosterService
-     */
-    //@Autowired
-    //public void setRosterService(final RosterService value) {
-    //    rosterService = value;
-    //}
 
     /**
      * Retrieves JotForm submissions.
@@ -134,8 +117,7 @@ public class JotFormService {
     public void getSubmissions() {
         try {
             final String dateStr = simpleDateFormat.format(new Date());
-            final JotForm client =
-                    new JotForm(propertyService.get(PropertyKeyConstants.JOTFORM_API_KEY_KEY).getValue());
+            final JotForm client = new JotForm(jotFormProperties.getApiKey());
             processNewMemberSubmissions(dateStr, client);
             processRenewingMemberSubmissions(dateStr, client);
         } catch (ResourceNotFoundException rnfe) {
@@ -150,33 +132,26 @@ public class JotFormService {
      * @return URL
      */
     public String buildRenewMembershipUrl(final Member member) {
-        try {
-            final StringBuilder sb = new StringBuilder();
-            // https://form.jotform.com/
-            sb.append(propertyService.get(PropertyKeyConstants.JOTFORM_BASE_URL_KEY).getValue());
-            // 203205658119150
-            sb.append(propertyService.get(PropertyKeyConstants.JOTFORM_MEMBER_RENEWAL_FORM_ID_KEY).getValue());
-            sb.append("?");
-            final List<String> parameters = new ArrayList<>();
-            parameters.add("fullName3[first]=" + handleNull(member.getFirstName()));
-            parameters.add("fullName3[last]=" + handleNull(member.getLastName()));
-            parameters.add("address4[addr_line1]=" + handleNull(member.getAddressLine1()));
-            parameters.add("address4[addr_line2]=" + handleNull(member.getAddressLine2()));
-            parameters.add("address4[city]=" + handleNull(member.getCity()));
-            parameters.add("address4[state]=" + handleNull(State.getDisplayString(member.getState())));
-            parameters.add("address4[postal]=" + handleNull(member.getZipCode()));
-            parameters.add("phoneNumber5=" + handleNull(member.getCellPhone())); // TODO
-            parameters.add("email6=" + handleNull(member.getEmail()));
-            parameters.add("additionalFamily9="); // TODO
-            parameters.add("numberOf="); // TODO
-            parameters.add("eaaNational15=" + handleNull(member.getEaaNumber()));
-            parameters.add("additionalInformation="); // TODO
-            sb.append(StringUtils.join(parameters, "&"));
-            return tinyUrlService.getTinyURL(sb.toString());
-        } catch (ResourceNotFoundException e) {
-            LOGGER.error("Error", e);
-        }
-        return null;
+        final StringBuilder sb = new StringBuilder();
+        sb.append(jotFormProperties.getBaseUrl());
+        sb.append(jotFormProperties.getMemberRenewalFormId());
+        sb.append("?");
+        final List<String> parameters = new ArrayList<>();
+        parameters.add("fullName3[first]=" + handleNull(member.getFirstName()));
+        parameters.add("fullName3[last]=" + handleNull(member.getLastName()));
+        parameters.add("address4[addr_line1]=" + handleNull(member.getAddressLine1()));
+        parameters.add("address4[addr_line2]=" + handleNull(member.getAddressLine2()));
+        parameters.add("address4[city]=" + handleNull(member.getCity()));
+        parameters.add("address4[state]=" + handleNull(State.getDisplayString(member.getState())));
+        parameters.add("address4[postal]=" + handleNull(member.getZipCode()));
+        parameters.add("phoneNumber5=" + handleNull(member.getCellPhone())); // TODO
+        parameters.add("email6=" + handleNull(member.getEmail()));
+        parameters.add("additionalFamily9="); // TODO
+        parameters.add("numberOf="); // TODO
+        parameters.add("eaaNational15=" + handleNull(member.getEaaNumber()));
+        parameters.add("additionalInformation="); // TODO
+        sb.append(StringUtils.join(parameters, "&"));
+        return tinyUrlService.getTinyURL(sb.toString());
     }
 
     /**
@@ -202,8 +177,7 @@ public class JotFormService {
     private void processRenewingMemberSubmissions(final String dateStr, final JotForm client)
             throws ResourceNotFoundException {
         final HashMap<String, String> submissionFilter = new HashMap<>();
-        submissionFilter.put("id:gt",
-                propertyService.get(PropertyKeyConstants.JOTFORM_MEMBER_RENEWAL_FORM_ID_KEY).getValue());
+        submissionFilter.put("id:gt", jotFormProperties.getMemberRenewalFormId());
         submissionFilter.put("created_at:gt", dateStr);
         LOGGER.info("Querying for member renewal form submissions after " + dateStr);
         final Map<String, Member> renewMembersMap =
@@ -215,7 +189,6 @@ public class JotFormService {
                 final String key = entry.getKey();
                 if (SUBMISSIONS_CACHE.getIfPresent(key) == null) {
                     SUBMISSIONS_CACHE.put(key, key);
-                    //rosterService.saveRenewingMember(entry.getValue());
                 }
             }
         }
@@ -231,8 +204,7 @@ public class JotFormService {
     private void processNewMemberSubmissions(final String dateStr, final JotForm client)
             throws ResourceNotFoundException {
         final HashMap<String, String> submissionFilter = new HashMap<>();
-        submissionFilter.put("id:gt",
-                propertyService.get(PropertyKeyConstants.JOTFORM_NEW_MEMBER_FORM_ID_KEY).getValue());
+        submissionFilter.put("id:gt", jotFormProperties.getNewMemberFormId());
         submissionFilter.put("created_at:gt", dateStr);
         LOGGER.info("Querying for new member form submissions after " + dateStr);
         final Map<String, Member> newMembersMap =

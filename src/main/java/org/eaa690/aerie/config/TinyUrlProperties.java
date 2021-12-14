@@ -14,7 +14,28 @@
  *  limitations under the License.
  */
 
+package org.eaa690.aerie.config;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 /**
- * Constants classes.
+ * Tiny URL Service Properties.
  */
-package org.eaa690.aerie.constant;
+@Getter
+@Setter
+@ConfigurationProperties("aerie.tinyurl")
+public class TinyUrlProperties {
+
+    /**
+     * api-key.
+     */
+    private String apiKey;
+
+    /**
+     * create-url.
+     */
+    private String createUrl;
+
+}

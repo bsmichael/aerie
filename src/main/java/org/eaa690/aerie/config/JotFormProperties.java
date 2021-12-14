@@ -14,49 +14,37 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
+package org.eaa690.aerie.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.eaa690.aerie.constant.CommonConstants;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.Date;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Property.
+ * JotForm Service Properties.
  */
-@Entity
-@Table(name = "PROPERTY")
 @Getter
 @Setter
-public class Property extends BaseEntity {
+@ConfigurationProperties("aerie.jotform")
+public class JotFormProperties {
 
     /**
-     * Default SerialVersionUID.
+     * api-key.
      */
-    private static final long serialVersionUID = 1L;
+    private String apiKey;
 
     /**
-     * Key.
+     * new-member-form-id.
      */
-    @Column(name = "k", length = CommonConstants.ONE_HUNDRED)
-    private String key;
+    private String newMemberFormId;
 
     /**
-     * Value.
+     * member-renewal-form-id.
      */
-    @Column(name = "v", length = CommonConstants.ONE_THOUSAND)
-    private String value;
+    private String memberRenewalFormId;
 
     /**
-     * Initializes an instance of <code>Address</code> with the default data.
+     * base-url.
      */
-    public Property() {
-        super.setCreatedAt(new Date());
-        super.setUpdatedAt(new Date());
-    }
-
+    private String baseUrl;
 }

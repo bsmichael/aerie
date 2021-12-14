@@ -22,7 +22,7 @@ import com.github.alexanderwe.bananaj.model.list.MailChimpList;
 import com.github.alexanderwe.bananaj.model.list.member.EmailType;
 import com.github.alexanderwe.bananaj.model.list.member.Member;
 import com.github.alexanderwe.bananaj.model.list.member.MemberStatus;
-import org.eaa690.aerie.constant.PropertyKeyConstants;
+import org.eaa690.aerie.config.MailchimpProperties;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public class MailChimpService {
      * PropertyService.
      */
     @Autowired
-    private PropertyService propertyService;
+    private MailchimpProperties mailchimpProperties;
 
     /**
      * MailChimp Connection.
@@ -58,14 +58,14 @@ public class MailChimpService {
     private MailChimpConnection mailChimpConnection;
 
     /**
-     * Sets PropertyService.
+     * Sets MailchimpProperties.
      * Note: mostly used for unit test mocks
      *
-     * @param value PropertyService
+     * @param value MailchimpProperties
      */
     @Autowired
-    public void setPropertyService(final PropertyService value) {
-        propertyService = value;
+    public void setMailchimpProperties(final MailchimpProperties value) {
+        mailchimpProperties = value;
     }
 
     /**
@@ -89,7 +89,7 @@ public class MailChimpService {
      */
     public void addOrUpdateMember(final String firstName, final String lastName, final String emailAddress)
             throws ResourceNotFoundException {
-        final String listId = propertyService.get(PropertyKeyConstants.MAILCHIMP_MEMBERS_LIST_ID_KEY).getValue();
+        final String listId = mailchimpProperties.getMembersListId();
         addOrUpdateMember(listId, firstName, lastName, emailAddress);
         final List<Member> members = getMemberList(listId);
         for (Member member : members) {
@@ -101,8 +101,7 @@ public class MailChimpService {
             if (emailAddress.equalsIgnoreCase(email)
                     && firstName.equalsIgnoreCase(first)
                     && lastName.equalsIgnoreCase(last)) {
-                deleteMember(propertyService
-                        .get(PropertyKeyConstants.MAILCHIMP_NON_MEMBERS_LIST_ID_KEY).getValue(), memberId);
+                deleteMember(mailchimpProperties.getNonMemberListId(), memberId);
             }
         }
     }
@@ -117,7 +116,7 @@ public class MailChimpService {
      */
     public void addOrUpdateNonMember(final String firstName, final String lastName, final String emailAddress)
             throws ResourceNotFoundException {
-        final String listId = propertyService.get(PropertyKeyConstants.MAILCHIMP_NON_MEMBERS_LIST_ID_KEY).getValue();
+        final String listId = mailchimpProperties.getNonMemberListId();
         addOrUpdateMember(listId, firstName, lastName, emailAddress);
         final List<Member> members = getMemberList(listId);
         for (Member member : members) {
@@ -129,8 +128,7 @@ public class MailChimpService {
             if (emailAddress.equalsIgnoreCase(email)
                     && firstName.equalsIgnoreCase(first)
                     && lastName.equalsIgnoreCase(last)) {
-                deleteMember(propertyService
-                        .get(PropertyKeyConstants.MAILCHIMP_MEMBERS_LIST_ID_KEY).getValue(), memberId);
+                deleteMember(mailchimpProperties.getMembersListId(), memberId);
             }
         }
     }

@@ -17,8 +17,7 @@
 package org.eaa690.aerie.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eaa690.aerie.constant.PropertyKeyConstants;
-import org.eaa690.aerie.exception.ResourceNotFoundException;
+import org.eaa690.aerie.config.TinyUrlProperties;
 import org.eaa690.aerie.model.TinyURLResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,13 +42,13 @@ public class TinyURLService {
     /**
      * JSON Object Serializer/Deserializer.
      */
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     /**
      * PropertyService.
      */
     @Autowired
-    private PropertyService propertyService;
+    private TinyUrlProperties tinyUrlProperties;
 
     /**
      * HttpClient.
@@ -58,14 +57,14 @@ public class TinyURLService {
     private HttpClient httpClient;
 
     /**
-     * Sets PropertyService.
+     * Sets TinyUrlProperties.
      * Note: mostly used for unit test mocks
      *
-     * @param value PropertyService
+     * @param value TinyUrlProperties
      */
     @Autowired
-    public void setPropertyService(final PropertyService value) {
-        propertyService = value;
+    public void setTinyUrlProperties(final TinyUrlProperties value) {
+        tinyUrlProperties = value;
     }
 
     /**
@@ -88,12 +87,10 @@ public class TinyURLService {
     public String getTinyURL(final String originalValue) {
         try {
             final HttpRequest.Builder builder = HttpRequest.newBuilder()
-                    // "https://api.tinyurl.com/create"
-                    .uri(URI.create(propertyService.get(PropertyKeyConstants.TINY_URL_CREATE_API_KEY).getValue()))
+                    .uri(URI.create(tinyUrlProperties.getCreateUrl()))
                     .setHeader("accept", "application/json")
                     .setHeader("Content-Type", "application/json")
-                    .setHeader("Authorization", "Bearer "
-                            + propertyService.get(PropertyKeyConstants.TINY_URL_API_KEY).getValue())
+                    .setHeader("Authorization", "Bearer " + tinyUrlProperties.getApiKey())
                     .POST(HttpRequest.BodyPublishers.ofString("{\"url\":\""
                             + originalValue
                             + "\",\"domain\":\"tiny.one\"}"));
@@ -101,7 +98,7 @@ public class TinyURLService {
                     httpClient.send(builder.build(), HttpResponse.BodyHandlers.ofString());
             final TinyURLResponse tuResponse = mapper.readValue(response.body(), TinyURLResponse.class);
             return tuResponse.getData().getTinyUrl();
-        } catch (IOException | InterruptedException | ResourceNotFoundException e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error("[Get Tiny URL] Error: " + e.getMessage(), e);
         }
         return null;

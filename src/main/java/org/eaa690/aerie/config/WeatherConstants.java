@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.constant;
+package org.eaa690.aerie.config;
 
 /**
  * Weather Constants.

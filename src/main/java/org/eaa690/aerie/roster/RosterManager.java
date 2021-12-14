@@ -19,16 +19,14 @@ package org.eaa690.aerie.roster;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eaa690.aerie.model.Member;
+import org.eaa690.aerie.ssl.FakeX509TrustManager;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.net.http.HttpClient;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
 
@@ -161,24 +159,7 @@ public class RosterManager {
         SSLContext sslContext = null;
         try {
             TrustManager[] trustManagerArray = new TrustManager[1];
-            trustManagerArray[0] = new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(final X509Certificate[] chain,
-                                               final String authType) throws CertificateException {
-                    // Do nothing
-                }
-
-                @Override
-                public void checkServerTrusted(final X509Certificate[] chain,
-                                               final String authType) throws CertificateException {
-                    // Do nothing
-                }
-
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            };
+            trustManagerArray[0] = new FakeX509TrustManager();
             sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, trustManagerArray, new SecureRandom());
         } catch (NoSuchAlgorithmException | KeyManagementException e) {

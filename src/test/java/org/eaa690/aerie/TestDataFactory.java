@@ -17,9 +17,8 @@
 package org.eaa690.aerie;
 
 import com.github.javafaker.Faker;
-import org.eaa690.aerie.constant.CommonConstants;
+import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.model.Member;
-import org.eaa690.aerie.model.Property;
 import org.eaa690.aerie.model.WeatherProduct;
 import org.eaa690.aerie.model.roster.Country;
 import org.eaa690.aerie.model.roster.Gender;
@@ -43,21 +42,6 @@ public class TestDataFactory {
      */
     private TestDataFactory() {
         // private constructor
-    }
-
-    /**
-     * Builds a Property for testing.
-     *
-     * @param key Key
-     * @param value Value
-     * @return Property
-     */
-    public static Property getProperty(final String key, final String value) {
-        final Property property = new Property();
-        property.setId(1L);
-        property.setKey(key);
-        property.setValue(value);
-        return property;
     }
 
     /**

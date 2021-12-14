@@ -26,10 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eaa690.aerie.constant.CommonConstants;
-import org.eaa690.aerie.constant.PropertyKeyConstants;
+import org.eaa690.aerie.config.MembershipProperties;
+import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.MemberRepository;
@@ -48,15 +46,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class RosterService {
 
     /**
-     * Logger.
-     */
-    private static final Log LOGGER = LogFactory.getLog(RosterService.class);
-
-    /**
-     * PropertyService.
+     * MembershipProperties.
      */
     @Autowired
-    private PropertyService propertyService;
+    private MembershipProperties membershipProperties;
+
+    /**
+     * Sets MembershipProperties.
+     * Note: mostly used for unit test mocks
+     *
+     * @param value MembershipProperties
+     */
+    @Autowired
+    public void setMembershipProperties(final MembershipProperties value) {
+        membershipProperties = value;
+    }
 
     /**
      * MemberRepository.
@@ -83,28 +87,6 @@ public class RosterService {
     private EmailService emailService;
 
     /**
-     * SlackService.
-     */
-    @Autowired
-    private SlackService slackService;
-
-    /**
-     * SMSService.
-     */
-    @Autowired
-    private SMSService smsService;
-
-    /**
-     * Sets PropertyService. Note: mostly used for unit test mocks
-     *
-     * @param value PropertyService
-     */
-    @Autowired
-    public void setPropertyService(final PropertyService value) {
-        propertyService = value;
-    }
-
-    /**
      * Sets JotFormService. Note: mostly used for unit test mocks
      *
      * @param jfService JotFormService
@@ -122,26 +104,6 @@ public class RosterService {
     @Autowired
     public void setEmailService(final EmailService eService) {
         emailService = eService;
-    }
-
-    /**
-     * Sets SlackService. Note: mostly used for unit test mocks
-     *
-     * @param sService SlackService
-     */
-    @Autowired
-    public void setSlackService(final SlackService sService) {
-        slackService = sService;
-    }
-
-    /**
-     * Sets SMSService. Note: mostly used for unit test mocks
-     *
-     * @param sService SMSService
-     */
-    @Autowired
-    public void setSMSService(final SMSService sService) {
-        smsService = sService;
     }
 
     /**
@@ -200,38 +162,16 @@ public class RosterService {
                         .filter(member -> member.getMemberType() == MemberType.Regular
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)
-                        .filter(m -> !"Cliff".equalsIgnoreCase(m.getFirstName()))
                         .forEach(m -> {
                             try {
                                 if (m.getEmail() != null && !"".equals(m.getEmail())) {
                                     emailService.sendEmailMessage(m.getEmail(),
-                                            propertyService.get(
-                                                    PropertyKeyConstants.RENEW_MEMBERSHIP_SUBJECT_KEY).getValue(),
-                                            personalizeBody(m, propertyService.get(
-                                                    PropertyKeyConstants.RENEW_MEMBERSHIP_BODY_KEY).getValue()),
-                                            propertyService.get(
-                                                    PropertyKeyConstants.MEMBERSHIP_EMAIL_USERNAME_KEY).getValue(),
-                                            propertyService.get(
-                                                    PropertyKeyConstants.MEMBERSHIP_EMAIL_PASSWORD_KEY).getValue(),
-                                            propertyService.get(PropertyKeyConstants.EMAIL_LETTERHEAD_KEY).getValue());
+                                            membershipProperties.getSubject(),
+                                            personalizeBody(m, membershipProperties.getBody()),
+                                            membershipProperties.getUsername(),
+                                            membershipProperties.getPassword(),
+                                            membershipProperties.getLetterhead());
                                 }
-                                if (m.getSlack() != null && !"".equals(m.getSlack())) {
-                                    slackService.sendSlackMessage(m.getSlack(), personalizeBody(m,
-                                            propertyService.get(PropertyKeyConstants.RENEW_MEMBERSHIP_SHORT_BODY_KEY)
-                                                    .getValue()));
-                                }
-//                                if (m.isSmsEnabled()) {
-//                                    smsService.sendSMSMessage(m.getCellPhone(),
-//                                            m.getCellPhoneProvider(),
-//                                            propertyService.get(PropertyKeyConstants.RENEW_MEMBERSHIP_SUBJECT_KEY)
-//                                                    .getValue(),
-//                                            personalizeBody(m, propertyService.get(
-//                                                    PropertyKeyConstants.RENEW_MEMBERSHIP_SHORT_BODY_KEY).getValue()),
-//                                            propertyService.get(PropertyKeyConstants.MEMBERSHIP_EMAIL_USERNAME_KEY)
-//                                                    .getValue(),
-//                                            propertyService.get(PropertyKeyConstants.MEMBERSHIP_EMAIL_PASSWORD_KEY)
-//                                                    .getValue());
-//                                }
                             } catch (ResourceNotFoundException rnfe) {
                                 // Do something
                             }
@@ -288,28 +228,6 @@ public class RosterService {
         final Member member = getMemberByRosterID(id);
         member.setRfid(rfid);
         memberRepository.save(member);
-    }
-
-    /**
-     * Saves member information to roster.
-     *
-     * @param member Member to be saved
-     * @return saved member
-     */
-    public Member saveNewMember(final Member member) {
-        LOGGER.info("Saving new member: " + member);
-        rosterManager.savePerson(member);
-        return member;
-    }
-
-    /**
-     * Saves member information to roster.
-     *
-     * @param member Member to be saved
-     */
-    public void saveRenewingMember(final Member member) {
-        LOGGER.info("Saving renewing member: " + member);
-        rosterManager.savePerson(member);
     }
 
     /**

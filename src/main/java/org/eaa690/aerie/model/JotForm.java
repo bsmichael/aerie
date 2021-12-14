@@ -21,7 +21,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.eaa690.aerie.constant.CommonConstants;
+import org.eaa690.aerie.config.CommonConstants;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

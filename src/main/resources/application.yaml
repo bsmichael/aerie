@@ -14,13 +14,38 @@
 #  limitations under the License.
 #
 
+aerie:
+  weather:
+    atlanta-icao-codes: KCNI,KGVL,KVPC,KJCA,KRYY,KLZU,KWDR,KPUJ,KMGE,KPDK,KFTY,KCTJ,KCVC,KATL,KCCO,KFFC,KHMP,KLGC,KOPN
+  roster:
+    username: <<username>>
+    password: <<password>>
+  jotform:
+    api-key: <<api-key>>
+    new-member-form-id: <<form-id>>
+    member-renewal-form-id: <<form-id>>
+    base-url: https://form.jotform.com/
+  mailchimp:
+    api-key: <<api-key>>
+    members-list-id: <<list-id>>
+    non-members-list-id: <<list-id>>
+  tinyurl:
+    api-key: <<api-key>>
+    create-url: https://api.tinyurl.com/create
+  membership:
+    username: <<username>>
+    password: <<password>>
+    letterhead: <<path>>eaa690_letterhead.png
+    subject: EAA 690 Membership Renewal
+    body: <p>Hello {{firstName}} {{lastName}}</p><p>The time has come to renew your membership.  Your membership is set to expire on {{expirationDate}}.  Be sure to go to <a href="{{url}}">https://eaa690.org</a> soon to make sure you remain in good standing.</p><p>A few reasons to keep your membership current:</p><ul><li>Access to the chapter hangar at LZU</li><li>Receive our monthly newsletter</li><li>Help us educate, inspire, and share aviation with the local community</li></ul>
+
 spring:
+  h2:
+    console:
+      enabled: true
   datasource:
-    username: aerie
-    password: Sw33tDr34ms
-    url: jdbc:mysql://localhost:3306/aerie?serverTimezone=America/New_York
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL57Dialect
-    show-sql: false
-    hibernate:
-      ddl-auto: update
+    url: jdbc:h2:mem:aerie
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default

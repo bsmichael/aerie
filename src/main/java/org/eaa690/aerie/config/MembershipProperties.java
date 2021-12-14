@@ -14,23 +14,43 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
+package org.eaa690.aerie.config;
 
-import java.util.Optional;
-
-import org.springframework.data.repository.Repository;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * PropertyRepository.
+ * Membership Properties.
  */
-public interface PropertyRepository extends Repository<Property, Long> {
+@Getter
+@Setter
+@ConfigurationProperties("aerie.membership")
+public class MembershipProperties {
 
     /**
-     * Gets a property.
-     *
-     * @param key Key
-     * @return Property
+     * username.
      */
-    Optional<Property> findByKey(String key);
+    private String username;
+
+    /**
+     * password.
+     */
+    private String password;
+
+    /**
+     * letterhead.
+     */
+    private String letterhead;
+
+    /**
+     * subject.
+     */
+    private String subject;
+
+    /**
+     * body.
+     */
+    private String body;
 
 }
