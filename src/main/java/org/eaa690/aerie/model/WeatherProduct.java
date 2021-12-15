@@ -18,7 +18,7 @@ package org.eaa690.aerie.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.eaa690.aerie.constant.CommonConstants;
+import org.eaa690.aerie.config.CommonConstants;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

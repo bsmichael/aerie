@@ -14,29 +14,22 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.exception;
+package org.eaa690.aerie.config;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * InvalidPayloadException.
+ * Weather Service Properties.
  */
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidPayloadException extends Exception {
+@Getter
+@Setter
+@ConfigurationProperties("aerie.weather")
+public class WeatherProperties {
 
     /**
-     * Default SerialVersionUID.
+     * atlanta-icao-codes.
      */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Initializes an instance of <code>InvalidPayloadException</code> with the default data.
-     *
-     * @param message message
-     */
-    public InvalidPayloadException(final String message) {
-        super(message);
-    }
-
+    private String atlantaIcaoCodes;
 }

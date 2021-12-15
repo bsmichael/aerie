@@ -14,29 +14,12 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.exception;
+package org.eaa690.aerie;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import io.cucumber.spring.CucumberContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * InvalidPayloadException.
- */
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidPayloadException extends Exception {
-
-    /**
-     * Default SerialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Initializes an instance of <code>InvalidPayloadException</code> with the default data.
-     *
-     * @param message message
-     */
-    public InvalidPayloadException(final String message) {
-        super(message);
-    }
-
+@CucumberContextConfiguration
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class Test {
 }

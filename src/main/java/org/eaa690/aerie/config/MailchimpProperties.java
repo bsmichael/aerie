@@ -14,29 +14,33 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.exception;
+package org.eaa690.aerie.config;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * InvalidPayloadException.
+ * Mailchimp Service Properties.
  */
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidPayloadException extends Exception {
+@Getter
+@Setter
+@ConfigurationProperties("aerie.mailchimp")
+public class MailchimpProperties {
 
     /**
-     * Default SerialVersionUID.
+     * api-key.
      */
-    private static final long serialVersionUID = 1L;
+    private String apiKey;
 
     /**
-     * Initializes an instance of <code>InvalidPayloadException</code> with the default data.
-     *
-     * @param message message
+     * members-list-id.
      */
-    public InvalidPayloadException(final String message) {
-        super(message);
-    }
+    private String membersListId;
+
+    /**
+     * non-members-list-id.
+     */
+    private String nonMemberListId;
 
 }

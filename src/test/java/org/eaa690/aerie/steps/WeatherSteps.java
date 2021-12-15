@@ -52,6 +52,15 @@ public class WeatherSteps extends BaseSteps {
                 .then());
     }
 
+    @When("^I request the weather data to be updated$")
+    public void iRequestWeatherUpdated() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(WEATHER + "update")
+                .then());
+    }
+
     @When("^I request the (.*) METAR$")
     public void iRequestTheMETAR(final String icao) {
         testContext.setValidatableResponse(requestSpecification()

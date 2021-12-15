@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
+package org.eaa690.aerie.model.roster;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +24,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * OtherInfo.
+ */
 @Getter
 @Setter
 public class OtherInfo {

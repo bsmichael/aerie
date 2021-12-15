@@ -14,29 +14,32 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package org.eaa690.aerie.model.roster;
 
 /**
- * InvalidPayloadException.
+ * Status.
  */
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidPayloadException extends Exception {
-
+public enum Status {
     /**
-     * Default SerialVersionUID.
+     * Active.
      */
-    private static final long serialVersionUID = 1L;
+    ACTIVE,
+    /**
+     * Inactive.
+     */
+    INACTIVE;
 
     /**
-     * Initializes an instance of <code>InvalidPayloadException</code> with the default data.
+     * Display string.
      *
-     * @param message message
+     * @param status Status
+     * @return display string
      */
-    public InvalidPayloadException(final String message) {
-        super(message);
+    public static String getDisplayString(final Status status) {
+        if (ACTIVE.equals(status)) {
+            return "Active";
+        } else {
+            return "Inactive";
+        }
     }
-
 }

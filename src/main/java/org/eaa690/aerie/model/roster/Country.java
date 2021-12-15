@@ -14,39 +14,35 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
-
-import org.springframework.data.repository.Repository;
-
-import java.util.List;
-import java.util.Optional;
+package org.eaa690.aerie.model.roster;
 
 /**
- * QueuedMessageRepository.
+ * Country.
  */
-public interface QueuedMessageRepository extends Repository<QueuedMessage, Long> {
+public enum Country {
 
     /**
-     * Gets all QueuedMessage.
-     *
-     * @return all QueuedMessage
+     * United States of America.
      */
-    Optional<List<QueuedMessage>> findAll();
+    USA;
 
     /**
-     * Saves a QueuedMessage.
+     * Converts to displayable string.
      *
-     * @param queuedMessage QueuedMessage
-     * @return QueuedMessage
+     * @param country Country
+     * @return displayable string
      */
-    QueuedMessage save(QueuedMessage queuedMessage);
+    public static String toDisplayString(final Country country) {
+        return "USA";
+    }
 
     /**
-     * Saves a QueuedMessage.
+     * Converts from displayable string.
      *
-     * @param queuedMessage QueuedMessage
-     * @return QueuedMessage
+     * @param displayString displayable string
+     * @return Country
      */
-    QueuedMessage delete(QueuedMessage queuedMessage);
-
+    public static Country fromDisplayString(final String displayString) {
+        return USA;
+    }
 }

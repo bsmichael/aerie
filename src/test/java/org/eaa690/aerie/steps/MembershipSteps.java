@@ -145,6 +145,51 @@ public class MembershipSteps extends BaseSteps {
                 .then());
     }
 
+    @When("^I request an email be sent to new member (.*)$")
+    public void iRequestEmailToNewMember(final String rosterId) {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + rosterId + "/new-membership")
+                .then());
+    }
+
+    @When("^I request a message be sent to member (.*) to renew their membership$")
+    public void iRequestAMessageToRenewMember(final String rosterId) {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + "membership/renew/" + rosterId)
+                .then());
+    }
+
+    @When("^I request member (.*) be added to the MailChimp member list$")
+    public void iRequestMemberAddedToMailChimpMemberList(final String rosterId) {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + "mailchimp/" + rosterId + "/add-member")
+                .then());
+    }
+
+    @When("^I request non-member (.*) be added to the MailChimp non-member list$")
+    public void iRequestNonMemberAddedToMailChimpNonMemberList(final String rosterId) {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + "mailchimp/" + rosterId + "/add-non-member")
+                .then());
+    }
+
+    @When("^I request membership renewal messages be sent$")
+    public void iRequestMembershipRenewalMessageBeSent() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + "roster/process-membership-renewals")
+                .then());
+    }
+
     @When("^I (.*)subscribe (.*) receiving (.*) messages$")
     public void iChangeMySMSSubscriptionStatus(final String action,
                                                final String ignored,
@@ -155,6 +200,15 @@ public class MembershipSteps extends BaseSteps {
             // Do resubscribe action
         }
         throw new PendingException();
+    }
+
+    @When("^Aerie checks for JotForm submissions$")
+    public void aerieChecksForJotFormSubmissions() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + "jotform")
+                .then());
     }
 
     @Then("^I should have a record in the roster management system$")

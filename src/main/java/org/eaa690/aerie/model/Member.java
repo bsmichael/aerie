@@ -23,15 +23,15 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-import io.github.bsmichael.rostermanagement.model.CellPhoneProvider;
-import io.github.bsmichael.rostermanagement.model.Country;
-import io.github.bsmichael.rostermanagement.model.Gender;
-import io.github.bsmichael.rostermanagement.model.MemberType;
-import io.github.bsmichael.rostermanagement.model.State;
-import io.github.bsmichael.rostermanagement.model.Status;
-import io.github.bsmichael.rostermanagement.model.WebAdminAccess;
 import lombok.Getter;
 import lombok.Setter;
+import org.eaa690.aerie.model.roster.CellPhoneProvider;
+import org.eaa690.aerie.model.roster.Country;
+import org.eaa690.aerie.model.roster.Gender;
+import org.eaa690.aerie.model.roster.MemberType;
+import org.eaa690.aerie.model.roster.State;
+import org.eaa690.aerie.model.roster.Status;
+import org.eaa690.aerie.model.roster.WebAdminAccess;
 
 /**
  * Member.

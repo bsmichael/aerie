@@ -15,6 +15,6 @@
  */
 
 /**
- * Constants classes.
+ * Roster model classes.
  */
-package org.eaa690.aerie.constant;
+package org.eaa690.aerie.model.roster;

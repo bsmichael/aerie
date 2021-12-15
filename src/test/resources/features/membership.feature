@@ -2,6 +2,54 @@
 Feature: membership
   Membership features
 
+  @email @newmember @disabled
+  Scenario: Send new membership email
+    Given I am an unauthenticated user
+    When I request an email be sent to new member 42648
+    Then The request should be successful
+
+  @email @renewmember @disabled
+  Scenario: Send renew membership email
+    Given I am an unauthenticated user
+    When I request a message be sent to member 42648 to renew their membership
+    Then The request should be successful
+
+  @mailchimp @member @disabled
+  Scenario: Add a new member to MailChimp with an invalid rosterId
+    Given I am an unauthenticated user
+    When I request member 42648 be added to the MailChimp member list
+    Then The request should be successful
+
+  @mailchimp @nonmember @disabled
+  Scenario: Add a non member to MailChimp with an invalid rosterId
+    Given I am an unauthenticated user
+    When I request non-member 42648 be added to the MailChimp non-member list
+    Then The request should be successful
+
+  @email @newmember @invaliddata @disabled
+  Scenario: Send new membership email to an invalid member
+    Given I am an unauthenticated user
+    When I request an email be sent to new member 0
+    Then A not found exception should be thrown
+
+  @mailchimp @member @invaliddata @disabled
+  Scenario: Add a new member to MailChimp with an invalid rosterId
+    Given I am an unauthenticated user
+    When I request member 0 be added to the MailChimp member list
+    Then A not found exception should be thrown
+
+  @mailchimp @nonmember @invaliddata @disabled
+  Scenario: Add a non member to MailChimp with an invalid rosterId
+    Given I am an unauthenticated user
+    When I request non-member 0 be added to the MailChimp non-member list
+    Then A not found exception should be thrown
+
+  @membership @auto @renewmember @disabled
+  Scenario: Force run of automated send membership renewal messages
+    Given I am an unauthenticated user
+    When I request membership renewal messages be sent
+    Then The request should be successful
+
   @newmember @disabled
   Scenario: New chapter member providing only a cell phone number as a contact method.
     Given I am a new chapter member
@@ -83,7 +131,7 @@ Feature: membership
     And I should not receive a new member SMS/Text message
     And I should not receive a new member Slack message
 
-  @status
+  @status @disabled
   Scenario: Chapter member checks their membership status
     Given I am a chapter member
     When I check my membership status
@@ -95,26 +143,7 @@ Feature: membership
     When I check my membership status
     Then A bad request exception should be thrown
 
-  @unsubscribe @email @disabled
-  Scenario: Email recipient wishes to un-subscribe from future emails
-    Given I am a chapter member
-    When I unsubscribe from receiving email messages
+  @jotform @update
+  Scenario: Aerie checks for any new JotForm submissions
+    When Aerie checks for JotForm submissions
     Then The request should be successful
-    And I should see a message stating that I have been unsubscribed
-    And I have an emailEnabled status of false
-
-  @unsubscribe @sms @disabled
-  Scenario: SMS/Text message recipient wishes to un-subscribe from future SMS/Text messages
-    Given I am a chapter member
-    When I unsubscribe from receiving sms messages
-    Then The request should be successful
-    And I should see a message stating that I have been unsubscribed
-    And I have an smsEnabled status of false
-
-  @unsubscribe @slack @disabled
-  Scenario: Slack message recipient wishes to un-subscribe from future Slack messages
-    Given I am a chapter member
-    When I unsubscribe from receiving slack messages
-    Then The request should be successful
-    And I should see a message stating that I have been unsubscribed
-    And I have an slackEnabled status of false

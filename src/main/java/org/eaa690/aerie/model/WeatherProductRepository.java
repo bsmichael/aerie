@@ -20,6 +20,9 @@ import org.springframework.data.repository.Repository;
 
 import java.util.Optional;
 
+/**
+ * WeatherProductRepository.
+ */
 public interface WeatherProductRepository extends Repository<WeatherProduct, Long> {
     /**
      * Gets a weather product.

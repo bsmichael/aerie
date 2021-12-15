@@ -14,23 +14,28 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
+package org.eaa690.aerie.config;
 
-import java.util.Optional;
-
-import org.springframework.data.repository.Repository;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * PropertyRepository.
+ * Tiny URL Service Properties.
  */
-public interface PropertyRepository extends Repository<Property, Long> {
+@Getter
+@Setter
+@ConfigurationProperties("aerie.tinyurl")
+public class TinyUrlProperties {
 
     /**
-     * Gets a property.
-     *
-     * @param key Key
-     * @return Property
+     * api-key.
      */
-    Optional<Property> findByKey(String key);
+    private String apiKey;
+
+    /**
+     * create-url.
+     */
+    private String createUrl;
 
 }

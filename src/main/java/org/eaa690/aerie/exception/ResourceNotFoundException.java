@@ -46,13 +46,4 @@ public class ResourceNotFoundException extends Exception {
         super(message);
     }
 
-    /**
-     * Initializes an instance of <code>ResourceNotFoundException</code> with the default data.
-     *
-     * @param message message
-     * @param cause cause
-     */
-    public ResourceNotFoundException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
 }

@@ -22,6 +22,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+/**
+ * Aerie.
+ */
 @SpringBootApplication
 @EnableScheduling
 @OpenAPIDefinition(info = @Info(title = "Aerie", version = "0.1.0", description = "Various services for EAA 690"))

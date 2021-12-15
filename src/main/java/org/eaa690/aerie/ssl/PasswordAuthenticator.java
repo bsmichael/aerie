@@ -14,53 +14,43 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
+package org.eaa690.aerie.ssl;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
 
 /**
- * QueuedMessage.
+ * Password Authenticator.
  */
-@Entity
-@Table(name = "QUEUED_MESSAGE")
-@Getter
-@Setter
-@NoArgsConstructor
-public class QueuedMessage extends BaseEntity {
+public class PasswordAuthenticator extends Authenticator {
 
     /**
-     * MessageType.
+     * User.
      */
-    private MessageType messageType;
+    private final String user;
 
     /**
-     * Recipient Address.
+     * Password.
      */
-    private String recipientAddress;
+    private final String password;
 
     /**
-     * Email template ID.
+     * Constructor.
+     *
+     * @param u user
+     * @param p password
      */
-    private String templateIdKey;
+    public PasswordAuthenticator(final String u, final String p) {
+        this.user = u;
+        this.password = p;
+    }
 
     /**
-     * Email Subject.
+     * Get Password Authentication.
+     *
+     * @return PasswordAuthentication
      */
-    private String subjectKey;
-
-    /**
-     * Member ID.
-     */
-    private Long memberId;
-
-    /**
-     * Body.
-     */
-    private String body;
-
+    public PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(user, password);
+    }
 }

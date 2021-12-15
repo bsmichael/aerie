@@ -14,29 +14,7 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 /**
- * InvalidPayloadException.
+ * EAA Roster Management Site Manager.
  */
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidPayloadException extends Exception {
-
-    /**
-     * Default SerialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Initializes an instance of <code>InvalidPayloadException</code> with the default data.
-     *
-     * @param message message
-     */
-    public InvalidPayloadException(final String message) {
-        super(message);
-    }
-
-}
+package org.eaa690.aerie.roster;
