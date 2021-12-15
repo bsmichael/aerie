@@ -473,7 +473,7 @@
 				<version>4.4.1</version>
 				<configuration>
 					<!--includesTestSourceRoots>false</includesTestSourceRoots-->
-					<targetPercentage>28%</targetPercentage>
+					<targetPercentage>63%</targetPercentage>
 					<generatePdf>true</generatePdf>
 					<generateHtml>true</generateHtml>
 					<!-- Verify that we can specify the JDK version for Clover's instrumentation -->

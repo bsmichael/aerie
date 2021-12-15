@@ -32,13 +32,6 @@ public class InvalidPayloadException extends Exception {
 
     /**
      * Initializes an instance of <code>InvalidPayloadException</code> with the default data.
-     */
-    public InvalidPayloadException() {
-        super();
-    }
-
-    /**
-     * Initializes an instance of <code>InvalidPayloadException</code> with the default data.
      *
      * @param message message
      */
@@ -46,13 +39,4 @@ public class InvalidPayloadException extends Exception {
         super(message);
     }
 
-    /**
-     * Initializes an instance of <code>InvalidPayloadException</code> with the default data.
-     *
-     * @param message message
-     * @param cause cause
-     */
-    public InvalidPayloadException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
 }

@@ -2,6 +2,12 @@
 Feature: weather
   METAR information
 
+  @update
+  Scenario: Update weather data from AviationWeather.gov
+    Given I am an unauthenticated user
+    When I request the weather data to be updated
+    Then The request should be successful
+
   @metar
   Scenario Outline: Retrieve METAR information for a single station
     Given I am an unauthenticated user

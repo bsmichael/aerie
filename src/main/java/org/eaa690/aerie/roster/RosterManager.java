@@ -65,20 +65,6 @@ public class RosterManager {
      *
      * @param user Username to be used when interacting with eaachapters.org
      * @param pass Password to be used when interacting with eaachapters.org
-     * @param client HttpClient
-     */
-    public RosterManager(final String user, final String pass, final HttpClient client) {
-        this.username = user;
-        this.password = pass;
-        this.httpClient = client;
-        LOGGER.info("RosterManager initialized for " + username);
-    }
-
-    /**
-     * Initializes a RosterManager instance.
-     *
-     * @param user Username to be used when interacting with eaachapters.org
-     * @param pass Password to be used when interacting with eaachapters.org
      */
     public RosterManager(final String user, final String pass) {
         this.username = user;

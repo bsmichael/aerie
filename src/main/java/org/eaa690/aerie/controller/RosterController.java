@@ -21,7 +21,8 @@ import org.eaa690.aerie.model.MemberData;
 import org.eaa690.aerie.model.FindByRFIDResponse;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.RFIDRequest;
-import org.eaa690.aerie.model.MembershipReport;
+import org.eaa690.aerie.service.JotFormService;
+import org.eaa690.aerie.service.MailChimpService;
 import org.eaa690.aerie.service.RosterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -52,6 +53,16 @@ public class RosterController {
     private RosterService rosterService;
 
     /**
+     * JotFormService.
+     */
+    private JotFormService jotFormService;
+
+    /**
+     * MailChimpService.
+     */
+    private MailChimpService mailChimpService;
+
+    /**
      * Sets RosterService.
      *
      * @param value RosterService
@@ -59,6 +70,26 @@ public class RosterController {
     @Autowired
     public void setRosterService(final RosterService value) {
         rosterService = value;
+    }
+
+    /**
+     * Sets JotFormService.
+     *
+     * @param value JotFormService
+     */
+    @Autowired
+    public void setJotFormService(final JotFormService value) {
+        jotFormService = value;
+    }
+
+    /**
+     * Sets MailChimpService.
+     *
+     * @param value MailChimpService
+     */
+    @Autowired
+    public void setMailChimpService(final MailChimpService value) {
+        mailChimpService = value;
     }
 
     /**
@@ -72,27 +103,69 @@ public class RosterController {
     }
 
     /**
-     * Get member's data.
-     *
-     * @return MembershipReport
-     * @throws ResourceNotFoundException when no member data is found
+     * Retrieves and processes any JotForm submissions.
      */
-    @GetMapping(path = {"/report"})
-    public MembershipReport getMembershipReport() throws ResourceNotFoundException {
-        return rosterService.getMembershipReport();
+    @PostMapping(path = {
+            "/jotform"
+    })
+    public void jotFormSubmissions() {
+        jotFormService.getSubmissions();
+    }
+
+    /**
+     * Sends Membership Renewal Messages.
+     *
+     * @param rosterId Member Roster ID (-1 for all expiring members)
+     * @throws ResourceNotFoundException when member is not found
+     */
+    @PostMapping(path = {"/membership/renew/{rosterId}"})
+    public void sendMembershipRenewalMessages(@PathVariable("rosterId") final Long rosterId)
+            throws ResourceNotFoundException {
+        if (rosterId == -1) {
+            rosterService.sendMembershipRenewalMessages();
+        } else {
+            final Member member = rosterService.getMemberByRosterID(rosterId);
+            rosterService.sendRenewMembershipMsg(member);
+        }
+    }
+
+    /**
+     * Adds a person to the member audience in Mail Chimp.
+     *
+     * @param rosterId Member Roster ID
+     * @throws ResourceNotFoundException when member is not found
+     */
+    @PostMapping(path = {"/mailchimp/{rosterId}/add-member"})
+    public void addOrUpdateMemberToMailChimp(@PathVariable("rosterId") final Long rosterId)
+            throws ResourceNotFoundException {
+        final Member member = rosterService.getMemberByRosterID(rosterId);
+        mailChimpService.addOrUpdateMember(member.getFirstName(), member.getLastName(), member.getEmail());
+    }
+
+    /**
+     * Adds a person to the non-member audience in Mail Chimp.
+     *
+     * @param rosterId Member Roster ID
+     * @throws ResourceNotFoundException when member is not found
+     */
+    @PostMapping(path = {"/mailchimp/{rosterId}/add-non-member"})
+    public void addOrUpdateNonMemberToMailChimp(@PathVariable("rosterId") final Long rosterId)
+            throws ResourceNotFoundException {
+        final Member member = rosterService.getMemberByRosterID(rosterId);
+        mailChimpService.addOrUpdateNonMember(member.getFirstName(), member.getLastName(), member.getEmail());
     }
 
     /**
      * Get member's data.
      *
-     * @param memberId Member's Roster ID
+     * @param rosterId Member's Roster ID
      * @return MemberData
      * @throws ResourceNotFoundException when no member data is found
      */
-    @GetMapping(path = {"/{memberId}/expiration"})
-    public MemberData getMemberData(@PathVariable("memberId") final Long memberId)
+    @GetMapping(path = {"/{rosterId}/expiration"})
+    public MemberData getMemberData(@PathVariable("rosterId") final Long rosterId)
             throws ResourceNotFoundException {
-        final Member member = rosterService.getMemberByRosterID(memberId);
+        final Member member = rosterService.getMemberByRosterID(rosterId);
         final MemberData record = new MemberData();
         record.setId(member.getId());
         record.setExpirationDate(member.getExpiration());

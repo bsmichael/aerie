@@ -150,7 +150,7 @@ public class RosterService {
      *
      * second, minute, hour, day of month, month, day(s) of week
      */
-    @Scheduled(cron = "0 0 9 10,20 * *")
+    @Scheduled(cron = "0 0 9 1,10,20 * *")
     public void sendMembershipRenewalMessages() {
         memberRepository
                 .findAll()
