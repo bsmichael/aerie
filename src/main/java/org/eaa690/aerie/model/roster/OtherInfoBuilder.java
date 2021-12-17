@@ -132,14 +132,14 @@ public class OtherInfoBuilder {
             if (additionalFamilyMatcher.find()) {
                 matched = true;
                 setAdditionalFamily(additionalFamilyMatcher.group(1));
-                LOGGER.info("Set additional family to [" + getAdditionalFamily() + "]");
+                LOGGER.debug("Set additional family to [" + getAdditionalFamily() + "]");
             }
             final Matcher numOfFamilyMatcher = numOfFamilyPattern.matcher(raw);
             if (numOfFamilyMatcher.find()) {
                 try {
                     setNumOfFamily(Long.parseLong(numOfFamilyMatcher.group(1)));
                     matched = true;
-                    LOGGER.info("Set number of family to [" + getNumOfFamily() + "]");
+                    LOGGER.debug("Set number of family to [" + getNumOfFamily() + "]");
                 } catch (NumberFormatException nfe) {
                     LOGGER.info("Unable to parse number of family value=[" + numOfFamilyMatcher.group(1) + "]");
                 }
@@ -148,22 +148,22 @@ public class OtherInfoBuilder {
             if (slackMatcher.find()) {
                 matched = true;
                 setSlack(slackMatcher.group(1));
-                LOGGER.info("Set Slack to [" + getSlack() + "]");
+                LOGGER.debug("Set Slack to [" + getSlack() + "]");
             }
             final Matcher rfidMatcher = rfidPattern.matcher(raw);
             if (rfidMatcher.find()) {
                 matched = true;
                 setRfid(rfidMatcher.group(1));
-                LOGGER.info("Set RFID to [" + getRfid() + "]");
+                LOGGER.debug("Set RFID to [" + getRfid() + "]");
             }
             final Matcher additionalInfoMatcher = additionalInfoPattern.matcher(raw);
             if (additionalInfoMatcher.find()) {
                 matched = true;
                 setAdditionalInfo(additionalInfoMatcher.group(1));
-                LOGGER.info("Set additional info to [" + getAdditionalInfo() + "]");
+                LOGGER.debug("Set additional info to [" + getAdditionalInfo() + "]");
             }
             if (!matched) {
-                LOGGER.info("No patterns matched.  Setting additional info to [" + raw + "]");
+                LOGGER.debug("No patterns matched.  Setting additional info to [" + raw + "]");
                 setAdditionalInfo(raw);
             }
         }

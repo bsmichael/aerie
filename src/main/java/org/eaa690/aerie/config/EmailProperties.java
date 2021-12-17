@@ -21,26 +21,25 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Mailchimp Service Properties.
+ * Email Properties.
  */
 @Getter
 @Setter
-@ConfigurationProperties("aerie.mailchimp")
-public class MailchimpProperties {
+@ConfigurationProperties("aerie.email")
+public class EmailProperties {
 
     /**
-     * api-key.
+     * letterhead.
      */
-    private String apiKey;
+    private String letterhead;
 
     /**
-     * members-list-id.
+     * Host.
      */
-    private String membersListId;
+    private String host;
 
     /**
-     * non-members-list-id.
+     * SMTP Port.
      */
-    private String nonMemberListId;
-
+    private String smtpPort;
 }

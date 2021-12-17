@@ -39,18 +39,23 @@ public class MembershipProperties {
     private String password;
 
     /**
-     * letterhead.
+     * New membership subject.
      */
-    private String letterhead;
+    private String newSubject;
 
     /**
-     * subject.
+     * New membership body.
      */
-    private String subject;
+    private String newBody;
 
     /**
-     * body.
+     * Renew membership subject.
      */
-    private String body;
+    private String renewSubject;
+
+    /**
+     * Renew membership body.
+     */
+    private String renewBody;
 
 }

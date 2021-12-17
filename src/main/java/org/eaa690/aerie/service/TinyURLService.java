@@ -85,6 +85,7 @@ public class TinyURLService {
      * @return tiny url
      */
     public String getTinyURL(final String originalValue) {
+        String tinyUrl = null;
         try {
             final HttpRequest.Builder builder = HttpRequest.newBuilder()
                     .uri(URI.create(tinyUrlProperties.getCreateUrl()))
@@ -97,11 +98,11 @@ public class TinyURLService {
             final HttpResponse<String> response =
                     httpClient.send(builder.build(), HttpResponse.BodyHandlers.ofString());
             final TinyURLResponse tuResponse = mapper.readValue(response.body(), TinyURLResponse.class);
-            return tuResponse.getData().getTinyUrl();
+            tinyUrl = tuResponse.getData().getTinyUrl();
         } catch (IOException | InterruptedException e) {
             LOGGER.error("[Get Tiny URL] Error: " + e.getMessage(), e);
         }
-        return null;
+        return tinyUrl;
     }
 
 }

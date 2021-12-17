@@ -36,12 +36,12 @@ public class SSLUtilities {
     /**
      * Hostname verifier.
      */
-    private HostnameVerifier hostnameVerifier;
+    private final HostnameVerifier hostnameVerifier;
 
     /**
      * Thrust managers.
      */
-    private TrustManager[] trustManagers;
+    private final TrustManager[] trustManagers;
 
     /**
      * Initializes an instance of <code>SSLUtilities</code> with the default data.
@@ -49,9 +49,12 @@ public class SSLUtilities {
     public SSLUtilities() {
         // Create a trust manager that does not validate certificate chains
         hostnameVerifier = new FakeHostnameVerifier();
+        hostnameVerifier.verify(null, null);
         // Create a trust manager that does not validate certificate chains
+        FakeX509TrustManager fakeX509TrustManager = new FakeX509TrustManager();
+        fakeX509TrustManager.checkClientTrusted(null, null);
         trustManagers = new TrustManager[] {
-                new FakeX509TrustManager()
+                fakeX509TrustManager
         };
     }
 

@@ -42,11 +42,6 @@ public class MembershipReport {
     private Long regularMemberWillExpire30DaysCount = 0L;
 
     /**
-     * Sum of all regular membership types that will expire in 7 days.
-     */
-    private Long regularMemberWillExpire7DaysCount = 0L;
-
-    /**
      * Sum of "num of family" for all family membership types.
      */
     private Long familyMemberCount = 0L;
@@ -62,11 +57,6 @@ public class MembershipReport {
     private Long familyMemberWillExpire30DaysCount = 0L;
 
     /**
-     * Sum of all family members that will expire in 7 days.
-     */
-    private Long familyMemberWillExpire7DaysCount = 0L;
-
-    /**
      * Sum of all family membership types.
      */
     private Long familyMembershipCount = 0L;
@@ -80,11 +70,6 @@ public class MembershipReport {
      * Sum of all family membership types that will expire in 30 days.
      */
     private Long familyMembershipWillExpire30DaysCount = 0L;
-
-    /**
-     * Sum of all family membership types that will expire in 7 days.
-     */
-    private Long familyMembershipWillExpire7DaysCount = 0L;
 
     /**
      * Sum of all lifetime membership types.
@@ -110,11 +95,6 @@ public class MembershipReport {
      * Sum of all student membership types that will expire in 30 days.
      */
     private Long studentMemberWillExpire30DaysCount = 0L;
-
-    /**
-     * Sum of all student membership types that will expire in 7 days.
-     */
-    private Long studentMemberWillExpire7DaysCount = 0L;
 
     /**
      * Sum of all prospect membership types.

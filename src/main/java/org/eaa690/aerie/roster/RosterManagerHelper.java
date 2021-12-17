@@ -793,45 +793,49 @@ public class RosterManagerHelper {
      * @throws ParseException when data is invalid
      */
     private void processColumn(final int columnCount, final Member person, final Element column) throws ParseException {
+        if (column == null) {
+            return;
+        }
+        final String columnText = column.text().trim();
         switch (columnCount) {
             case 0:
-                person.setRosterId(Long.parseLong(column.text().trim()));
+                person.setRosterId(Long.parseLong(columnText));
                 break;
             case 1:
-                person.setMemberType(MemberType.valueOf(column.text().trim().replaceAll("-", "")));
+                person.setMemberType(MemberType.valueOf(columnText.replaceAll("-", "")));
                 break;
             case 2:
-                person.setNickname(column.text().trim());
+                person.setNickname(columnText);
                 break;
             case CommonConstants.THREE:
-                person.setFirstName(column.text().trim());
+                person.setFirstName(columnText);
                 break;
             case CommonConstants.FOUR:
-                person.setLastName(column.text().trim());
+                person.setLastName(columnText);
                 break;
             case CommonConstants.FIVE:
-                person.setSpouse(column.text().trim());
+                person.setSpouse(columnText);
                 break;
             case CommonConstants.SIX:
-                person.setGender(Gender.fromDisplayString(column.text().trim().toUpperCase()));
+                person.setGender(Gender.fromDisplayString(columnText.toUpperCase()));
                 break;
             case CommonConstants.SEVEN:
-                person.setEmail(column.text().trim());
+                person.setEmail(columnText);
                 break;
             case CommonConstants.EIGHT:
                 // Ignore EmailPrivate
                 break;
             case CommonConstants.NINE:
-                person.setUsername(column.text().trim());
+                person.setUsername(columnText);
                 break;
             case CommonConstants.TEN:
-                person.setBirthDate(column.text().trim());
+                person.setBirthDate(columnText);
                 break;
             case CommonConstants.ELEVEN:
-                person.setAddressLine1(column.text().trim());
+                person.setAddressLine1(columnText);
                 break;
             case CommonConstants.TWELVE:
-                person.setAddressLine2(column.text().trim());
+                person.setAddressLine2(columnText);
                 break;
             case CommonConstants.THIRTEEN:
                 // Ignore AddressPrivate
@@ -849,43 +853,43 @@ public class RosterManagerHelper {
                 // Ignore CellPhonePrivate
                 break;
             case CommonConstants.EIGHTEEN:
-                person.setEaaNumber(column.text().trim());
+                person.setEaaNumber(columnText);
                 break;
             case CommonConstants.NINETEEN:
-                person.setStatus(Status.valueOf(column.text().trim().toUpperCase()));
+                person.setStatus(Status.valueOf(columnText.toUpperCase()));
                 break;
             case CommonConstants.TWENTY:
-                person.setJoined(column.text().trim());
+                person.setJoined(columnText);
                 break;
             case CommonConstants.TWENTY_ONE:
-                person.setExpiration(simpleDateFormat.parse(column.text().trim()));
+                person.setExpiration(simpleDateFormat.parse(columnText));
                 break;
             case CommonConstants.TWENTY_TWO:
                 handleOtherInfo(person, column);
                 break;
             case CommonConstants.TWENTY_THREE:
-                person.setCity(column.text().trim());
+                person.setCity(columnText);
                 break;
             case CommonConstants.TWENTY_FOUR:
-                person.setState(State.fromDisplayString(column.text().trim()));
+                person.setState(State.fromDisplayString(columnText));
                 break;
             case CommonConstants.TWENTY_FIVE:
-                person.setCountry(Country.fromDisplayString(column.text().trim()));
+                person.setCountry(Country.fromDisplayString(columnText));
                 break;
             case CommonConstants.TWENTY_SIX:
-                person.setZipCode(column.text().trim());
+                person.setZipCode(columnText);
                 break;
             case CommonConstants.TWENTY_SEVEN:
-                person.setRatings(column.text().trim());
+                person.setRatings(columnText);
                 break;
             case CommonConstants.TWENTY_EIGHT:
-                person.setAircraftOwned(column.text().trim());
+                person.setAircraftOwned(columnText);
                 break;
             case CommonConstants.TWENTY_NINE:
-                person.setAircraftProject(column.text().trim());
+                person.setAircraftProject(columnText);
                 break;
             case CommonConstants.THIRTY:
-                person.setAircraftBuilt(column.text().trim());
+                person.setAircraftBuilt(columnText);
                 break;
             case CommonConstants.THIRTY_ONE:
                 setImcClub(person, column);
@@ -912,19 +916,19 @@ public class RosterManagerHelper {
                 // Ignore DateUpdated
                 break;
             case CommonConstants.THIRTY_NINE:
-                person.setEaaExpiration(column.text().trim());
+                person.setEaaExpiration(columnText);
                 break;
             case CommonConstants.FORTY:
-                person.setYouthProtection(column.text().trim());
+                person.setYouthProtection(columnText);
                 break;
             case CommonConstants.FORTY_ONE:
-                person.setBackgroundCheck(column.text().trim());
+                person.setBackgroundCheck(columnText);
                 break;
             case CommonConstants.FORTY_TWO:
                 // Ignore UpdatedBy
                 break;
             case CommonConstants.FORTY_THREE:
-                person.setWebAdminAccess(WebAdminAccess.fromDisplayString(column.text().trim()));
+                person.setWebAdminAccess(WebAdminAccess.fromDisplayString(columnText));
                 break;
             default:
                 // Do nothing

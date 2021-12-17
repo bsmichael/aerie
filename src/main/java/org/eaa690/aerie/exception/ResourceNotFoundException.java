@@ -32,13 +32,6 @@ public class ResourceNotFoundException extends Exception {
 
     /**
      * Initializes an instance of <code>ResourceNotFoundException</code> with the default data.
-     */
-    public ResourceNotFoundException() {
-        super();
-    }
-
-    /**
-     * Initializes an instance of <code>ResourceNotFoundException</code> with the default data.
      *
      * @param message message
      */

@@ -17,12 +17,10 @@
 package org.eaa690.aerie.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.alexanderwe.bananaj.connection.MailChimpConnection;
 import org.eaa690.aerie.model.WeatherProductRepository;
 import org.eaa690.aerie.roster.RosterManager;
 import org.eaa690.aerie.service.EmailService;
 import org.eaa690.aerie.service.JotFormService;
-import org.eaa690.aerie.service.MailChimpService;
 import org.eaa690.aerie.service.RosterService;
 import org.eaa690.aerie.service.TinyURLService;
 import org.eaa690.aerie.service.WeatherService;
@@ -46,7 +44,7 @@ import java.time.Duration;
         TinyUrlProperties.class,
         RosterProperties.class,
         JotFormProperties.class,
-        MailchimpProperties.class,
+        EmailProperties.class,
         MembershipProperties.class})
 public class ServiceConfig {
 
@@ -122,17 +120,6 @@ public class ServiceConfig {
     }
 
     /**
-     * MailChimpConnection.
-     *
-     * @param props MailchimpProperties
-     * @return MailChimpConnection
-     */
-    @Bean
-    public MailChimpConnection mailChimpConnection(final MailchimpProperties props) {
-        return new MailChimpConnection(props.getApiKey());
-    }
-
-    /**
      * RosterService.
      *
      * @return RosterService
@@ -170,16 +157,6 @@ public class ServiceConfig {
     @Bean
     public TinyURLService tinyUrlService() {
         return new TinyURLService();
-    }
-
-    /**
-     * MailChimpService.
-     *
-     * @return MailChimpService
-     */
-    @Bean
-    public MailChimpService mailChimpService() {
-        return new MailChimpService();
     }
 
     /**

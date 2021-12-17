@@ -16,10 +16,16 @@
 
 package org.eaa690.aerie.steps;
 
+import io.cucumber.java.PendingException;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import org.eaa690.aerie.TestContext;
+import org.eaa690.aerie.TestDataFactory;
+import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.RFIDRequest;
+import org.hamcrest.Matchers;
 
 /**
  * Roster test steps.
@@ -32,6 +38,11 @@ public class RosterSteps extends BaseSteps {
     private final String ROSTER = "roster/";
 
     /**
+     * Email service.
+     */
+    private final String EMAIL = "email/";
+
+    /**
      * Constructor.
      *
      * @param testContext TestContext
@@ -40,12 +51,51 @@ public class RosterSteps extends BaseSteps {
         super(testContext);
     }
 
-    @When("^I request the roster membership report$")
-    public void iRequestTheReport() {
+    @Given("^I am not a chapter member$")
+    public void iAmNotAChapterMember() {
+        testContext.setRosterId(null);
+    }
+
+    @Given("^I am a new chapter member$")
+    public void iAmANewMember() {
+        final Member member = TestDataFactory.getMember();
+        throw new PendingException();
+    }
+
+    @Given("^I am a chapter member$")
+    public void iAmAnExistingMember() {
+        testContext.setRosterId("42648");
+    }
+
+    @Given("^I have a record in the roster management system$")
+    public void iHaveARecord() {
+        throw new PendingException();
+    }
+
+    @Given("^I do not have a record in the roster management system$")
+    public void iDoNotHaveARecord() {
+        throw new PendingException();
+    }
+
+    @Given("^email is (.*)$")
+    public void emailEnabled(final String flag) {
+        String enabled = "true";
+        if ("disabled".equalsIgnoreCase(flag)) {
+            enabled = "false";
+        }
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get(ROSTER + "report")
+                .post(EMAIL + "enabled/" + enabled)
+                .then());
+    }
+
+    @When("^I request a membership report$")
+    public void iRequestAMembershipReport() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .get(ROSTER + "membershipreport")
                 .then());
     }
 
@@ -98,6 +148,101 @@ public class RosterSteps extends BaseSteps {
                 .when()
                 .get(ROSTER + "all-rfid")
                 .then());
+    }
+
+    @When("^I submit a new membership Jot Form$")
+    public void iSubmitANewMembershipJotForm() {
+        throw new PendingException();
+    }
+
+    @When("^I submit a renew membership Jot Form$")
+    public void iSubmitARenewMembershipJotForm() {
+        throw new PendingException();
+    }
+
+    @When("^I check membership information for (.*)")
+    public void iCheckMyMembershipInformation(final String rosterId) {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .get(ROSTER + rosterId)
+                .then());
+    }
+
+    @When("^I request an email be sent to new member (.*)$")
+    public void iRequestEmailToNewMember(final String rosterId) {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + rosterId + "/new-membership")
+                .then());
+    }
+
+    @When("^I request a message be sent to member (.*) to renew their membership$")
+    public void iRequestAMessageToRenewMember(final String rosterId) {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + rosterId + "/renew")
+                .then());
+    }
+
+    @When("^I request membership renewal messages be sent$")
+    public void iRequestMembershipRenewalMessageBeSent() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + "-1/renew")
+                .then());
+    }
+
+    @When("^Aerie checks for JotForm submissions$")
+    public void aerieChecksForJotFormSubmissions() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(ROSTER + "jotform")
+                .then());
+    }
+
+    @Then("^I should have a record in the roster management system$")
+    public void iShouldHaveARecordInTheRosterManagementSystem() {
+        throw new PendingException();
+    }
+
+    @Then("^my membership expiration should be set to (.*) from now$")
+    public void myMembershipExpirationShouldBeSetToFromNow(final String duration) {
+        throw new PendingException();
+    }
+
+    @Then("^I should not receive a new member welcome email message$")
+    public void iShouldNotReceiveANewMemberWelcomeEmailMessage() {
+        throw new PendingException();
+    }
+
+    @Then("^I should receive a new member welcome email message$")
+    public void iShouldReceiveANewMemberWelcomeEmailMessage() {
+        throw new PendingException();
+    }
+
+    @Then("^my membership expiration should be set to (.*) from my previous expiration date$")
+    public void myMembershipExpirationShouldBeSetToFromPreviousExpiration(final String duration) {
+        throw new PendingException();
+    }
+
+    @Then("^I should receive a renew member welcome email message$")
+    public void iShouldReceiveARenewMemberWelcomeEmailMessage() {
+        throw new PendingException();
+    }
+
+    @Then("^I should receive my membership details$")
+    public void iShouldReceiveMyMembershipDetails() {
+        testContext.getValidatableResponse()
+                .assertThat()
+                .body("id", Matchers.notNullValue())
+                .body("firstName", Matchers.notNullValue())
+                .body("expiration", Matchers.notNullValue())
+                .body("rfid", Matchers.notNullValue());
     }
 
 }

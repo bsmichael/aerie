@@ -47,28 +47,15 @@ public class CommonSteps extends BaseSteps {
 
     @Then("^A (.*) exception should be thrown$")
     public void aExceptionShouldBeThrown(String exception) {
-        switch (exception) {
-            case "unauthorized":
-                testContext.getValidatableResponse()
-                        .assertThat()
-                        .statusCode(Matchers.equalTo(HttpStatus.SC_UNAUTHORIZED));
-                break;
-            case "forbidden":
-                testContext.getValidatableResponse()
-                        .assertThat()
-                        .statusCode(Matchers.equalTo(HttpStatus.SC_FORBIDDEN));
-                break;
-            case "not found":
-                testContext.getValidatableResponse()
-                        .assertThat()
-                        .statusCode(Matchers.equalTo(HttpStatus.SC_NOT_FOUND));
-                break;
-            case "bad request":
-                testContext.getValidatableResponse()
-                        .assertThat()
-                        .statusCode(Matchers.equalTo(HttpStatus.SC_BAD_REQUEST));
-                break;
-            default:
+        if ("not found".equalsIgnoreCase(exception)) {
+            testContext.getValidatableResponse()
+                    .assertThat()
+                    .statusCode(Matchers.equalTo(HttpStatus.SC_NOT_FOUND));
+        }
+        if ("bad request".equalsIgnoreCase(exception)) {
+            testContext.getValidatableResponse()
+                    .assertThat()
+                    .statusCode(Matchers.equalTo(HttpStatus.SC_BAD_REQUEST));
         }
     }
 

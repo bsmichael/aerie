@@ -16,9 +16,13 @@
 
 package org.eaa690.aerie.service;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.eaa690.aerie.config.EmailProperties;
 import org.eaa690.aerie.ssl.PasswordAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -49,6 +53,30 @@ public class EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     /**
+     * EmailProperties.
+     */
+    @Autowired
+    private EmailProperties emailProperties;
+
+    /**
+     * Sets EmailProperties.
+     * Note: mostly used for unit test mocks
+     *
+     * @param value EmailProperties
+     */
+    @Autowired
+    public void setEmailProperties(final EmailProperties value) {
+        emailProperties = value;
+    }
+
+    /**
+     * Email Enabled.
+     */
+    @Getter
+    @Setter
+    private boolean enabled = true;
+
+    /**
      * Sends an email.
      *
      * @param to message recipient
@@ -56,20 +84,18 @@ public class EmailService {
      * @param body of the message
      * @param from sender
      * @param password for the sender's mailbox
-     * @param img Image to be included in message, null if no image is to be included
      */
     public void sendEmailMessage(final String to,
                                  final String subject,
                                  final String body,
                                  final String from,
-                                 final String password,
-                                 final String img) {
+                                 final String password) {
         final Properties props = new Properties();
-        props.put("mail.smtp.host", "mail.eaa690.org");
+        props.put("mail.smtp.host", emailProperties.getHost());
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.port", emailProperties.getSmtpPort());
         final Authenticator auth = new PasswordAuthenticator(from, password);
         final Session session = Session.getDefaultInstance(props, auth);
         try {
@@ -82,25 +108,24 @@ public class EmailService {
             msg.setSubject(subject, "UTF-8");
             msg.setSentDate(new Date());
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
-            if (img == null) {
-                msg.setText(body, "UTF-8");
-            } else {
-                msg.setContent(buildMultipartMessage(body, img));
-            }
+            msg.setContent(buildMultipartMessage(body));
             LOGGER.info("Sending email with subject[" + subject + "] to [" + to + "] from [" + from + "]");
-            Transport.send(msg);
+            if (enabled) {
+                Transport.send(msg);
+            }
         } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
 
-    private Multipart buildMultipartMessage(final String body, final String img) throws MessagingException {
+    private Multipart buildMultipartMessage(final String body) throws MessagingException {
         final Multipart multipart = new MimeMultipart();
 
         final BodyPart messageBodyPart1 = new MimeBodyPart();
-        final DataSource source = new FileDataSource(img);
+        final String letterHeader = emailProperties.getLetterhead();
+        final DataSource source = new FileDataSource(letterHeader);
         messageBodyPart1.setDataHandler(new DataHandler(source));
-        messageBodyPart1.setFileName(img);
+        messageBodyPart1.setFileName(letterHeader);
         messageBodyPart1.setHeader("Content-ID", "image_id");
         multipart.addBodyPart(messageBodyPart1);
 
