@@ -22,6 +22,7 @@ import org.eaa690.aerie.roster.RosterManager;
 import org.eaa690.aerie.service.EmailService;
 import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.RosterService;
+import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.TinyURLService;
 import org.eaa690.aerie.service.WeatherService;
 import org.eaa690.aerie.ssl.SSLUtilities;
@@ -48,6 +49,7 @@ import java.time.Duration;
         RosterProperties.class,
         JotFormProperties.class,
         EmailProperties.class,
+        SlackProperties.class,
         MembershipProperties.class})
 public class ServiceConfig {
 
@@ -158,6 +160,16 @@ public class ServiceConfig {
     @Bean
     public EmailService emailService() {
         return new EmailService();
+    }
+
+    /**
+     * SlackService.
+     *
+     * @return SlackService
+     */
+    @Bean
+    public SlackService slackService() {
+        return new SlackService();
     }
 
     /**

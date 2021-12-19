@@ -128,10 +128,10 @@ public class EmailService {
             msg.setSentDate(new Date());
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
             msg.setContent(buildMultipartMessage(body));
-            LOGGER.info("Sending email with subject [" + subject + "] to [" + to + "] from [" + from + "]");
             if (enabled) {
-                messageRepository.save(new org.eaa690.aerie.model.Message(Instant.now(), to, subject));
+                LOGGER.info("Sending email with subject [" + subject + "] to [" + to + "] from [" + from + "]");
                 Transport.send(msg);
+                messageRepository.save(new org.eaa690.aerie.model.Message(Instant.now(), to, "EMAIL", subject));
             }
         } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();

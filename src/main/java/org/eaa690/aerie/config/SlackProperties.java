@@ -14,46 +14,32 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.model;
+package org.eaa690.aerie.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.time.Instant;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Message.
+ * Slack Properties.
  */
-@Entity
-@Table(name = "MESSAGE")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class Message extends BaseEntity {
+@ConfigurationProperties("aerie.slack")
+public class SlackProperties {
 
     /**
-     * Time message was sent.
+     * token.
      */
-    private Instant sent;
+    private String token;
 
     /**
-     * Recipient of the message.
+     * Base URL.
      */
-    private String to;
+    private String baseUrl;
 
     /**
-     * Type of message.
+     * Template Path.
      */
-    private String type;
-
-    /**
-     * Description of the message (subject or body).
-     */
-    private String description;
-
+    private String templatePath;
 }

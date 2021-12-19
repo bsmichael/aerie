@@ -17,13 +17,15 @@ Feature: Roster functions
   Scenario: Send renew membership email
     Given I am an unauthenticated user
     And email is enabled
+    And slack is enabled
     When I request a message be sent to member 42648 to renew their membership
     Then The request should be successful
 
   @email @renewmember
-  Scenario: Send renew membership email with email service disabled
+  Scenario: Send renew membership email with services disabled
     Given I am an unauthenticated user
     And email is disabled
+    And slack is disabled
     When I request a message be sent to member 42648 to renew their membership
     Then The request should be successful
 
@@ -31,6 +33,7 @@ Feature: Roster functions
   Scenario: Send renew membership email to a member with no email address
     Given I am an unauthenticated user
     And email is enabled
+    And slack is enabled
     When I request a message be sent to member 67972 to renew their membership
     Then The request should be successful
 
@@ -38,6 +41,7 @@ Feature: Roster functions
   Scenario: Send renew membership email to a non-existant member
     Given I am an unauthenticated user
     And email is enabled
+    And slack is enabled
     When I request a message be sent to member 0 to renew their membership
     Then A not found exception should be thrown
 
@@ -98,6 +102,7 @@ Feature: Roster functions
   Scenario: Force run of automated send membership renewal messages
     Given I am an unauthenticated user
     And email is disabled
+    And slack is disabled
     When I request membership renewal messages be sent
     Then The request should be successful
 
@@ -105,6 +110,7 @@ Feature: Roster functions
   Scenario: Send new membership email
     Given I am an unauthenticated user
     And email is enabled
+    And slack is enabled
     When I request an email be sent to new member 42648
     Then The request should be successful
 
@@ -112,6 +118,7 @@ Feature: Roster functions
   Scenario: Send new membership email to an invalid member
     Given I am an unauthenticated user
     And email is enabled
+    And slack is enabled
     When I request an email be sent to new member 0
     Then A not found exception should be thrown
 
