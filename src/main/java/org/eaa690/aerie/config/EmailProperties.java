@@ -42,4 +42,9 @@ public class EmailProperties {
      * SMTP Port.
      */
     private String smtpPort;
+
+    /**
+     * Template Path.
+     */
+    private String templatePath;
 }

@@ -65,13 +65,13 @@ public class BaseEntity implements Serializable {
      */
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
-    private Date createdAt;
+    private Date createdAt = new Date();
 
     /**
      * Updated At.
      */
     @Column(name = "updated_at", nullable = false)
     @LastModifiedDate
-    private Date updatedAt;
+    private Date updatedAt = new Date();
 
 }

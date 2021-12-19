@@ -16,10 +16,8 @@
 
 package org.eaa690.aerie.service;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +36,8 @@ import org.eaa690.aerie.model.roster.Status;
 import org.eaa690.aerie.roster.RosterManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 /**
  * Logs into EAA's roster management system, downloads the EAA 690 records as an
@@ -47,21 +47,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class RosterService {
 
     /**
+     * Date Format.
+     */
+    private final SimpleDateFormat sdf = new SimpleDateFormat("EEE MMMMM dd, yyyy");
+
+    /**
      * MembershipProperties.
      */
     @Autowired
     private MembershipProperties membershipProperties;
 
     /**
-     * Sets MembershipProperties.
-     * Note: mostly used for unit test mocks
-     *
-     * @param value MembershipProperties
+     * Template Engine.
      */
     @Autowired
-    public void setMembershipProperties(final MembershipProperties value) {
-        membershipProperties = value;
-    }
+    private TemplateEngine templateEngine;
 
     /**
      * MemberRepository.
@@ -86,6 +86,28 @@ public class RosterService {
      */
     @Autowired
     private EmailService emailService;
+
+    /**
+     * Sets MembershipProperties.
+     * Note: mostly used for unit test mocks
+     *
+     * @param value MembershipProperties
+     */
+    @Autowired
+    public void setMembershipProperties(final MembershipProperties value) {
+        membershipProperties = value;
+    }
+
+    /**
+     * Sets TemplateEngine.
+     * Note: mostly used for unit test mocks
+     *
+     * @param value TemplateEngine
+     */
+    @Autowired
+    public void setTemplateEngine(final TemplateEngine value) {
+        templateEngine = value;
+    }
 
     /**
      * Sets JotFormService. Note: mostly used for unit test mocks
@@ -175,9 +197,15 @@ public class RosterService {
      */
     public void sendRenewMembershipMsg(final Member member) {
         if (member.getEmail() != null && !"".equals(member.getEmail())) {
+            final Context context = new Context();
+            context.setVariable("member", member);
+            context.setVariable("expiration", sdf.format(member.getExpiration()));
+            final String renewMembershipUrl = jotFormService.buildRenewMembershipUrl(member);
+            context.setVariable("url", "<a href=\"" + renewMembershipUrl + "\">" + renewMembershipUrl + "</a>");
+            final String body = templateEngine.process("renewing-member", context);
             emailService.sendEmailMessage(member.getEmail(),
                     membershipProperties.getRenewSubject(),
-                    personalizeBody(member, membershipProperties.getRenewBody()),
+                    body,
                     membershipProperties.getUsername(),
                     membershipProperties.getPassword());
         }
@@ -190,9 +218,13 @@ public class RosterService {
      */
     public void sendNewMembershipMsg(final Member member) {
         if (member.getEmail() != null && !"".equals(member.getEmail())) {
+            final Context context = new Context();
+            context.setVariable("member", member);
+            context.setVariable("expiration", sdf.format(member.getExpiration()));
+            final String body = templateEngine.process("new-member", context);
             emailService.sendEmailMessage(member.getEmail(),
                     membershipProperties.getNewSubject(),
-                    personalizeBody(member, membershipProperties.getNewBody()),
+                    body,
                     membershipProperties.getUsername(),
                     membershipProperties.getPassword());
         }
@@ -349,22 +381,6 @@ public class RosterService {
                 allMembers.stream().filter(m -> MemberType.Student == m.getMemberType())
                         .filter(m -> Status.ACTIVE == m.getStatus())
                         .filter(m -> today.after(m.getExpiration())).count());
-    }
-
-    /**
-     * Builds message to be sent to member.
-     *
-     * @param member Member
-     * @param body message body
-     * @return message
-     */
-    private String personalizeBody(final Member member, final String body) {
-        return body.replaceAll("\\{\\{firstName\\}\\}", member.getFirstName())
-                .replaceAll("\\{\\{lastName\\}\\}", member.getLastName())
-                .replaceAll("\\{\\{expirationDate\\}\\}", ZonedDateTime
-                        .ofInstant(member.getExpiration().toInstant(), ZoneId.systemDefault())
-                        .format(DateTimeFormatter.ofPattern("MMM d, yyyy")))
-                .replaceAll("\\{\\{url\\}\\}", jotFormService.buildRenewMembershipUrl(member));
     }
 
 }

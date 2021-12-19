@@ -14,38 +14,41 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.config;
+package org.eaa690.aerie.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.Instant;
 
 /**
- * Membership Properties.
+ * Message.
  */
+@Entity
+@Table(name = "MESSAGE")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@ConfigurationProperties("aerie.membership")
-public class MembershipProperties {
+public class Message extends BaseEntity {
 
     /**
-     * username.
+     * Time message was sent.
      */
-    private String username;
+    private Instant sent;
 
     /**
-     * password.
+     * Recipient of the message.
      */
-    private String password;
+    private String to;
 
     /**
-     * New membership subject.
+     * Description of the message (subject or body).
      */
-    private String newSubject;
-
-    /**
-     * Renew membership subject.
-     */
-    private String renewSubject;
+    private String description;
 
 }

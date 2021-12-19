@@ -19,6 +19,7 @@ package org.eaa690.aerie.service;
 import lombok.Getter;
 import lombok.Setter;
 import org.eaa690.aerie.config.EmailProperties;
+import org.eaa690.aerie.model.MessageRepository;
 import org.eaa690.aerie.ssl.PasswordAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.UnsupportedEncodingException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Properties;
 
@@ -59,6 +61,12 @@ public class EmailService {
     private EmailProperties emailProperties;
 
     /**
+     * MessageRepository.
+     */
+    @Autowired
+    private MessageRepository messageRepository;
+
+    /**
      * Sets EmailProperties.
      * Note: mostly used for unit test mocks
      *
@@ -67,6 +75,17 @@ public class EmailService {
     @Autowired
     public void setEmailProperties(final EmailProperties value) {
         emailProperties = value;
+    }
+
+    /**
+     * Sets MessageRepository.
+     * Note: mostly used for unit test mocks
+     *
+     * @param value MessageRepository
+     */
+    @Autowired
+    public void setMessageRepository(final MessageRepository value) {
+        messageRepository = value;
     }
 
     /**
@@ -109,8 +128,9 @@ public class EmailService {
             msg.setSentDate(new Date());
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
             msg.setContent(buildMultipartMessage(body));
-            LOGGER.info("Sending email with subject[" + subject + "] to [" + to + "] from [" + from + "]");
+            LOGGER.info("Sending email with subject [" + subject + "] to [" + to + "] from [" + from + "]");
             if (enabled) {
+                messageRepository.save(new org.eaa690.aerie.model.Message(Instant.now(), to, subject));
                 Transport.send(msg);
             }
         } catch (MessagingException | UnsupportedEncodingException e) {

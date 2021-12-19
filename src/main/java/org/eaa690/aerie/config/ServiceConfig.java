@@ -31,6 +31,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 import java.net.http.HttpClient;
 import java.time.Duration;
@@ -47,6 +50,24 @@ import java.time.Duration;
         EmailProperties.class,
         MembershipProperties.class})
 public class ServiceConfig {
+
+    /**
+     * SpringTemplateEngine.
+     *
+     * @param emailProperties EmailProperties
+     * @return SpringTemplateEngine
+     */
+    @Bean
+    public SpringTemplateEngine thymeleafTemplateEngine(final EmailProperties emailProperties) {
+        final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        final FileTemplateResolver templateResolver = new FileTemplateResolver();
+        templateResolver.setPrefix(emailProperties.getTemplatePath());
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.TEXT);
+        templateResolver.setCacheable(Boolean.FALSE);
+        templateEngine.setTemplateResolver(templateResolver);
+        return templateEngine;
+    }
 
     /**
      * Creates a rest template with default timeout settings. The bean definition will be updated to accept timeout

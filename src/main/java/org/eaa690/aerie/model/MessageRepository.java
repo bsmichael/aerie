@@ -14,38 +14,39 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.config;
+package org.eaa690.aerie.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.data.repository.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Membership Properties.
+ * MessageRepository.
  */
-@Getter
-@Setter
-@ConfigurationProperties("aerie.membership")
-public class MembershipProperties {
+public interface MessageRepository extends Repository<Message, Long> {
 
     /**
-     * username.
+     * Gets a message.
+     *
+     * @param id ID
+     * @return Message
      */
-    private String username;
+    Optional<Message> findById(Long id);
 
     /**
-     * password.
+     * Gets all messages.
+     *
+     * @return all messages
      */
-    private String password;
+    Optional<List<Message>> findAll();
 
     /**
-     * New membership subject.
+     * Saves a message.
+     *
+     * @param message Message
+     * @return Message
      */
-    private String newSubject;
-
-    /**
-     * Renew membership subject.
-     */
-    private String renewSubject;
+    Message save(Message message);
 
 }
