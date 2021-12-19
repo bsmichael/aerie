@@ -202,7 +202,7 @@ public class RosterService {
             context.setVariable("expiration", sdf.format(member.getExpiration()));
             final String renewMembershipUrl = jotFormService.buildRenewMembershipUrl(member);
             context.setVariable("url", "<a href=\"" + renewMembershipUrl + "\">" + renewMembershipUrl + "</a>");
-            final String body = templateEngine.process("renewing-member", context);
+            final String body = templateEngine.process("email/renewing-member", context);
             emailService.sendEmailMessage(member.getEmail(),
                     membershipProperties.getRenewSubject(),
                     body,
@@ -221,7 +221,7 @@ public class RosterService {
             final Context context = new Context();
             context.setVariable("member", member);
             context.setVariable("expiration", sdf.format(member.getExpiration()));
-            final String body = templateEngine.process("new-member", context);
+            final String body = templateEngine.process("email/new-member", context);
             emailService.sendEmailMessage(member.getEmail(),
                     membershipProperties.getNewSubject(),
                     body,
