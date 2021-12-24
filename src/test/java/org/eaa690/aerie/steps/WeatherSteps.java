@@ -49,7 +49,7 @@ public class WeatherSteps extends BaseSteps {
                 .param("data", field)
                 .when()
                 .get(WEATHER + "metars/" + icao)
-                .then());
+                .then().log().all());
     }
 
     @When("^I request the weather data to be updated$")
@@ -58,7 +58,7 @@ public class WeatherSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(WEATHER + "update")
-                .then());
+                .then().log().all());
     }
 
     @When("^I request the (.*) METAR$")
@@ -67,7 +67,7 @@ public class WeatherSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(WEATHER + "metars/" + icao)
-                .then());
+                .then().log().all());
     }
 
     @When("^I request a METAR for an unprovided station$")
@@ -77,7 +77,7 @@ public class WeatherSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(WEATHER + product)
-                .then());
+                .then().log().all());
     }
 
     @Then("^I should receive the (.*) data$")

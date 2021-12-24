@@ -87,7 +87,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(EMAIL + "enabled/" + enabled)
-                .then());
+                .then().log().all());
     }
 
     @When("^I request a membership report$")
@@ -95,8 +95,8 @@ public class RosterSteps extends BaseSteps {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get(ROSTER + "membershipreport")
-                .then());
+                .get( "/membershipreport")
+                .then().log().all());
     }
 
     @When("^I request an update of the roster data$")
@@ -105,7 +105,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(ROSTER + "update")
-                .then());
+                .then().log().all());
     }
 
     @When("^I update member (.*)'s RFID with (.*)$")
@@ -117,7 +117,7 @@ public class RosterSteps extends BaseSteps {
                 .when()
                 .body(rfidRequest)
                 .put(ROSTER + memberId + "/rfid")
-                .then());
+                .then().log().all());
     }
 
     @When("^I find a member by their RFID (.*)$")
@@ -129,7 +129,7 @@ public class RosterSteps extends BaseSteps {
                 .when()
                 .body(rfidRequest)
                 .post(ROSTER + "find-by-rfid")
-                .then());
+                .then().log().all());
     }
 
     @When("^I request the expiration data for member with ID (.*)$")
@@ -138,7 +138,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(ROSTER + memberId + "/expiration")
-                .then());
+                .then().log().all());
     }
 
     @When("^I request RFID data for all members$")
@@ -146,8 +146,8 @@ public class RosterSteps extends BaseSteps {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get(ROSTER + "all-rfid")
-                .then());
+                .get(ROSTER)
+                .then().log().all());
     }
 
     @When("^I submit a new membership Jot Form$")
@@ -166,7 +166,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(ROSTER + rosterId)
-                .then());
+                .then().log().all());
     }
 
     @When("^I request an email be sent to new member (.*)$")
@@ -175,7 +175,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(ROSTER + rosterId + "/new-membership")
-                .then());
+                .then().log().all());
     }
 
     @When("^I request a message be sent to member (.*) to renew their membership$")
@@ -184,7 +184,31 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(ROSTER + rosterId + "/renew")
-                .then());
+                .then().log().all());
+    }
+
+    @When("^I search for members with (.*) and (.*)$")
+    public void iSearchForMembers(final String firstName, final String lastName) {
+        final StringBuilder sb = new StringBuilder();
+        if (firstName != null && !firstName.equalsIgnoreCase("null")
+                || lastName != null && !lastName.equalsIgnoreCase("null")) {
+            sb.append("?");
+        }
+        if (firstName != null && !firstName.equalsIgnoreCase("null")) {
+            sb.append("firstName=").append(firstName);
+        }
+        if (firstName != null && !firstName.equalsIgnoreCase("null")
+                && lastName != null && !lastName.equalsIgnoreCase("null")) {
+            sb.append("&");
+        }
+        if (lastName != null && !lastName.equalsIgnoreCase("null")) {
+            sb.append("lastName=").append(lastName);
+        }
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .get(ROSTER + "find-by-name" + sb)
+                .then().log().all());
     }
 
     @When("^I request membership renewal messages be sent$")
@@ -193,7 +217,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(ROSTER + "-1/renew")
-                .then());
+                .then().log().all());
     }
 
     @When("^Aerie checks for JotForm submissions$")
@@ -202,7 +226,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(ROSTER + "jotform")
-                .then());
+                .then().log().all());
     }
 
     @Then("^I should have a record in the roster management system$")
@@ -245,4 +269,12 @@ public class RosterSteps extends BaseSteps {
                 .body("rfid", Matchers.notNullValue());
     }
 
+    @Then("^I should receive a list of membership details with (.*)$")
+    public void iShouldReceiveAListOfMembershipDetailsWith(final String name) {
+        if (name != null && !"null".equalsIgnoreCase(name)) {
+            testContext.getValidatableResponse()
+                    .assertThat()
+                    .body("name", Matchers.hasItem(name));
+        }
+    }
 }
