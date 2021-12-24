@@ -51,6 +51,22 @@ public interface MemberRepository extends Repository<Member, Long> {
     Optional<Member> findByRosterId(Long rosterId);
 
     /**
+     * Gets members by first name.
+     *
+     * @param firstName First name
+     * @return all members matching provided value
+     */
+    Optional<List<Member>> findByFirstName(String firstName);
+
+    /**
+     * Gets members by last name.
+     *
+     * @param lastName Last name
+     * @return all members matching provided value
+     */
+    Optional<List<Member>> findByLastName(String lastName);
+
+    /**
      * Gets all members.
      *
      * @return all members

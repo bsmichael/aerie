@@ -62,7 +62,7 @@ public class BaseSteps {
 
     protected RequestSpecification requestSpecification() {
         configureRestAssured();
-        return given();
+        return given().log().all();
     }
 
 }

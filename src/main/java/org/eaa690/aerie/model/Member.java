@@ -17,6 +17,7 @@
 package org.eaa690.aerie.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,7 +41,7 @@ import org.eaa690.aerie.model.roster.WebAdminAccess;
 @Table(name = "MEMBER")
 @Getter
 @Setter
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Comparable<Member> {
 
     /**
      * Date representing the beginning of dates.
@@ -281,4 +282,45 @@ public class Member extends BaseEntity {
      */
     private boolean slackEnabled = false;
 
+    /**
+     * Required implementation.
+     *
+     * @param o Member
+     * @return comparison
+     */
+    @Override
+    public int compareTo(final Member o) {
+        if (o != null && Objects.equals(getId(), o.getId())) {
+            return 0;
+        }
+        return -1;
+    }
+
+    /**
+     * Required implementation.
+     *
+     * @param o Object
+     * @return if objects are the same
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Member member = (Member) o;
+        return getRosterId().equals(member.getRosterId());
+    }
+
+    /**
+     * Required implementation.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode() {
+        return getRosterId().hashCode();
+    }
 }

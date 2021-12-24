@@ -16,7 +16,10 @@
 
 package org.eaa690.aerie.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
@@ -26,12 +29,19 @@ import java.util.Date;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberData {
 
     /**
      * Id.
      */
     private Long id;
+
+    /**
+     * Roster Id.
+     */
+    private Long rosterId;
 
     /**
      * Name.
@@ -41,6 +51,7 @@ public class MemberData {
     /**
      * Expiration date.
      */
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
     private Date expirationDate;
 
     /**

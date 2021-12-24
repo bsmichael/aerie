@@ -261,6 +261,26 @@ public class RosterService {
     }
 
     /**
+     * Retrieves the members affiliated with the provided first name.
+     *
+     * @param firstName First name
+     * @return Member list
+     */
+    public List<Member> getMembersByFirstName(final String firstName) {
+        return memberRepository.findByFirstName(firstName).orElseGet(ArrayList::new);
+    }
+
+    /**
+     * Retrieves the members affiliated with the provided last name.
+     *
+     * @param lastName Last name
+     * @return Member list
+     */
+    public List<Member> getMembersByLastName(final String lastName) {
+        return memberRepository.findByLastName(lastName).orElseGet(ArrayList::new);
+    }
+
+    /**
      * Gets all members.
      *
      * @return list of Member

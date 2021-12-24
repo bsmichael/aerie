@@ -16,14 +16,10 @@
 
 package org.eaa690.aerie.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.MemberData;
 import org.eaa690.aerie.model.FindByRFIDResponse;
 import org.eaa690.aerie.model.Member;
-import org.eaa690.aerie.model.MembershipReport;
 import org.eaa690.aerie.model.RFIDRequest;
 import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.RosterService;
@@ -35,10 +31,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * RosterController.
@@ -78,23 +76,6 @@ public class RosterController {
     @Autowired
     public void setJotFormService(final JotFormService value) {
         jotFormService = value;
-    }
-
-    /**
-     * Membership Report.
-     *
-     * @return report
-     */
-    @Operation(summary = "Membership report",
-            description = "Membership report",
-            tags = {"reports"})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "successful operation")
-    })
-    @GetMapping({"/membershipreport"})
-    public MembershipReport membershipReport() {
-        return rosterService.getMembershipReport();
     }
 
     /**
@@ -210,22 +191,69 @@ public class RosterController {
     }
 
     /**
+     * Retrieves list of members matching provided criteria.
+     *
+     * @param firstName First name
+     * @param lastName Last name
+     * @return MemberData list
+     */
+    @GetMapping(path = {"/find-by-name"})
+    public List<MemberData> findByName(@RequestParam(name = "firstName", required = false) final String firstName,
+                                       @RequestParam(name = "lastName", required = false) final String lastName) {
+        final List<Member> firstNameMembers = rosterService.getMembersByFirstName(firstName);
+        final List<Member> lastNameMembers = rosterService.getMembersByLastName(lastName);
+        final List<MemberData> members = new ArrayList<>();
+        if (firstNameMembers.isEmpty() && lastNameMembers.isEmpty()) {
+            return members;
+        }
+        if (lastNameMembers.isEmpty()) {
+            members.addAll(firstNameMembers
+                    .stream()
+                    .map(m -> new MemberData(m.getId(),
+                            m.getRosterId(),
+                            m.getFirstName() + " " + m.getLastName(),
+                            m.getExpiration(),
+                            m.getRfid()))
+                    .collect(Collectors.toList()));
+        }
+        if (firstNameMembers.isEmpty()) {
+            members.addAll(lastNameMembers
+                    .stream()
+                    .map(m -> new MemberData(m.getId(),
+                            m.getRosterId(),
+                            m.getFirstName() + " " + m.getLastName(),
+                            m.getExpiration(),
+                            m.getRfid()))
+                    .collect(Collectors.toList()));
+        }
+        if (!firstNameMembers.isEmpty() && !lastNameMembers.isEmpty()) {
+            members.addAll(firstNameMembers.stream()
+                    .filter(lastNameMembers::contains)
+                    .map(m -> new MemberData(m.getId(),
+                            m.getRosterId(),
+                            m.getFirstName() + " " + m.getLastName(),
+                            m.getExpiration(),
+                            m.getRfid()))
+                    .collect(Collectors.toList()));
+        }
+        return members;
+    }
+
+    /**
      * Gets all member's RFID data.
      *
      * @return list of MemberData
      */
-    @GetMapping(path = {"/all-rfid"})
-    public List<MemberData> allMemberRFIDData() {
-        final List<MemberData> records = new ArrayList<>();
-        final List<Member> members = rosterService.getAllMembers();
-        for (Member member : members) {
-            final MemberData record = new MemberData();
-            record.setId(member.getId());
-            record.setExpirationDate(member.getExpiration());
-            record.setRfid(member.getRfid());
-            record.setName(member.getFirstName() + " " + member.getLastName());
-            records.add(record);
-        }
-        return records;
+    @GetMapping()
+    public List<MemberData> allMemberData() {
+        return rosterService
+                .getAllMembers()
+                .stream()
+                .map(m -> new MemberData(m.getId(),
+                        m.getRosterId(),
+                        m.getFirstName() + " " + m.getLastName(),
+                        m.getExpiration(),
+                        m.getRfid()))
+                .collect(Collectors.toList());
     }
 }
