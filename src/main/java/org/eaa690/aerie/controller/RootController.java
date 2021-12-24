@@ -41,6 +41,15 @@ public class RootController {
     }
 
     /**
+     * Constructor.
+     *
+     * @param rService RosterService
+     */
+    public RootController(final RosterService rService) {
+        this.rosterService = rService;
+    }
+
+    /**
      * Membership Report.
      *
      * @param model Model
