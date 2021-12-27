@@ -13,7 +13,7 @@ whatever is configured in the application.yaml file.  The Default username is `s
 
 ## Search
 
-Search by first and/or last name.  (ex. http://localhost:8080/reports/search)
+Search by first and/or last name.  (ex. http://localhost:8080/search)
 
 ## Reports
 

@@ -70,7 +70,7 @@ public class ReportController {
      * @param model Model
      * @return results
      */
-    @GetMapping({"/reports/search"})
+    @GetMapping({"/search"})
     public String membershipReport(@RequestParam(name = "firstName", required = false) final String firstName,
                                    @RequestParam(name = "lastName", required = false) final String lastName,
                                    final Model model) {
