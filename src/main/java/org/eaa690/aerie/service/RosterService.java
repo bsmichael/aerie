@@ -190,10 +190,29 @@ public class RosterService {
                 .ifPresent(members -> members
                         .stream()
                         .filter(m -> m.getExpiration()
-                                .after(Date.from(Instant.now().minus(CommonConstants.THREE_HUNDRED_SIXTY_FIVE,
+                                .after(Date.from(Instant.now().minus(CommonConstants.THREE_HUNDRED_THIRTY,
                                         ChronoUnit.DAYS))))
                         .filter(m -> m.getExpiration()
                                 .before(Date.from(Instant.now().plus(CommonConstants.THIRTY, ChronoUnit.DAYS))))
+                        .filter(member -> member.getMemberType() == MemberType.Regular
+                                || member.getMemberType() == MemberType.Family
+                                || member.getMemberType() == MemberType.Student)
+                        .forEach(membersList::add));
+        return membersList;
+    }
+
+    /**
+     * Gets the list of members who are about to expire.
+     *
+     * @return list of expiring members
+     */
+    public List<Member> getExpiredMembers() {
+        final List<Member> membersList = new ArrayList<>();
+        memberRepository
+                .findAll()
+                .ifPresent(members -> members
+                        .stream()
+                        .filter(m -> m.getExpiration().before(Date.from(Instant.now())))
                         .filter(member -> member.getMemberType() == MemberType.Regular
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)

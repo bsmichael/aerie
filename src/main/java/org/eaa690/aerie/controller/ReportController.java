@@ -73,4 +73,16 @@ public class ReportController {
         return "expiringreport";
     }
 
+    /**
+     * Expired Report.
+     *
+     * @param model Model
+     * @return report
+     */
+    @GetMapping({"/reports/expired"})
+    public String expiredReport(final Model model) {
+        model.addAttribute("members", rosterService.getExpiredMembers());
+        return "expiredreport";
+    }
+
 }

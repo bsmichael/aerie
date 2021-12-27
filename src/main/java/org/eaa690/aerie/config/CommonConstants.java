@@ -244,9 +244,9 @@ public class CommonConstants {
     public static final int ONE_HUNDRED = 100;
 
     /**
-     * THREE_HUNDRED_SIXTY_FIVE.
+     * THREE_HUNDRED_THIRTY.
      */
-    public static final int THREE_HUNDRED_SIXTY_FIVE = 365;
+    public static final int THREE_HUNDRED_THIRTY = 330;
 
     /**
      * ONE_THOUSAND.
