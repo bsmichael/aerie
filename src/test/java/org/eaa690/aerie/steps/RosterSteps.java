@@ -43,6 +43,11 @@ public class RosterSteps extends BaseSteps {
     private final String EMAIL = "email/";
 
     /**
+     * Slack service.
+     */
+    private final String SLACK = "slack/";
+
+    /**
      * Constructor.
      *
      * @param testContext TestContext
@@ -87,6 +92,19 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .post(EMAIL + "enabled/" + enabled)
+                .then().log().all());
+    }
+
+    @Given("^slack is (.*)$")
+    public void slackEnabled(final String flag) {
+        String enabled = "true";
+        if ("disabled".equalsIgnoreCase(flag)) {
+            enabled = "false";
+        }
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .post(SLACK + "enabled/" + enabled)
                 .then().log().all());
     }
 

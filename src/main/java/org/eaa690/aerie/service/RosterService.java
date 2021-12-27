@@ -90,6 +90,12 @@ public class RosterService {
     private EmailService emailService;
 
     /**
+     * SlackService.
+     */
+    @Autowired
+    private SlackService slackService;
+
+    /**
      * Sets MembershipProperties.
      * Note: mostly used for unit test mocks
      *
@@ -129,6 +135,16 @@ public class RosterService {
     @Autowired
     public void setEmailService(final EmailService eService) {
         emailService = eService;
+    }
+
+    /**
+     * Sets SlackService. Note: mostly used for unit test mocks
+     *
+     * @param sService SlackService
+     */
+    @Autowired
+    public void setSlackService(final SlackService sService) {
+        slackService = sService;
     }
 
     /**
@@ -228,18 +244,22 @@ public class RosterService {
      * @param member Member
      */
     public void sendRenewMembershipMsg(final Member member) {
+        final String renewMembershipUrl = jotFormService.buildRenewMembershipUrl(member);
+        final Context context = new Context();
+        context.setVariable("member", member);
+        context.setVariable("expiration", sdf.format(member.getExpiration()));
+        context.setVariable("url", "<a href=\"" + renewMembershipUrl + "\">" + renewMembershipUrl + "</a>");
         if (member.getEmail() != null && !"".equals(member.getEmail())) {
-            final Context context = new Context();
-            context.setVariable("member", member);
-            context.setVariable("expiration", sdf.format(member.getExpiration()));
-            final String renewMembershipUrl = jotFormService.buildRenewMembershipUrl(member);
-            context.setVariable("url", "<a href=\"" + renewMembershipUrl + "\">" + renewMembershipUrl + "</a>");
             final String body = templateEngine.process("email/renewing-member", context);
             emailService.sendEmailMessage(member.getEmail(),
                     membershipProperties.getRenewSubject(),
                     body,
                     membershipProperties.getUsername(),
                     membershipProperties.getPassword());
+        }
+        if (member.getSlack() != null && !"".equals(member.getSlack())) {
+            final String body = templateEngine.process("slack/renewing-member", context);
+            slackService.sendSlackMessage(member.getSlack(), body);
         }
     }
 

@@ -17,11 +17,14 @@
 package org.eaa690.aerie.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import org.eaa690.aerie.model.WeatherProductRepository;
 import org.eaa690.aerie.roster.RosterManager;
 import org.eaa690.aerie.service.EmailService;
 import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.RosterService;
+import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.TinyURLService;
 import org.eaa690.aerie.service.WeatherService;
 import org.eaa690.aerie.ssl.SSLUtilities;
@@ -35,6 +38,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
 import java.time.Duration;
 
@@ -48,6 +52,7 @@ import java.time.Duration;
         RosterProperties.class,
         JotFormProperties.class,
         EmailProperties.class,
+        SlackProperties.class,
         MembershipProperties.class})
 public class ServiceConfig {
 
@@ -158,6 +163,34 @@ public class ServiceConfig {
     @Bean
     public EmailService emailService() {
         return new EmailService();
+    }
+
+    /**
+     * SlackService.
+     *
+     * @return SlackService
+     */
+    @Bean
+    public SlackService slackService() {
+        return new SlackService();
+    }
+
+    /**
+     * Membership Bot SlackSession.
+     *
+     * @param slackProperties SlackProperties
+     * @return SlackSession
+     */
+    @Bean(name = "membership")
+    public SlackSession slackSession(final SlackProperties slackProperties) {
+        try {
+            final SlackSession slackSession =
+                    SlackSessionFactory.createWebSocketSlackSession(slackProperties.getToken());
+            slackSession.connect();
+            return slackSession;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     /**

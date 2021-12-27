@@ -17,13 +17,15 @@ Feature: Roster functions
   Scenario: Send renew membership email
     Given I am an unauthenticated user
     And email is enabled
+    And slack is disabled
     When I request a message be sent to member 42648 to renew their membership
     Then The request should be successful
 
   @email @renewmember
-  Scenario: Send renew membership email with email service disabled
+  Scenario: Send renew membership email with services disabled
     Given I am an unauthenticated user
     And email is disabled
+    And slack is disabled
     When I request a message be sent to member 42648 to renew their membership
     Then The request should be successful
 
@@ -98,6 +100,7 @@ Feature: Roster functions
   Scenario: Force run of automated send membership renewal messages
     Given I am an unauthenticated user
     And email is disabled
+    And slack is disabled
     When I request membership renewal messages be sent
     Then The request should be successful
 
@@ -136,11 +139,11 @@ Feature: Roster functions
     Then The request should be successful
 
     Examples:
-      | firstName | lastName | name          |
-      | Brian     | Michael  | Brian Michael |
-      | Brian     | null     | Brian Michael |
-      | null      | Michael  | Brian Michael |
-      | null      | null     | null          |
+      | firstName | lastName |
+      | Brian     | Michael  |
+      | Brian     | null     |
+      | null      | Michael  |
+      | null      | null     |
 
   @newmember @disabled
   Scenario: New chapter member
