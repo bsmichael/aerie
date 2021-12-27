@@ -175,6 +175,16 @@ public class RosterService {
      */
     @Scheduled(cron = "0 0 9 1,10,20 * *")
     public void sendMembershipRenewalMessages() {
+        getExpiringMembers().forEach(this::sendRenewMembershipMsg);
+    }
+
+    /**
+     * Gets the list of members who are about to expire.
+     *
+     * @return list of expiring members
+     */
+    public List<Member> getExpiringMembers() {
+        final List<Member> membersList = new ArrayList<>();
         memberRepository
                 .findAll()
                 .ifPresent(members -> members
@@ -187,7 +197,8 @@ public class RosterService {
                         .filter(member -> member.getMemberType() == MemberType.Regular
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)
-                        .forEach(this::sendRenewMembershipMsg));
+                        .forEach(membersList::add));
+        return membersList;
     }
 
     /**

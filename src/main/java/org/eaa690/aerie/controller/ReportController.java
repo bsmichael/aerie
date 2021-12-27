@@ -23,7 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class RootController {
+public class ReportController {
 
     /**
      * RosterService.
@@ -45,7 +45,7 @@ public class RootController {
      *
      * @param rService RosterService
      */
-    public RootController(final RosterService rService) {
+    public ReportController(final RosterService rService) {
         this.rosterService = rService;
     }
 
@@ -55,10 +55,22 @@ public class RootController {
      * @param model Model
      * @return report
      */
-    @GetMapping({"/membershipreport"})
+    @GetMapping({"/reports/membership"})
     public String membershipReport(final Model model) {
         model.addAttribute("report", rosterService.getMembershipReport());
         return "membershipreport";
+    }
+
+    /**
+     * Expiring Report.
+     *
+     * @param model Model
+     * @return report
+     */
+    @GetMapping({"/reports/expiring"})
+    public String expiringReport(final Model model) {
+        model.addAttribute("members", rosterService.getExpiringMembers());
+        return "expiringreport";
     }
 
 }

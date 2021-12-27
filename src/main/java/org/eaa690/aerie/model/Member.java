@@ -24,6 +24,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.eaa690.aerie.model.roster.CellPhoneProvider;
@@ -265,6 +266,7 @@ public class Member extends BaseEntity implements Comparable<Member> {
     /**
      * Membership Expiration.
      */
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
     private Date expiration;
 
     /**
