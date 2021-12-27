@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ReportController {
@@ -59,6 +60,22 @@ public class ReportController {
     public String membershipReport(final Model model) {
         model.addAttribute("report", rosterService.getMembershipReport());
         return "membershipreport";
+    }
+
+    /**
+     * Member Search.
+     *
+     * @param firstName First name
+     * @param lastName Last name
+     * @param model Model
+     * @return results
+     */
+    @GetMapping({"/reports/search"})
+    public String membershipReport(@RequestParam(name = "firstName", required = false) final String firstName,
+                                   @RequestParam(name = "lastName", required = false) final String lastName,
+                                   final Model model) {
+        model.addAttribute("members", rosterService.findByName(firstName, lastName));
+        return "membersearch";
     }
 
     /**

@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -200,43 +199,7 @@ public class RosterController {
     @GetMapping(path = {"/find-by-name"})
     public List<MemberData> findByName(@RequestParam(name = "firstName", required = false) final String firstName,
                                        @RequestParam(name = "lastName", required = false) final String lastName) {
-        final List<Member> firstNameMembers = rosterService.getMembersByFirstName(firstName);
-        final List<Member> lastNameMembers = rosterService.getMembersByLastName(lastName);
-        final List<MemberData> members = new ArrayList<>();
-        if (firstNameMembers.isEmpty() && lastNameMembers.isEmpty()) {
-            return members;
-        }
-        if (lastNameMembers.isEmpty()) {
-            members.addAll(firstNameMembers
-                    .stream()
-                    .map(m -> new MemberData(m.getId(),
-                            m.getRosterId(),
-                            m.getFirstName() + " " + m.getLastName(),
-                            m.getExpiration(),
-                            m.getRfid()))
-                    .collect(Collectors.toList()));
-        }
-        if (firstNameMembers.isEmpty()) {
-            members.addAll(lastNameMembers
-                    .stream()
-                    .map(m -> new MemberData(m.getId(),
-                            m.getRosterId(),
-                            m.getFirstName() + " " + m.getLastName(),
-                            m.getExpiration(),
-                            m.getRfid()))
-                    .collect(Collectors.toList()));
-        }
-        if (!firstNameMembers.isEmpty() && !lastNameMembers.isEmpty()) {
-            members.addAll(firstNameMembers.stream()
-                    .filter(lastNameMembers::contains)
-                    .map(m -> new MemberData(m.getId(),
-                            m.getRosterId(),
-                            m.getFirstName() + " " + m.getLastName(),
-                            m.getExpiration(),
-                            m.getRfid()))
-                    .collect(Collectors.toList()));
-        }
-        return members;
+        return rosterService.findByName(firstName, lastName);
     }
 
     /**

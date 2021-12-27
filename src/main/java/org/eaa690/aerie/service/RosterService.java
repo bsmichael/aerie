@@ -24,11 +24,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eaa690.aerie.config.MembershipProperties;
 import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.Member;
+import org.eaa690.aerie.model.MemberData;
 import org.eaa690.aerie.model.MemberRepository;
 import org.eaa690.aerie.model.MembershipReport;
 import org.eaa690.aerie.model.roster.MemberType;
@@ -308,6 +310,53 @@ public class RosterService {
      */
     public List<Member> getMembersByLastName(final String lastName) {
         return memberRepository.findByLastName(lastName).orElseGet(ArrayList::new);
+    }
+
+    /**
+     * Retrieves list of members matching provided criteria.
+     *
+     * @param firstName First name
+     * @param lastName Last name
+     * @return MemberData list
+     */
+    public List<MemberData> findByName(final String firstName, final String lastName) {
+        final List<Member> firstNameMembers = getMembersByFirstName(firstName);
+        final List<Member> lastNameMembers = getMembersByLastName(lastName);
+        final List<MemberData> members = new ArrayList<>();
+        if (firstNameMembers.isEmpty() && lastNameMembers.isEmpty()) {
+            return members;
+        }
+        if (lastNameMembers.isEmpty()) {
+            members.addAll(firstNameMembers
+                    .stream()
+                    .map(m -> new MemberData(m.getId(),
+                            m.getRosterId(),
+                            m.getFirstName() + " " + m.getLastName(),
+                            m.getExpiration(),
+                            m.getRfid()))
+                    .collect(Collectors.toList()));
+        }
+        if (firstNameMembers.isEmpty()) {
+            members.addAll(lastNameMembers
+                    .stream()
+                    .map(m -> new MemberData(m.getId(),
+                            m.getRosterId(),
+                            m.getFirstName() + " " + m.getLastName(),
+                            m.getExpiration(),
+                            m.getRfid()))
+                    .collect(Collectors.toList()));
+        }
+        if (!firstNameMembers.isEmpty() && !lastNameMembers.isEmpty()) {
+            members.addAll(firstNameMembers.stream()
+                    .filter(lastNameMembers::contains)
+                    .map(m -> new MemberData(m.getId(),
+                            m.getRosterId(),
+                            m.getFirstName() + " " + m.getLastName(),
+                            m.getExpiration(),
+                            m.getRfid()))
+                    .collect(Collectors.toList()));
+        }
+        return members;
     }
 
     /**

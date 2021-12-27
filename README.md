@@ -11,6 +11,10 @@ if running the service locally)
 To view the H2 database, navigate to /h2-console (ex. http://localhost:8080/h2-console).  The JDBC URL will be 
 whatever is configured in the application.yaml file.  The Default username is `sa` with no password.
 
+## Search
+
+Search by first and/or last name.  (ex. http://localhost:8080/reports/search)
+
 ## Reports
 
 Several reports are available:
