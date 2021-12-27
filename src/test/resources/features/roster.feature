@@ -115,10 +115,10 @@ Feature: Roster functions
     When I request an email be sent to new member 0
     Then A not found exception should be thrown
 
-  @search
+  @findByName
   Scenario Outline:
     Given I am an unauthenticated user
-    When I search for members with <firstName> and <lastName>
+    When I find by name members with <firstName> and <lastName>
     Then The request should be successful
     And I should receive a list of membership details with <name>
 
@@ -128,6 +128,19 @@ Feature: Roster functions
     | Brian     | null     | Brian Michael |
     | null      | Michael  | Brian Michael |
     | null      | null     | null          |
+
+  @search
+  Scenario Outline:
+    Given I am an unauthenticated user
+    When I search for members with <firstName> and <lastName>
+    Then The request should be successful
+
+    Examples:
+      | firstName | lastName | name          |
+      | Brian     | Michael  | Brian Michael |
+      | Brian     | null     | Brian Michael |
+      | null      | Michael  | Brian Michael |
+      | null      | null     | null          |
 
   @newmember @disabled
   Scenario: New chapter member

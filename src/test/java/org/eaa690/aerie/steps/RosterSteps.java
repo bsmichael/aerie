@@ -90,15 +90,6 @@ public class RosterSteps extends BaseSteps {
                 .then().log().all());
     }
 
-    @When("^I request a membership report$")
-    public void iRequestAMembershipReport() {
-        testContext.setValidatableResponse(requestSpecification()
-                .contentType(ContentType.JSON)
-                .when()
-                .get( "/membershipreport")
-                .then().log().all());
-    }
-
     @When("^I request an update of the roster data$")
     public void iRequestUpdateRosterData() {
         testContext.setValidatableResponse(requestSpecification()
@@ -187,27 +178,23 @@ public class RosterSteps extends BaseSteps {
                 .then().log().all());
     }
 
-    @When("^I search for members with (.*) and (.*)$")
-    public void iSearchForMembers(final String firstName, final String lastName) {
-        final StringBuilder sb = new StringBuilder();
-        if (firstName != null && !firstName.equalsIgnoreCase("null")
-                || lastName != null && !lastName.equalsIgnoreCase("null")) {
-            sb.append("?");
-        }
-        if (firstName != null && !firstName.equalsIgnoreCase("null")) {
-            sb.append("firstName=").append(firstName);
-        }
-        if (firstName != null && !firstName.equalsIgnoreCase("null")
-                && lastName != null && !lastName.equalsIgnoreCase("null")) {
-            sb.append("&");
-        }
-        if (lastName != null && !lastName.equalsIgnoreCase("null")) {
-            sb.append("lastName=").append(lastName);
-        }
+    @When("^I find by name members with (.*) and (.*)$")
+    public void iFindByNameMembers(final String firstName, final String lastName) {
+        final StringBuilder sb = buildFirstAndLastNameQueryParamString(firstName, lastName);
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
                 .get(ROSTER + "find-by-name" + sb)
+                .then().log().all());
+    }
+
+    @When("^I search for members with (.*) and (.*)$")
+    public void iSearchForMembers(final String firstName, final String lastName) {
+        final StringBuilder sb = buildFirstAndLastNameQueryParamString(firstName, lastName);
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("search" + sb)
                 .then().log().all());
     }
 
@@ -277,4 +264,31 @@ public class RosterSteps extends BaseSteps {
                     .body("name", Matchers.hasItem(name));
         }
     }
+
+    /**
+     * Builds a query param string with first and last name values.
+     *
+     * @param firstName First name
+     * @param lastName Last name
+     * @return query param string
+     */
+    private StringBuilder buildFirstAndLastNameQueryParamString(String firstName, String lastName) {
+        final StringBuilder sb = new StringBuilder();
+        if (firstName != null && !firstName.equalsIgnoreCase("null")
+                || lastName != null && !lastName.equalsIgnoreCase("null")) {
+            sb.append("?");
+        }
+        if (firstName != null && !firstName.equalsIgnoreCase("null")) {
+            sb.append("firstName=").append(firstName);
+        }
+        if (firstName != null && !firstName.equalsIgnoreCase("null")
+                && lastName != null && !lastName.equalsIgnoreCase("null")) {
+            sb.append("&");
+        }
+        if (lastName != null && !lastName.equalsIgnoreCase("null")) {
+            sb.append("lastName=").append(lastName);
+        }
+        return sb;
+    }
+
 }
