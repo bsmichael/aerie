@@ -29,9 +29,8 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.config.JotFormProperties;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
@@ -47,12 +46,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 /**
  * Retrieves form submissions to JotForm.
  */
+@Slf4j
 public class JotFormService {
-
-    /**
-     * Logger.
-     */
-    private static final Log LOGGER = LogFactory.getLog(JotFormService.class);
 
     /**
      * Answers.
@@ -121,7 +116,7 @@ public class JotFormService {
             processNewMemberSubmissions(dateStr, client);
             processRenewingMemberSubmissions(dateStr, client);
         } catch (ResourceNotFoundException rnfe) {
-            LOGGER.error(rnfe);
+            log.error("Error: {}", rnfe, rnfe);
         }
     }
 
@@ -179,12 +174,12 @@ public class JotFormService {
         final HashMap<String, String> submissionFilter = new HashMap<>();
         submissionFilter.put("id:gt", jotFormProperties.getMemberRenewalFormId());
         submissionFilter.put("created_at:gt", dateStr);
-        LOGGER.info("Querying for member renewal form submissions after " + dateStr);
+        log.info("Querying for member renewal form submissions after " + dateStr);
         final Map<String, Member> renewMembersMap =
                 parseRenewingMember(client.getSubmissions("0", "1000", submissionFilter, "created_at"));
 
         if (!renewMembersMap.isEmpty()) {
-            LOGGER.info("RenewMembersMap size is " + renewMembersMap.size());
+            log.info("RenewMembersMap size is " + renewMembersMap.size());
             for (final Map.Entry<String, Member> entry : renewMembersMap.entrySet()) {
                 final String key = entry.getKey();
                 if (SUBMISSIONS_CACHE.getIfPresent(key) == null) {
@@ -206,12 +201,12 @@ public class JotFormService {
         final HashMap<String, String> submissionFilter = new HashMap<>();
         submissionFilter.put("id:gt", jotFormProperties.getNewMemberFormId());
         submissionFilter.put("created_at:gt", dateStr);
-        LOGGER.info("Querying for new member form submissions after " + dateStr);
+        log.info("Querying for new member form submissions after " + dateStr);
         final Map<String, Member> newMembersMap =
                 parseNewMember(client.getSubmissions("0", "1000", submissionFilter, "created_at"));
 
         if (!newMembersMap.isEmpty()) {
-            LOGGER.info("NewMembersMap size is " + newMembersMap.size());
+            log.info("NewMembersMap size is " + newMembersMap.size());
             for (final Map.Entry<String, Member> entry : newMembersMap.entrySet()) {
                 final String key = entry.getKey();
                 if (SUBMISSIONS_CACHE.getIfPresent(key) == null) {
@@ -300,7 +295,7 @@ public class JotFormService {
                 try {
                     otherInfoBuilder.setNumOfFamily(Long.parseLong(numOfFamily.getString(ANSWER)));
                 } catch (NumberFormatException nfe) {
-                    LOGGER.error("Unable to parse number of family value=[" + numOfFamily.getString(ANSWER) + "]");
+                    log.error("Unable to parse number of family value=[" + numOfFamily.getString(ANSWER) + "]");
                 }
             }
         }

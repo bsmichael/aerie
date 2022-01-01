@@ -18,8 +18,7 @@ package org.eaa690.aerie.model.roster;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +30,8 @@ import java.util.regex.Pattern;
  */
 @Getter
 @Setter
+@Slf4j
 public class OtherInfoBuilder {
-
-    /**
-     * Logger.
-     */
-    private static final Log LOGGER = LogFactory.getLog(OtherInfoBuilder.class);
 
     /**
      * Family Pattern.
@@ -132,38 +127,38 @@ public class OtherInfoBuilder {
             if (additionalFamilyMatcher.find()) {
                 matched = true;
                 setAdditionalFamily(additionalFamilyMatcher.group(1));
-                LOGGER.debug("Set additional family to [" + getAdditionalFamily() + "]");
+                log.debug("Set additional family to [" + getAdditionalFamily() + "]");
             }
             final Matcher numOfFamilyMatcher = numOfFamilyPattern.matcher(raw);
             if (numOfFamilyMatcher.find()) {
                 try {
                     setNumOfFamily(Long.parseLong(numOfFamilyMatcher.group(1)));
                     matched = true;
-                    LOGGER.debug("Set number of family to [" + getNumOfFamily() + "]");
+                    log.debug("Set number of family to [" + getNumOfFamily() + "]");
                 } catch (NumberFormatException nfe) {
-                    LOGGER.info("Unable to parse number of family value=[" + numOfFamilyMatcher.group(1) + "]");
+                    log.info("Unable to parse number of family value=[" + numOfFamilyMatcher.group(1) + "]");
                 }
             }
             final Matcher slackMatcher = slackPattern.matcher(raw);
             if (slackMatcher.find()) {
                 matched = true;
                 setSlack(slackMatcher.group(1));
-                LOGGER.debug("Set Slack to [" + getSlack() + "]");
+                log.debug("Set Slack to [" + getSlack() + "]");
             }
             final Matcher rfidMatcher = rfidPattern.matcher(raw);
             if (rfidMatcher.find()) {
                 matched = true;
                 setRfid(rfidMatcher.group(1));
-                LOGGER.debug("Set RFID to [" + getRfid() + "]");
+                log.debug("Set RFID to [" + getRfid() + "]");
             }
             final Matcher additionalInfoMatcher = additionalInfoPattern.matcher(raw);
             if (additionalInfoMatcher.find()) {
                 matched = true;
                 setAdditionalInfo(additionalInfoMatcher.group(1));
-                LOGGER.debug("Set additional info to [" + getAdditionalInfo() + "]");
+                log.debug("Set additional info to [" + getAdditionalInfo() + "]");
             }
             if (!matched) {
-                LOGGER.debug("No patterns matched.  Setting additional info to [" + raw + "]");
+                log.debug("No patterns matched.  Setting additional info to [" + raw + "]");
                 setAdditionalInfo(raw);
             }
         }

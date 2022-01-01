@@ -16,8 +16,7 @@
 
 package org.eaa690.aerie.roster;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.config.RosterConstants;
 import org.eaa690.aerie.model.Member;
@@ -53,12 +52,8 @@ import java.util.regex.Pattern;
 /**
  * Roster Manager Helper.
  */
+@Slf4j
 public class RosterManagerHelper {
-
-    /**
-     * Logger.
-     */
-    private static final Log LOGGER = LogFactory.getLog(RosterManagerHelper.class);
 
     /**
      * Date formatter.
@@ -107,7 +102,7 @@ public class RosterManagerHelper {
     public void setSlackUsers(final List<String> users) {
         if (slackUsers != null) {
             this.slackUsers = users;
-            LOGGER.info("slackUsers set");
+            log.info("slackUsers set");
         }
     }
 
@@ -118,7 +113,7 @@ public class RosterManagerHelper {
      * @param headers Map of Headers
      */
     public void login(final HttpClient httpClient, final Map<String, String> headers) {
-        LOGGER.debug("Performing login...");
+        log.debug("Performing login...");
         final String uriStr = RosterConstants.EAA_CHAPTERS_SITE_BASE + "/main.aspx";
         final String requestBodyStr = buildLoginRequestBodyString(headers);
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -133,7 +128,7 @@ public class RosterManagerHelper {
             httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             loggedIn = true;
         } catch (Exception e) {
-            LOGGER.error("[Login] Error", e);
+            log.error("[Login] Error", e);
         }
     }
 
@@ -153,7 +148,7 @@ public class RosterManagerHelper {
      * @param headers Map of Headers
      */
     public void logout(final HttpClient httpClient, final Map<String, String> headers) {
-        LOGGER.debug("Performing logout...");
+        log.debug("Performing logout...");
         final String uriStr = RosterConstants.EAA_CHAPTERS_SITE_BASE + "/main.aspx";
         final String requestBodyStr = buildLogoutRequestBodyString(headers);
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -167,7 +162,7 @@ public class RosterManagerHelper {
             httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             loggedIn = false;
         } catch (Exception e) {
-            LOGGER.error("[Logout] Error", e);
+            log.error("[Logout] Error", e);
         }
     }
 
@@ -191,7 +186,7 @@ public class RosterManagerHelper {
         try {
             HttpResponse<String> response = httpClient.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            LOGGER.debug("Received status code=" + response.statusCode());
+            log.debug("Received status code=" + response.statusCode());
 
             final Document doc = Jsoup.parse(response.body());
             viewStateMap.put(RosterConstants.VIEW_STATE, doc.getElementById(RosterConstants.VIEW_STATE));
@@ -199,7 +194,7 @@ public class RosterManagerHelper {
                     doc.getElementById(RosterConstants.VIEW_STATE_GENERATOR));
             headers.put(RosterConstants.VIEW_STATE, getViewStateValue(viewStateMap.get(RosterConstants.VIEW_STATE)));
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("[Search Page] Error", e);
+            log.error("[Search Page] Error", e);
         }
     }
 
@@ -233,11 +228,11 @@ public class RosterManagerHelper {
             final HttpRequest request = builder.build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            LOGGER.info("Received status code=" + response.statusCode());
-            LOGGER.info("Received headers=" + response.headers());
-            LOGGER.info("[Add member] response: " + response.body());
+            log.info("Received status code=" + response.statusCode());
+            log.info("Received headers=" + response.headers());
+            log.info("[Add member] response: " + response.body());
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("[Add Member] Error", e);
+            log.error("[Add Member] Error", e);
         }
     }
 
@@ -249,7 +244,7 @@ public class RosterManagerHelper {
      * @param person Member
      */
     public void updateMember(final HttpClient httpClient, final Map<String, String> headers, final Member person) {
-        LOGGER.info("Updating existing entry");
+        log.info("Updating existing entry");
     }
 
     /**
@@ -265,7 +260,7 @@ public class RosterManagerHelper {
                                final Map<String, String> headers,
                                final String firstName,
                                final String lastName) {
-        LOGGER.debug(String.format("Checking if %s %s exists...", firstName, lastName));
+        log.debug(String.format("Checking if %s %s exists...", firstName, lastName));
         final String uriStr = RosterConstants.EAA_CHAPTERS_SITE_BASE + "/searchmembers.aspx";
         final String requestBodyStr = buildExistsUserRequestBodyString(headers, firstName, lastName);
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -283,10 +278,10 @@ public class RosterManagerHelper {
         try {
             HttpResponse<String> response = httpClient.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            LOGGER.debug("Received status code=" + response.statusCode());
+            log.debug("Received status code=" + response.statusCode());
             sb.append(response.body());
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("[existsUser] Error", e);
+            log.error("[existsUser] Error", e);
         }
         return sb.toString().contains("lnkViewUpdateMember");
     }
@@ -300,7 +295,7 @@ public class RosterManagerHelper {
      */
     public String startAddUser(final HttpClient httpClient,
                                final Map<String, String> headers) {
-        LOGGER.debug("Starting add user process...");
+        log.debug("Starting add user process...");
         final String uriStr = RosterConstants.EAA_CHAPTERS_SITE_BASE + "/searchmembers.aspx";
         final String requestBodyStr = buildAddUserRequestBodyString(headers);
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -316,14 +311,14 @@ public class RosterManagerHelper {
         try {
             final HttpResponse<String> response = httpClient.send(builder.build(),
                     HttpResponse.BodyHandlers.ofString());
-            LOGGER.debug("Received status code=" + response.statusCode());
-            LOGGER.debug("Received headers: " + response.headers());
+            log.debug("Received status code=" + response.statusCode());
+            log.debug("Received headers: " + response.headers());
             final Matcher m = viewStatePattern.matcher(response.body());
             if (m.matches()) {
                 return m.group(1);
             }
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("[startAddUser] Error", e);
+            log.error("[startAddUser] Error", e);
         }
         return null;
     }
@@ -353,10 +348,10 @@ public class RosterManagerHelper {
         try {
             HttpResponse<String> response = httpClient.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            LOGGER.info("Received status code=" + response.statusCode());
+            log.info("Received status code=" + response.statusCode());
             sb.append(response.body());
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("[fetchData] Error", e);
+            log.error("[fetchData] Error", e);
         }
         return sb.toString();
     }
@@ -379,12 +374,12 @@ public class RosterManagerHelper {
                 .build();
         try {
             final HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            LOGGER.debug("Received status code=" + response.statusCode());
+            log.debug("Received status code=" + response.statusCode());
             final HttpHeaders responseHeaders = response.headers();
             final String cookieStr = responseHeaders.firstValue("set-cookie").orElse("");
             headers.put("cookie", cookieStr.substring(0, cookieStr.indexOf(";")));
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("[getHttpHeaders] Error", e);
+            log.error("[getHttpHeaders] Error", e);
         }
         headers.put(RosterConstants.EVENT_TARGET, "");
         headers.put(RosterConstants.EVENT_ARGUMENT, "");
@@ -701,7 +696,7 @@ public class RosterManagerHelper {
             builder.append(value);
         }
         final String dataStr = builder.toString();
-        LOGGER.info("[ofFormData] built " + dataStr);
+        log.info("[ofFormData] built " + dataStr);
         return HttpRequest.BodyPublishers.ofString(dataStr);
     }
 
@@ -776,7 +771,7 @@ public class RosterManagerHelper {
                     }
                     records.add(person);
                 } catch (Exception e) {
-                    LOGGER.error("Error", e);
+                    log.error("Error", e);
                 }
             }
             rowCount++;

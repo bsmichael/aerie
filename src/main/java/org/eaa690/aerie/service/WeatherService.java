@@ -27,8 +27,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.config.WeatherConstants;
 import org.eaa690.aerie.config.WeatherProperties;
@@ -61,6 +60,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * WeatherService.
  */
+@Slf4j
 public class WeatherService {
 
     /**
@@ -86,11 +86,6 @@ public class WeatherService {
      */
     @Autowired
     private ObjectMapper objectMapper;
-
-    /**
-     * Logger.
-     */
-    private static final Log LOGGER = LogFactory.getLog(WeatherService.class);
 
     /**
      * WeatherProductRepository.
@@ -179,7 +174,7 @@ public class WeatherService {
             try {
                 metars.add(getMETAR(icaoCode));
             } catch (ResourceNotFoundException rnfe) {
-                LOGGER.error("No METAR found for " + icaoCode, rnfe);
+                log.error("No METAR found for " + icaoCode, rnfe);
             }
         });
         return metars;
@@ -201,7 +196,7 @@ public class WeatherService {
             try {
                 cachedMetar = objectMapper.readValue(weatherProduct.getValue(), METAR.class);
             } catch (IOException e) {
-                LOGGER.warn(String.format("Unable to deserialize METAR from cache: %s", e.getMessage()));
+                log.warn(String.format("Unable to deserialize METAR from cache: %s", e.getMessage()));
             }
         }
         if (cachedMetar != null) {
@@ -229,7 +224,7 @@ public class WeatherService {
      * Queries AviationWeather.gov for METAR information.
      */
     private void getMETARsFromAviationWeather() {
-        LOGGER.info("Querying AviationWeather.gov for METAR information");
+        log.info("Querying AviationWeather.gov for METAR information");
         final String url = "https://www.aviationweather.gov/cgi-bin/json/MetarJSON.php"
             + "?density=all&bbox=-85.6898,30.1588,-80.8209,35.1475";
         final HttpHeaders headers = new HttpHeaders();
@@ -257,7 +252,7 @@ public class WeatherService {
             }
         } catch (RestClientException rce) {
             String msg = String.format("[RestClientException] Unable to retrieve METARs: %s", rce.getMessage());
-            LOGGER.error(msg, rce);
+            log.error(msg, rce);
         }
     }
 
@@ -347,7 +342,7 @@ public class WeatherService {
             weatherProduct.setUpdatedAt(new Date());
             weatherProductRepository.save(weatherProduct);
         } catch (JsonProcessingException jpe) {
-            LOGGER.warn(String.format("Unable to serialize METAR [%s]: %s", metar, jpe.getMessage()));
+            log.warn(String.format("Unable to serialize METAR [%s]: %s", metar, jpe.getMessage()));
         }
     }
 
