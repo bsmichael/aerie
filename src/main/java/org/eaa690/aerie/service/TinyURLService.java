@@ -17,10 +17,9 @@
 package org.eaa690.aerie.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.config.TinyUrlProperties;
 import org.eaa690.aerie.model.TinyURLResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -32,12 +31,8 @@ import java.net.http.HttpResponse;
 /**
  * TinyURLService.
  */
+@Slf4j
 public class TinyURLService {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TinyURLService.class);
 
     /**
      * JSON Object Serializer/Deserializer.
@@ -100,7 +95,7 @@ public class TinyURLService {
             final TinyURLResponse tuResponse = mapper.readValue(response.body(), TinyURLResponse.class);
             tinyUrl = tuResponse.getData().getTinyUrl();
         } catch (IOException | InterruptedException e) {
-            LOGGER.error("[Get Tiny URL] Error: " + e.getMessage(), e);
+            log.error("[Get Tiny URL] Error: " + e.getMessage(), e);
         }
         return tinyUrl;
     }

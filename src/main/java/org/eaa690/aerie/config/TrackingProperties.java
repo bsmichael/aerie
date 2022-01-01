@@ -21,36 +21,16 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Membership Properties.
+ * Tracking Properties.
  */
 @Getter
 @Setter
-@ConfigurationProperties("aerie.membership")
-public class MembershipProperties {
+@ConfigurationProperties("aerie.tracking")
+public class TrackingProperties {
 
     /**
-     * host.
+     * Host.
      */
     private String host;
-
-    /**
-     * username.
-     */
-    private String username;
-
-    /**
-     * password.
-     */
-    private String password;
-
-    /**
-     * New membership subject.
-     */
-    private String newSubject;
-
-    /**
-     * Renew membership subject.
-     */
-    private String renewSubject;
 
 }

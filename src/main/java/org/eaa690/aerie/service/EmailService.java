@@ -18,11 +18,10 @@ package org.eaa690.aerie.service;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.config.EmailProperties;
 import org.eaa690.aerie.model.MessageRepository;
 import org.eaa690.aerie.ssl.PasswordAuthenticator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.activation.DataHandler;
@@ -47,12 +46,8 @@ import java.util.Properties;
 /**
  * Email Service.
  */
+@Slf4j
 public class EmailService {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     /**
      * EmailProperties.
@@ -98,15 +93,11 @@ public class EmailService {
     /**
      * Sends an email.
      *
-     * @param to message recipient
-     * @param subject of the message
-     * @param body of the message
+     * @param message Message
      * @param from sender
      * @param password for the sender's mailbox
      */
-    public void sendEmailMessage(final String to,
-                                 final String subject,
-                                 final String body,
+    public void sendEmailMessage(final org.eaa690.aerie.model.Message message,
                                  final String from,
                                  final String password) {
         final Properties props = new Properties();
@@ -124,13 +115,14 @@ public class EmailService {
             msg.addHeader("Content-Transfer-Encoding", "8bit");
             msg.setFrom(new InternetAddress(from, from));
             msg.setReplyTo(InternetAddress.parse(from, false));
-            msg.setSubject(subject, "UTF-8");
+            msg.setSubject(message.getSubject(), "UTF-8");
             msg.setSentDate(new Date());
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
-            msg.setContent(buildMultipartMessage(body));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.getTo(), false));
+            msg.setContent(buildMultipartMessage(message.getBody()));
             if (enabled) {
-                LOGGER.info("Sending email with subject [" + subject + "] to [" + to + "] from [" + from + "]");
-                messageRepository.save(new org.eaa690.aerie.model.Message(Instant.now(), to, subject));
+                log.info("Sending email with subject [{}] to [{}] from [{}]",
+                        message.getSubject(), message.getTo(), from);
+                messageRepository.save(message.sent(Instant.now()));
                 Transport.send(msg);
             }
         } catch (MessagingException | UnsupportedEncodingException e) {

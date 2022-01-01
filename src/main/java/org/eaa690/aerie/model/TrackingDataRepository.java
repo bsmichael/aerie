@@ -14,43 +14,39 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.config;
+package org.eaa690.aerie.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.data.repository.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Membership Properties.
+ * TrackingDataRepository.
  */
-@Getter
-@Setter
-@ConfigurationProperties("aerie.membership")
-public class MembershipProperties {
+public interface TrackingDataRepository extends Repository<TrackingData, Long> {
 
     /**
-     * host.
+     * Gets all TrackingData.
+     *
+     * @return all TrackingData
      */
-    private String host;
+    Optional<List<TrackingData>> findAll();
 
     /**
-     * username.
+     * Saves a TrackingData.
+     *
+     * @param trackingData TrackingData
+     * @return TrackingData
      */
-    private String username;
+    TrackingData save(TrackingData trackingData);
 
     /**
-     * password.
+     * Find TrackingData by roster ID.
+     *
+     * @param rosterId roster ID
+     * @return matching TrackingData
      */
-    private String password;
-
-    /**
-     * New membership subject.
-     */
-    private String newSubject;
-
-    /**
-     * Renew membership subject.
-     */
-    private String renewSubject;
+    Optional<List<TrackingData>> findByRosterId(Long rosterId);
 
 }

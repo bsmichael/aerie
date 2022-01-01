@@ -14,43 +14,41 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.config;
+package org.eaa690.aerie.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import javax.persistence.Entity;
+import java.util.Date;
 
 /**
- * Membership Properties.
+ * TrackingData.
  */
+@Entity
 @Getter
 @Setter
-@ConfigurationProperties("aerie.membership")
-public class MembershipProperties {
+@NoArgsConstructor
+@AllArgsConstructor
+public class TrackingData extends BaseEntity {
 
     /**
-     * host.
+     * Roster Id.
      */
-    private String host;
+    private Long rosterId;
 
     /**
-     * username.
+     * Message Id.
      */
-    private String username;
+    private Long messageId;
 
     /**
-     * password.
+     * Opened date.
      */
-    private String password;
-
-    /**
-     * New membership subject.
-     */
-    private String newSubject;
-
-    /**
-     * Renew membership subject.
-     */
-    private String renewSubject;
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy HH:mm")
+    private Date openedDate;
 
 }

@@ -16,8 +16,7 @@
 
 package org.eaa690.aerie.roster;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.ssl.FakeX509TrustManager;
 
@@ -33,12 +32,8 @@ import java.util.Map;
 /**
  * Roster Manager.
  */
+@Slf4j
 public class RosterManager {
-
-    /**
-     * Logger.
-     */
-    private static final Log LOGGER = LogFactory.getLog(RosterManager.class);
 
     /**
      * HttpClient.
@@ -75,7 +70,7 @@ public class RosterManager {
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .sslContext(getSSLContext())
                 .build();
-        LOGGER.info("RosterManager initialized for " + username);
+        log.info("RosterManager initialized for " + username);
     }
 
     /**
@@ -137,10 +132,10 @@ public class RosterManager {
      */
     public boolean deletePerson(final Long rosterId) {
         if (rosterId == null) {
-            LOGGER.info("not deleting person as no ID provided");
+            log.info("not deleting person as no ID provided");
             return Boolean.FALSE;
         }
-        LOGGER.info("deletePerson yet to be implemented");
+        log.info("deletePerson yet to be implemented");
         return Boolean.TRUE;
     }
 

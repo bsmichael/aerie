@@ -20,7 +20,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.eaa690.aerie.config.CommonConstants;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.Instant;
@@ -47,8 +49,57 @@ public class Message extends BaseEntity {
     private String to;
 
     /**
-     * Description of the message (subject or body).
+     * Subject of the message.
      */
-    private String description;
+    private String subject;
 
+    /**
+     * Body of the message.
+     */
+    @Column(length = CommonConstants.FOUR_THOUSAND)
+    private String body;
+
+    /**
+     * Adds sent value.
+     *
+     * @param value sent
+     * @return Message
+     */
+    public Message sent(final Instant value) {
+        sent = value;
+        return this;
+    }
+
+    /**
+     * Adds to value.
+     *
+     * @param value to
+     * @return Message
+     */
+    public Message to(final String value) {
+        to = value;
+        return this;
+    }
+
+    /**
+     * Adds subject value.
+     *
+     * @param value subject
+     * @return Message
+     */
+    public Message subject(final String value) {
+        subject = value;
+        return this;
+    }
+
+    /**
+     * Adds body value.
+     *
+     * @param value body
+     * @return Message
+     */
+    public Message body(final String value) {
+        body = value;
+        return this;
+    }
 }

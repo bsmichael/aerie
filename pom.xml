@@ -27,7 +27,7 @@
 	</parent>
 	<groupId>org.eaa690</groupId>
 	<artifactId>aerie</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<name>Aerie</name>
 	<description>Various services for EAA 690</description>
 
@@ -163,6 +163,11 @@
 			<groupId>ma.glasnost.orika</groupId>
 			<artifactId>orika-core</artifactId>
 			<version>1.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>1.0.2</version>
 		</dependency>
 	</dependencies>
 
@@ -355,7 +360,7 @@
 				<dependency>
 					<groupId>com.puppycrawl.tools</groupId>
 					<artifactId>checkstyle</artifactId>
-					<version>9.2</version>
+					<version>9.2.1</version>
 				</dependency>
 			</dependencies>
 			<configuration>
@@ -472,7 +477,7 @@
 				<version>4.4.1</version>
 				<configuration>
 					<!--includesTestSourceRoots>false</includesTestSourceRoots-->
-					<targetPercentage>67%</targetPercentage>
+					<targetPercentage>74%</targetPercentage>
 					<generatePdf>true</generatePdf>
 					<generateHtml>true</generateHtml>
 					<!-- Verify that we can specify the JDK version for Clover's instrumentation -->

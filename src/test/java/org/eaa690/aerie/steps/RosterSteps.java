@@ -108,6 +108,15 @@ public class RosterSteps extends BaseSteps {
                 .then().log().all());
     }
 
+    @When("^I request all Slack users$")
+    public void iRequestAllSlackUsers() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .get(SLACK)
+                .then().log().all());
+    }
+
     @When("^I request an update of the roster data$")
     public void iRequestUpdateRosterData() {
         testContext.setValidatableResponse(requestSpecification()
@@ -281,6 +290,13 @@ public class RosterSteps extends BaseSteps {
                     .assertThat()
                     .body("name", Matchers.hasItem(name));
         }
+    }
+
+    @Then("^The response should have Slack users listed$")
+    public void theResponseShouldHaveSlackUsersListed() {
+        testContext.getValidatableResponse()
+                .assertThat()
+                .body("size()", Matchers.greaterThan(1));
     }
 
     /**

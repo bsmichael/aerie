@@ -37,10 +37,10 @@ public interface MemberRepository extends Repository<Member, Long> {
     /**
      * Gets a member.
      *
-     * @param id ID
+     * @param email email
      * @return Member
      */
-    Optional<Member> findById(Long id);
+    Optional<Member> findByEmail(String email);
 
     /**
      * Gets a member.

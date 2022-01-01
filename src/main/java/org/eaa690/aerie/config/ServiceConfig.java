@@ -26,6 +26,7 @@ import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.RosterService;
 import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.TinyURLService;
+import org.eaa690.aerie.service.TrackingService;
 import org.eaa690.aerie.service.WeatherService;
 import org.eaa690.aerie.ssl.SSLUtilities;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -52,6 +53,7 @@ import java.time.Duration;
         RosterProperties.class,
         JotFormProperties.class,
         EmailProperties.class,
+        TrackingProperties.class,
         SlackProperties.class,
         MembershipProperties.class})
 public class ServiceConfig {
@@ -173,6 +175,16 @@ public class ServiceConfig {
     @Bean
     public SlackService slackService() {
         return new SlackService();
+    }
+
+    /**
+     * TrackingService.
+     *
+     * @return TrackingService
+     */
+    @Bean
+    public TrackingService trackingService() {
+        return new TrackingService();
     }
 
     /**

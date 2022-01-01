@@ -19,10 +19,10 @@ package org.eaa690.aerie.service;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.config.SlackProperties;
+import org.eaa690.aerie.model.Message;
 import org.eaa690.aerie.model.MessageRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -33,12 +33,8 @@ import java.util.List;
 /**
  * Slack Service.
  */
+@Slf4j
 public class SlackService {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(SlackService.class);
 
     /**
      * SlackProperties.
@@ -115,14 +111,13 @@ public class SlackService {
     /**
      * Sends a Slack message.
      *
-     * @param to message recipient
-     * @param body of the message
+     * @param message Message
      */
-    public void sendSlackMessage(final String to, final String body) {
+    public void sendSlackMessage(final Message message) {
         if (enabled) {
-            LOGGER.info(String.format("Sending %s to %s", body, to));
-            slackSession.sendMessageToUser(slackSession.findUserByUserName(to), body, null);
-            messageRepository.save(new org.eaa690.aerie.model.Message(Instant.now(), to, body));
+            log.info("Sending {} to {}", message.getBody(), message.getTo());
+            slackSession.sendMessageToUser(slackSession.findUserByUserName(message.getTo()), message.getBody(), null);
+            messageRepository.save(message.sent(Instant.now()));
         }
     }
 

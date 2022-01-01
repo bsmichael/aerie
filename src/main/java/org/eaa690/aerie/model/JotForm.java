@@ -18,9 +18,8 @@ package org.eaa690.aerie.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.eaa690.aerie.config.CommonConstants;
@@ -46,12 +45,8 @@ import java.util.Map;
  */
 @Getter
 @Setter
+@Slf4j
 public class JotForm {
-
-    /**
-     * Logger.
-     */
-    private static final Log LOGGER = LogFactory.getLog(JotForm.class);
 
     /**
      * Base URL.
@@ -129,7 +124,7 @@ public class JotForm {
         try {
             HttpResponse resp = client.execute(req);
             if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                LOGGER.info(resp.getStatusLine().getReasonPhrase());
+                log.info(resp.getStatusLine().getReasonPhrase());
             }
             return new JSONObject(readInput(resp.getEntity().getContent()));
         } catch (IOException | IllegalStateException | JSONException e) {
