@@ -145,6 +145,13 @@ Feature: Roster functions
       | null      | Michael  |
       | null      | null     |
 
+  @slack
+  Scenario: Get all Slack users
+    Given I am an unauthenticated user
+    When I request all Slack users
+    Then The request should be successful
+    And The response should have Slack users listed
+
   @newmember @disabled
   Scenario: New chapter member
     Given I am a new chapter member

@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.config.MembershipProperties;
 import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
@@ -33,6 +34,8 @@ import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.MemberData;
 import org.eaa690.aerie.model.MemberRepository;
 import org.eaa690.aerie.model.MembershipReport;
+import org.eaa690.aerie.model.Message;
+import org.eaa690.aerie.model.MessageRepository;
 import org.eaa690.aerie.model.roster.MemberType;
 import org.eaa690.aerie.model.roster.Status;
 import org.eaa690.aerie.roster.RosterManager;
@@ -46,6 +49,7 @@ import org.thymeleaf.context.Context;
  * Excel spreadsheet. Then parses the spreadsheet for member details, and
  * inserts (or updates) member data in a local MySQL database.
  */
+@Slf4j
 public class RosterService {
 
     /**
@@ -72,6 +76,12 @@ public class RosterService {
     private MemberRepository memberRepository;
 
     /**
+     * MessageRepository.
+     */
+    @Autowired
+    private MessageRepository messageRepository;
+
+    /**
      * RosterManager.
      */
     @Autowired
@@ -82,6 +92,12 @@ public class RosterService {
      */
     @Autowired
     private JotFormService jotFormService;
+
+    /**
+     * TrackingService.
+     */
+    @Autowired
+    private TrackingService trackingService;
 
     /**
      * EmailService.
@@ -128,6 +144,16 @@ public class RosterService {
     }
 
     /**
+     * Sets TrackingService. Note: mostly used for unit test mocks
+     *
+     * @param tService TrackingService
+     */
+    @Autowired
+    public void setTrackingService(final TrackingService tService) {
+        trackingService = tService;
+    }
+
+    /**
      * Sets EmailService. Note: mostly used for unit test mocks
      *
      * @param eService EmailService
@@ -155,6 +181,17 @@ public class RosterService {
     @Autowired
     public void setMemberRepository(final MemberRepository mRepository) {
         memberRepository = mRepository;
+    }
+
+    /**
+     * Sets MessageRepository.
+     * Note: mostly used for unit test mocks
+     *
+     * @param value MessageRepository
+     */
+    @Autowired
+    public void setMessageRepository(final MessageRepository value) {
+        messageRepository = value;
     }
 
     /**
@@ -244,23 +281,38 @@ public class RosterService {
      * @param member Member
      */
     public void sendRenewMembershipMsg(final Member member) {
+        final Message message = messageRepository.save(new Message().sent(Instant.now()));
         final String renewMembershipUrl = jotFormService.buildRenewMembershipUrl(member);
         final Context context = new Context();
         context.setVariable("member", member);
         context.setVariable("expiration", sdf.format(member.getExpiration()));
+        context.setVariable("unsubscribeUrl", buildUnsubscribeUrl(member));
+        context.setVariable("trackingUrl",
+                trackingService.generateTrackingLink(member.getRosterId(), message.getId()));
         context.setVariable("url", "<a href=\"" + renewMembershipUrl + "\">" + renewMembershipUrl + "</a>");
         if (member.getEmail() != null && !"".equals(member.getEmail())) {
             final String body = templateEngine.process("email/renewing-member", context);
-            emailService.sendEmailMessage(member.getEmail(),
-                    membershipProperties.getRenewSubject(),
-                    body,
+            emailService.sendEmailMessage(message
+                            .to(member.getEmail())
+                            .subject(membershipProperties.getRenewSubject())
+                            .body(body),
                     membershipProperties.getUsername(),
                     membershipProperties.getPassword());
         }
         if (member.getSlack() != null && !"".equals(member.getSlack())) {
             final String body = templateEngine.process("slack/renewing-member", context);
-            slackService.sendSlackMessage(member.getSlack(), body);
+            slackService.sendSlackMessage(message.to(member.getSlack()).body(body));
         }
+    }
+
+    /**
+     * Builds email unsubscribe link.
+     *
+     * @param member Member
+     * @return URL
+     */
+    public String buildUnsubscribeUrl(final Member member) {
+        return membershipProperties.getHost() + "/unsubscribe/" + member.getRosterId() + "/email";
     }
 
     /**
@@ -269,14 +321,19 @@ public class RosterService {
      * @param member Member
      */
     public void sendNewMembershipMsg(final Member member) {
+        final Message message = messageRepository.save(new Message().sent(Instant.now()));
         if (member.getEmail() != null && !"".equals(member.getEmail())) {
             final Context context = new Context();
             context.setVariable("member", member);
+            context.setVariable("unsubscribeUrl", buildUnsubscribeUrl(member));
+            context.setVariable("trackingUrl",
+                    trackingService.generateTrackingLink(member.getRosterId(), message.getId()));
             context.setVariable("expiration", sdf.format(member.getExpiration()));
             final String body = templateEngine.process("email/new-member", context);
-            emailService.sendEmailMessage(member.getEmail(),
-                    membershipProperties.getNewSubject(),
-                    body,
+            emailService.sendEmailMessage(message
+                            .to(member.getEmail())
+                            .subject(membershipProperties.getNewSubject())
+                            .body(body),
                     membershipProperties.getUsername(),
                     membershipProperties.getPassword());
         }
@@ -330,6 +387,16 @@ public class RosterService {
      */
     public List<Member> getMembersByLastName(final String lastName) {
         return memberRepository.findByLastName(lastName).orElseGet(ArrayList::new);
+    }
+
+    /**
+     * Gets a member by email address.
+     *
+     * @param email address
+     * @return Member
+     */
+    public Member getMemberByEmail(final String email) {
+        return memberRepository.findByEmail(email).orElse(null);
     }
 
     /**
@@ -423,6 +490,46 @@ public class RosterService {
         membershipReport.setNonMemberCount(
                 allMembers.stream().filter(m -> MemberType.NonMember == m.getMemberType()).count());
         return membershipReport;
+    }
+
+    /**
+     * Disables member email enabled flag.
+     *
+     * @param rosterId roster ID
+     */
+    public void disableMemberEmail(final Long rosterId) {
+        try {
+            final Member member = getMemberByRosterID(rosterId);
+            member.setEmailEnabled(Boolean.FALSE);
+            memberRepository.save(member);
+        } catch (ResourceNotFoundException e) {
+            log.error("Unable to find member for ID: {}", rosterId);
+        }
+    }
+
+    /**
+     * Enables member email enabled flag.
+     *
+     * @param rosterId roster ID
+     */
+    public void enableMemberEmail(final Long rosterId) {
+        try {
+            final Member member = getMemberByRosterID(rosterId);
+            member.setEmailEnabled(Boolean.TRUE);
+            memberRepository.save(member);
+        } catch (ResourceNotFoundException e) {
+            log.error("Unable to find member for ID: {}", rosterId);
+        }
+    }
+
+    /**
+     * Adds a member.
+     *
+     * @param member Member
+     * @return Member
+     */
+    public Member addMember(final Member member) {
+        return member;
     }
 
     private void setActiveCounts(final Date today, final MembershipReport membershipReport,

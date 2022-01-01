@@ -14,43 +14,26 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.config;
+package org.eaa690.aerie.model.roster;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * Membership Properties.
- */
-@Getter
-@Setter
-@ConfigurationProperties("aerie.membership")
-public class MembershipProperties {
+public class WebAdminAccessTest {
 
-    /**
-     * host.
-     */
-    private String host;
+    @Test
+    public void testGetDisplayString_CHAPTER_ADMIN() {
+        Assert.assertEquals("2", WebAdminAccess.getDisplayString(WebAdminAccess.CHAPTER_ADMIN));
+    }
 
-    /**
-     * username.
-     */
-    private String username;
+    @Test
+    public void testGetDisplayString_CHAPTER_READONLY() {
+        Assert.assertEquals("3", WebAdminAccess.getDisplayString(WebAdminAccess.CHAPTER_READONLY));
+    }
 
-    /**
-     * password.
-     */
-    private String password;
-
-    /**
-     * New membership subject.
-     */
-    private String newSubject;
-
-    /**
-     * Renew membership subject.
-     */
-    private String renewSubject;
+    @Test
+    public void testGetDisplayString_NO_ACCESS() {
+        Assert.assertEquals("4", WebAdminAccess.getDisplayString(WebAdminAccess.NO_ACCESS));
+    }
 
 }

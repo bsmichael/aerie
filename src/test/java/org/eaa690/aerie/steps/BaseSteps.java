@@ -16,6 +16,7 @@
 
 package org.eaa690.aerie.steps;
 
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.eaa690.aerie.TestContext;
@@ -30,6 +31,11 @@ public class BaseSteps {
      * Server Base URI.
      */
     private final static String BASE_URI = "http://localhost";
+
+    /**
+     * Faker.
+     */
+    protected Faker faker = new Faker();
 
     /**
      * Local Server Port.

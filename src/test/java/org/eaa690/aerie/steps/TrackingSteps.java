@@ -16,49 +16,69 @@
 
 package org.eaa690.aerie.steps;
 
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
 import org.eaa690.aerie.TestContext;
+import org.hamcrest.Matchers;
 
 /**
- * Roster test steps.
+ * Tracking test steps.
  */
-public class ReportSteps extends BaseSteps {
+public class TrackingSteps extends BaseSteps {
 
     /**
      * Constructor.
      *
      * @param testContext TestContext
      */
-    public ReportSteps(final TestContext testContext) {
+    public TrackingSteps(final TestContext testContext) {
         super(testContext);
     }
 
-    @When("^I request a membership report$")
-    public void iRequestAMembershipReport() {
+    @Given("^I have received an email message$")
+    public void iHaveReceivedATrackedMessage() {
+        testContext.setMessageId(Long.parseLong(faker.numerify("#####")));
+    }
+
+    @When("^I open a tracked message$")
+    public void iOpenATrackedMessage() {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get( "/reports/membership")
+                .get( "/tracking/record/" + testContext.getRosterId() + "/" + testContext.getMessageId())
                 .then().log().all());
     }
 
-    @When("^I request a membership expiring report$")
-    public void iRequestAMembershipExpiringReport() {
+    @When("^I request all tracking data$")
+    public void iRequestAllTrackingData() {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get( "/reports/expiring")
+                .get( "/tracking/events")
                 .then().log().all());
     }
 
-    @When("^I request a membership expired report$")
-    public void iRequestAMembershipExpiredReport() {
+    @Then("^The response should have tracking data listed$")
+    public void theResponseShouldHaveSlackUsersListed() {
+        testContext.getValidatableResponse()
+                .assertThat()
+                .body("size()", Matchers.greaterThan(0));
+    }
+
+    @Then("^The message open event is recorded$")
+    public void theMessageOpenEventIsRecorded() {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get( "/reports/expired")
+                .get("/tracking/" + testContext.getRosterId() + "/events")
                 .then().log().all());
+        testContext.getValidatableResponse()
+                .assertThat()
+                .statusCode(Matchers.equalTo(HttpStatus.SC_OK))
+                .assertThat()
+                .body("size()", Matchers.greaterThan(0));
     }
-
 }

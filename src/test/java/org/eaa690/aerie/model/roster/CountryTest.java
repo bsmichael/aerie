@@ -14,43 +14,16 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.config;
+package org.eaa690.aerie.model.roster;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * Membership Properties.
- */
-@Getter
-@Setter
-@ConfigurationProperties("aerie.membership")
-public class MembershipProperties {
+public class CountryTest {
 
-    /**
-     * host.
-     */
-    private String host;
-
-    /**
-     * username.
-     */
-    private String username;
-
-    /**
-     * password.
-     */
-    private String password;
-
-    /**
-     * New membership subject.
-     */
-    private String newSubject;
-
-    /**
-     * Renew membership subject.
-     */
-    private String renewSubject;
+    @Test
+    public void testToDisplayString() {
+        Assert.assertEquals("USA", Country.toDisplayString(Country.USA));
+    }
 
 }

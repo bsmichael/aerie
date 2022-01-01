@@ -19,6 +19,7 @@ package org.eaa690.aerie;
 import io.restassured.response.ValidatableResponse;
 import lombok.Getter;
 import lombok.Setter;
+import org.eaa690.aerie.model.Member;
 
 /**
  * TestContext used in BDD tests.
@@ -31,6 +32,16 @@ public class TestContext {
      * Roster ID.
      */
     private String rosterId;
+
+    /**
+     * Message ID.
+     */
+    private Long messageId;
+
+    /**
+     * Member.
+     */
+    private Member member = new Member();
 
     /**
      * ValidatableResponse.

@@ -17,6 +17,7 @@
 package org.eaa690.aerie.model.roster;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class OtherInfo {
 
     /**
@@ -59,7 +61,7 @@ public class OtherInfo {
     /**
      * Family.
      */
-    private List<String> family;
+    private List<String> family = new ArrayList<>();
 
     /**
      * Constructor.
