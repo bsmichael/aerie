@@ -61,7 +61,7 @@ public class RosterService {
     /**
      * Date Format.
      */
-    private final SimpleDateFormat mdysdf = new SimpleDateFormat("MM/dd/yyyy");
+    private final SimpleDateFormat ymdsdf = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * MembershipProperties.
@@ -294,9 +294,10 @@ public class RosterService {
                         .stream()
                         .filter(m -> {
                             try {
-                                return mdysdf.parse(m.getJoined())
-                                        .after(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+                                return ymdsdf.parse(m.getJoined())
+                                        .after(Date.from(Instant.now().minus(CommonConstants.THIRTY, ChronoUnit.DAYS)));
                             } catch (ParseException e) {
+                                log.warn("Unable to parse date: {}", e.getMessage(), e);
                                 return false;
                             }
                         })
@@ -320,8 +321,9 @@ public class RosterService {
                         .stream()
                         .filter(m -> {
                             try {
-                                return mdysdf.parse(m.getJoined())
-                                        .after(Date.from(Instant.now().minus(1, ChronoUnit.YEARS)));
+                                return ymdsdf.parse(m.getJoined())
+                                        .after(Date.from(Instant.now()
+                                                .minus(CommonConstants.THREE_HUNDRED_THIRTY, ChronoUnit.DAYS)));
                             } catch (ParseException e) {
                                 return false;
                             }
