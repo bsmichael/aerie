@@ -13,6 +13,12 @@ Feature: Reports
     When I request a membership expired report
     Then The request should be successful
 
+  @new
+  Scenario: New members report
+    Given I am an unauthenticated user
+    When I request a new members report
+    Then The request should be successful
+
   @membership
   Scenario: Retrieve membership report
     Given I am an unauthenticated user

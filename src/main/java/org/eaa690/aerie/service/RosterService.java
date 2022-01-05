@@ -16,6 +16,7 @@
 
 package org.eaa690.aerie.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -56,6 +57,11 @@ public class RosterService {
      * Date Format.
      */
     private final SimpleDateFormat sdf = new SimpleDateFormat("EEE MMMMM dd, yyyy");
+
+    /**
+     * Date Format.
+     */
+    private final SimpleDateFormat mdysdf = new SimpleDateFormat("MM/dd/yyyy");
 
     /**
      * MembershipProperties.
@@ -268,6 +274,58 @@ public class RosterService {
                 .ifPresent(members -> members
                         .stream()
                         .filter(m -> m.getExpiration().before(Date.from(Instant.now())))
+                        .filter(member -> member.getMemberType() == MemberType.Regular
+                                || member.getMemberType() == MemberType.Family
+                                || member.getMemberType() == MemberType.Student)
+                        .forEach(membersList::add));
+        return membersList;
+    }
+
+    /**
+     * Gets the list of members who are new (past 30 days).
+     *
+     * @return list of new members
+     */
+    public List<Member> getNewMembersPastMonth() {
+        final List<Member> membersList = new ArrayList<>();
+        memberRepository
+                .findAll()
+                .ifPresent(members -> members
+                        .stream()
+                        .filter(m -> {
+                            try {
+                                return mdysdf.parse(m.getJoined())
+                                        .after(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+                            } catch (ParseException e) {
+                                return false;
+                            }
+                        })
+                        .filter(member -> member.getMemberType() == MemberType.Regular
+                                || member.getMemberType() == MemberType.Family
+                                || member.getMemberType() == MemberType.Student)
+                        .forEach(membersList::add));
+        return membersList;
+    }
+
+    /**
+     * Gets the list of members who are new (past 1 year).
+     *
+     * @return list of new members
+     */
+    public List<Member> getNewMembersPastYear() {
+        final List<Member> membersList = new ArrayList<>();
+        memberRepository
+                .findAll()
+                .ifPresent(members -> members
+                        .stream()
+                        .filter(m -> {
+                            try {
+                                return mdysdf.parse(m.getJoined())
+                                        .after(Date.from(Instant.now().minus(1, ChronoUnit.YEARS)));
+                            } catch (ParseException e) {
+                                return false;
+                            }
+                        })
                         .filter(member -> member.getMemberType() == MemberType.Regular
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)

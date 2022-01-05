@@ -59,7 +59,7 @@ public class ReportController {
      * @param model Model
      * @return report
      */
-    @GetMapping({"/reports/membership"})
+    @GetMapping({"/reports/members"})
     public String membershipReport(final Model model) {
         model.addAttribute("report", rosterService.getMembershipReport());
         return "membershipreport";
@@ -73,7 +73,7 @@ public class ReportController {
      * @param model Model
      * @return results
      */
-    @GetMapping({"/search"})
+    @GetMapping({"/members/search"})
     public String membershipReport(@RequestParam(name = "firstName", required = false) final String firstName,
                                    @RequestParam(name = "lastName", required = false) final String lastName,
                                    final Model model) {
@@ -87,7 +87,7 @@ public class ReportController {
      * @param model Model
      * @return report
      */
-    @GetMapping({"/reports/expiring"})
+    @GetMapping({"/reports/members/expiring"})
     public String expiringReport(final Model model) {
         model.addAttribute("members", rosterService.getExpiringMembers());
         return "expiringreport";
@@ -99,10 +99,23 @@ public class ReportController {
      * @param model Model
      * @return report
      */
-    @GetMapping({"/reports/expired"})
+    @GetMapping({"/reports/members/expired"})
     public String expiredReport(final Model model) {
         model.addAttribute("members", rosterService.getExpiredMembers());
         return "expiredreport";
+    }
+
+    /**
+     * Expired Report.
+     *
+     * @param model Model
+     * @return report
+     */
+    @GetMapping({"/reports/members/new"})
+    public String newMembersReport(final Model model) {
+        model.addAttribute("membersMonth", rosterService.getNewMembersPastMonth());
+        model.addAttribute("membersYear", rosterService.getNewMembersPastYear());
+        return "newmembersreport";
     }
 
 }

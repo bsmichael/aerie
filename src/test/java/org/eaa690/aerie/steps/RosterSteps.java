@@ -221,7 +221,7 @@ public class RosterSteps extends BaseSteps {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("search" + sb)
+                .get("members/search" + sb)
                 .then().log().all());
     }
 

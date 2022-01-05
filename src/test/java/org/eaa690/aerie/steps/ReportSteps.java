@@ -39,7 +39,7 @@ public class ReportSteps extends BaseSteps {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get( "/reports/membership")
+                .get( "/reports/members")
                 .then().log().all());
     }
 
@@ -48,7 +48,7 @@ public class ReportSteps extends BaseSteps {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get( "/reports/expiring")
+                .get( "/reports/members/expiring")
                 .then().log().all());
     }
 
@@ -57,7 +57,16 @@ public class ReportSteps extends BaseSteps {
         testContext.setValidatableResponse(requestSpecification()
                 .contentType(ContentType.JSON)
                 .when()
-                .get( "/reports/expired")
+                .get( "/reports/members/expired")
+                .then().log().all());
+    }
+
+    @When("^I request a new members report$")
+    public void iRequestANewMembersReport() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .get( "/reports/members/new")
                 .then().log().all());
     }
 

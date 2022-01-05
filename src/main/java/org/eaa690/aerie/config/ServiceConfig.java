@@ -23,6 +23,7 @@ import org.eaa690.aerie.model.WeatherProductRepository;
 import org.eaa690.aerie.roster.RosterManager;
 import org.eaa690.aerie.service.EmailService;
 import org.eaa690.aerie.service.JotFormService;
+import org.eaa690.aerie.service.NotamService;
 import org.eaa690.aerie.service.RosterService;
 import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.TinyURLService;
@@ -53,6 +54,7 @@ import java.time.Duration;
         RosterProperties.class,
         JotFormProperties.class,
         EmailProperties.class,
+        NotamProperties.class,
         TrackingProperties.class,
         SlackProperties.class,
         MembershipProperties.class})
@@ -155,6 +157,16 @@ public class ServiceConfig {
     @Bean
     public RosterService rosterService() {
         return new RosterService();
+    }
+
+    /**
+     * NotamService.
+     *
+     * @return NotamService
+     */
+    @Bean
+    public NotamService notamService() {
+        return new NotamService();
     }
 
     /**
