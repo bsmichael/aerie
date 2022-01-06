@@ -273,8 +273,7 @@ public class RosterService {
                 .findAll()
                 .ifPresent(members -> members
                         .stream()
-                        .filter(m -> m.getExpiration()
-                                .after(Date.from(Instant.now())))
+                        .filter(m -> m.getExpiration().after(new Date()))
                         .filter(member -> member.getMemberType() == MemberType.Regular
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)
