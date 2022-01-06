@@ -106,6 +106,18 @@ public class ReportController {
     }
 
     /**
+     * Current Report.
+     *
+     * @param model Model
+     * @return report
+     */
+    @GetMapping({"/reports/members/current"})
+    public String expiredReport(final Model model) {
+        model.addAttribute("members", rosterService.getCurrentMembers());
+        return "currentreport";
+    }
+
+    /**
      * Expired Report.
      *
      * @param model Model
