@@ -263,6 +263,26 @@ public class RosterService {
     }
 
     /**
+     * Gets the list of members who are current.
+     *
+     * @return list of current members
+     */
+    public List<Member> getCurrentMembers() {
+        final List<Member> membersList = new ArrayList<>();
+        memberRepository
+                .findAll()
+                .ifPresent(members -> members
+                        .stream()
+                        .filter(m -> m.getExpiration()
+                                .after(Date.from(Instant.now())))
+                        .filter(member -> member.getMemberType() == MemberType.Regular
+                                || member.getMemberType() == MemberType.Family
+                                || member.getMemberType() == MemberType.Student)
+                        .forEach(membersList::add));
+        return membersList;
+    }
+
+    /**
      * Gets the list of members who are about to expire.
      *
      * @return list of expiring members
