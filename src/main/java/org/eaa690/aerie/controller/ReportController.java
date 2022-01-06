@@ -112,7 +112,7 @@ public class ReportController {
      * @return report
      */
     @GetMapping({"/reports/members/current"})
-    public String expiredReport(final Model model) {
+    public String currentReport(final Model model) {
         model.addAttribute("members", rosterService.getCurrentMembers());
         return "currentreport";
     }
