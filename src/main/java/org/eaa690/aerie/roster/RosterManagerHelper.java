@@ -755,6 +755,7 @@ public class RosterManagerHelper {
      * @return list of parsed values
      */
     public List<Member> parseRecords(final String data) {
+        log.debug("Parsing records: {}", data);
         final List<Member> records = new ArrayList<>();
         final Document doc = Jsoup.parse(data);
         final Elements tableRecords = doc.getElementsByTag("tr");
@@ -788,145 +789,149 @@ public class RosterManagerHelper {
      * @throws ParseException when data is invalid
      */
     private void processColumn(final int columnCount, final Member person, final Element column) throws ParseException {
-        if (column == null) {
-            return;
-        }
-        final String columnText = column.text().trim();
-        switch (columnCount) {
-            case 0:
-                person.setRosterId(Long.parseLong(columnText));
-                break;
-            case 1:
-                person.setMemberType(MemberType.valueOf(columnText.replaceAll("-", "")));
-                break;
-            case 2:
-                person.setNickname(columnText);
-                break;
-            case CommonConstants.THREE:
-                person.setFirstName(columnText);
-                break;
-            case CommonConstants.FOUR:
-                person.setLastName(columnText);
-                break;
-            case CommonConstants.FIVE:
-                person.setSpouse(columnText);
-                break;
-            case CommonConstants.SIX:
-                person.setGender(Gender.fromDisplayString(columnText.toUpperCase()));
-                break;
-            case CommonConstants.SEVEN:
-                person.setEmail(columnText);
-                break;
-            case CommonConstants.EIGHT:
-                // Ignore EmailPrivate
-                break;
-            case CommonConstants.NINE:
-                person.setUsername(columnText);
-                break;
-            case CommonConstants.TEN:
-                person.setBirthDate(columnText);
-                break;
-            case CommonConstants.ELEVEN:
-                person.setAddressLine1(columnText);
-                break;
-            case CommonConstants.TWELVE:
-                person.setAddressLine2(columnText);
-                break;
-            case CommonConstants.THIRTEEN:
-                // Ignore AddressPrivate
-                break;
-            case CommonConstants.FOURTEEN:
-                setHomePhone(person, column);
-                break;
-            case CommonConstants.FIFTEEN:
-                // Ignore HomePhonePrivate
-                break;
-            case CommonConstants.SIXTEEN:
-                setCellPhone(person, column);
-                break;
-            case CommonConstants.SEVENTEEN:
-                // Ignore CellPhonePrivate
-                break;
-            case CommonConstants.EIGHTEEN:
-                person.setEaaNumber(columnText);
-                break;
-            case CommonConstants.NINETEEN:
-                person.setStatus(Status.valueOf(columnText.toUpperCase()));
-                break;
-            case CommonConstants.TWENTY:
-                person.setJoined(columnText);
-                break;
-            case CommonConstants.TWENTY_ONE:
-                person.setExpiration(simpleDateFormat.parse(columnText));
-                break;
-            case CommonConstants.TWENTY_TWO:
-                handleOtherInfo(person, column);
-                break;
-            case CommonConstants.TWENTY_THREE:
-                person.setCity(columnText);
-                break;
-            case CommonConstants.TWENTY_FOUR:
-                person.setState(State.fromDisplayString(columnText));
-                break;
-            case CommonConstants.TWENTY_FIVE:
-                person.setCountry(Country.fromDisplayString(columnText));
-                break;
-            case CommonConstants.TWENTY_SIX:
-                person.setZipCode(columnText);
-                break;
-            case CommonConstants.TWENTY_SEVEN:
-                person.setRatings(columnText);
-                break;
-            case CommonConstants.TWENTY_EIGHT:
-                person.setAircraftOwned(columnText);
-                break;
-            case CommonConstants.TWENTY_NINE:
-                person.setAircraftProject(columnText);
-                break;
-            case CommonConstants.THIRTY:
-                person.setAircraftBuilt(columnText);
-                break;
-            case CommonConstants.THIRTY_ONE:
-                setImcClub(person, column);
-                break;
-            case CommonConstants.THIRTY_TWO:
-                setVmcClub(person, column);
-                break;
-            case CommonConstants.THIRTY_THREE:
-                setYePilot(person, column);
-                break;
-            case CommonConstants.THIRTY_FOUR:
-                setYeVolunteer(person, column);
-                break;
-            case CommonConstants.THIRTY_FIVE:
-                setEaglePilot(person, column);
-                break;
-            case CommonConstants.THIRTY_SIX:
-                setEagleVolunteer(person, column);
-                break;
-            case CommonConstants.THIRTY_SEVEN:
-                // Ignore DateAdded
-                break;
-            case CommonConstants.THIRTY_EIGHT:
-                // Ignore DateUpdated
-                break;
-            case CommonConstants.THIRTY_NINE:
-                person.setEaaExpiration(columnText);
-                break;
-            case CommonConstants.FORTY:
-                person.setYouthProtection(columnText);
-                break;
-            case CommonConstants.FORTY_ONE:
-                person.setBackgroundCheck(columnText);
-                break;
-            case CommonConstants.FORTY_TWO:
-                // Ignore UpdatedBy
-                break;
-            case CommonConstants.FORTY_THREE:
-                person.setWebAdminAccess(WebAdminAccess.fromDisplayString(columnText));
-                break;
-            default:
-                // Do nothing
+        try {
+            if (column == null) {
+                return;
+            }
+            final String columnText = column.text().trim();
+            switch (columnCount) {
+                case 0:
+                    person.setRosterId(Long.parseLong(columnText));
+                    break;
+                case 1:
+                    person.setMemberType(MemberType.valueOf(columnText.replaceAll("-", "")));
+                    break;
+                case 2:
+                    person.setNickname(columnText);
+                    break;
+                case CommonConstants.THREE:
+                    person.setFirstName(columnText);
+                    break;
+                case CommonConstants.FOUR:
+                    person.setLastName(columnText);
+                    break;
+                case CommonConstants.FIVE:
+                    person.setSpouse(columnText);
+                    break;
+                case CommonConstants.SIX:
+                    person.setGender(Gender.fromDisplayString(columnText.toUpperCase()));
+                    break;
+                case CommonConstants.SEVEN:
+                    person.setEmail(columnText);
+                    break;
+                case CommonConstants.EIGHT:
+                    // Ignore EmailPrivate
+                    break;
+                case CommonConstants.NINE:
+                    person.setUsername(columnText);
+                    break;
+                case CommonConstants.TEN:
+                    person.setBirthDate(columnText);
+                    break;
+                case CommonConstants.ELEVEN:
+                    person.setAddressLine1(columnText);
+                    break;
+                case CommonConstants.TWELVE:
+                    person.setAddressLine2(columnText);
+                    break;
+                case CommonConstants.THIRTEEN:
+                    // Ignore AddressPrivate
+                    break;
+                case CommonConstants.FOURTEEN:
+                    setHomePhone(person, column);
+                    break;
+                case CommonConstants.FIFTEEN:
+                    // Ignore HomePhonePrivate
+                    break;
+                case CommonConstants.SIXTEEN:
+                    setCellPhone(person, column);
+                    break;
+                case CommonConstants.SEVENTEEN:
+                    // Ignore CellPhonePrivate
+                    break;
+                case CommonConstants.EIGHTEEN:
+                    person.setEaaNumber(columnText);
+                    break;
+                case CommonConstants.NINETEEN:
+                    person.setStatus(Status.valueOf(columnText.toUpperCase()));
+                    break;
+                case CommonConstants.TWENTY:
+                    person.setJoined(columnText);
+                    break;
+                case CommonConstants.TWENTY_ONE:
+                    person.setExpiration(simpleDateFormat.parse(columnText));
+                    break;
+                case CommonConstants.TWENTY_TWO:
+                    handleOtherInfo(person, column);
+                    break;
+                case CommonConstants.TWENTY_THREE:
+                    person.setCity(columnText);
+                    break;
+                case CommonConstants.TWENTY_FOUR:
+                    person.setState(State.fromDisplayString(columnText));
+                    break;
+                case CommonConstants.TWENTY_FIVE:
+                    person.setCountry(Country.fromDisplayString(columnText));
+                    break;
+                case CommonConstants.TWENTY_SIX:
+                    person.setZipCode(columnText);
+                    break;
+                case CommonConstants.TWENTY_SEVEN:
+                    person.setRatings(columnText);
+                    break;
+                case CommonConstants.TWENTY_EIGHT:
+                    person.setAircraftOwned(columnText);
+                    break;
+                case CommonConstants.TWENTY_NINE:
+                    person.setAircraftProject(columnText);
+                    break;
+                case CommonConstants.THIRTY:
+                    person.setAircraftBuilt(columnText);
+                    break;
+                case CommonConstants.THIRTY_ONE:
+                    setImcClub(person, column);
+                    break;
+                case CommonConstants.THIRTY_TWO:
+                    setVmcClub(person, column);
+                    break;
+                case CommonConstants.THIRTY_THREE:
+                    setYePilot(person, column);
+                    break;
+                case CommonConstants.THIRTY_FOUR:
+                    setYeVolunteer(person, column);
+                    break;
+                case CommonConstants.THIRTY_FIVE:
+                    setEaglePilot(person, column);
+                    break;
+                case CommonConstants.THIRTY_SIX:
+                    setEagleVolunteer(person, column);
+                    break;
+                case CommonConstants.THIRTY_SEVEN:
+                    // Ignore DateAdded
+                    break;
+                case CommonConstants.THIRTY_EIGHT:
+                    // Ignore DateUpdated
+                    break;
+                case CommonConstants.THIRTY_NINE:
+                    person.setEaaExpiration(columnText);
+                    break;
+                case CommonConstants.FORTY:
+                    person.setYouthProtection(columnText);
+                    break;
+                case CommonConstants.FORTY_ONE:
+                    person.setBackgroundCheck(columnText);
+                    break;
+                case CommonConstants.FORTY_TWO:
+                    // Ignore UpdatedBy
+                    break;
+                case CommonConstants.FORTY_THREE:
+                    person.setWebAdminAccess(WebAdminAccess.fromDisplayString(columnText));
+                    break;
+                default:
+                    // Do nothing
+            }
+        } catch (ParseException pe) {
+            log.error("Error processing count {}; column: {}", columnCount, column, pe);
         }
     }
 
