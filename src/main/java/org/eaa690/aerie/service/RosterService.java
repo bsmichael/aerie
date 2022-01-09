@@ -278,6 +278,12 @@ public class RosterService {
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)
                         .forEach(membersList::add));
+        memberRepository
+                .findAll()
+                .ifPresent(members -> members
+                        .stream()
+                        .filter(member -> member.getMemberType() == MemberType.Lifetime)
+                        .forEach(membersList::add));
         return membersList;
     }
 
