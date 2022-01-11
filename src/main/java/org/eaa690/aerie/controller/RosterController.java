@@ -16,13 +16,16 @@
 
 package org.eaa690.aerie.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.MemberData;
 import org.eaa690.aerie.model.FindByRFIDResponse;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.RFIDRequest;
+import org.eaa690.aerie.model.SlackCommand;
 import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.RosterService;
+import org.eaa690.aerie.service.SlackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +37,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -45,12 +51,18 @@ import java.util.stream.Collectors;
 @RequestMapping({
         "/roster"
 })
+@Slf4j
 public class RosterController {
 
     /**
      * RosterService.
      */
     private RosterService rosterService;
+
+    /**
+     * SlackService.
+     */
+    private SlackService slackService;
 
     /**
      * JotFormService.
@@ -65,6 +77,16 @@ public class RosterController {
     @Autowired
     public void setRosterService(final RosterService value) {
         rosterService = value;
+    }
+
+    /**
+     * Sets SlackService.
+     *
+     * @param value SlackService
+     */
+    @Autowired
+    public void setSlackService(final SlackService value) {
+        slackService = value;
     }
 
     /**
@@ -85,6 +107,36 @@ public class RosterController {
     })
     public void update() {
         rosterService.update();
+    }
+
+    /**
+     * Slack command to retrieve current membership info.
+     * Note: called via /membership within Slack.
+     *
+     * @param message as received from Slack
+     * @return user message
+     */
+    @PostMapping(path = {
+            "/slack"
+    })
+    public String slashMembership(@RequestBody final String message) {
+        log.info("Received message from Slack: {}", message);
+        final SlackCommand slackCommand = slackService.getSlackCommand(message);
+        final Optional<Member> memberOpt = rosterService
+                .getAllMembers()
+                .stream()
+                .filter(m -> slackCommand.getUserId().equalsIgnoreCase(slackService.getUserIDForUsername(m.getSlack())))
+                .findFirst();
+        if (memberOpt.isPresent()) {
+            final Member member = memberOpt.get();
+            return "{\n" + "  \"response_type\": \"ephemeral\",\n"
+                    + "  \"text\": \"Your membership is set to expire on " + member.getExpiration().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                    .format(DateTimeFormatter.ofPattern("EEE. MMMMM dd, yyyy")) + "\"\n" + "}";
+        }
+        return "{\n" + "  \"response_type\": \"ephemeral\",\n"
+                + "  \"text\": \"Please become a chapter member\"\n" + "}";
     }
 
     /**

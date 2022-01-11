@@ -16,6 +16,7 @@
 
 package org.eaa690.aerie.controller;
 
+import org.eaa690.aerie.model.SlackRecord;
 import org.eaa690.aerie.service.SlackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -79,7 +80,7 @@ public class SlackController {
      * @return list of slack users
      */
     @GetMapping
-    public List<String> getAll() {
+    public List<SlackRecord> getAll() {
         return slackService.allSlackUsers();
     }
 }

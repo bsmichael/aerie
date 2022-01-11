@@ -152,6 +152,22 @@ Feature: Roster functions
     Then The request should be successful
     And The response should have Slack users listed
 
+  @slashCommand
+  Scenario: Handle Slack /membership command for members
+    Given I am an unauthenticated user
+    And my membership is current
+    When I request my membership info via Slack
+    Then The request should be successful
+    And I should receive a membership info message
+
+  @slashCommand
+  Scenario: Handle Slack /membership command for non-members
+    Given I am an unauthenticated user
+    And my membership is unknown
+    When I request my membership info via Slack
+    Then The request should be successful
+    And I should receive a message with a link to become a member
+
   @newmember @disabled
   Scenario: New chapter member
     Given I am a new chapter member

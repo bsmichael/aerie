@@ -114,7 +114,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(SLACK)
-                .then().log().all());
+                .then());
     }
 
     @When("^I request an update of the roster data$")
@@ -165,7 +165,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(ROSTER)
-                .then().log().all());
+                .then());
     }
 
     @When("^I submit a new membership Jot Form$")
@@ -184,6 +184,42 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(ROSTER + rosterId)
+                .then().log().all());
+    }
+
+    @When("^I request my membership info via Slack$")
+    public void iRequestMyMembershipInfoViaSlack() {
+        String username = "test";
+        String userid = "unknown";
+        if (testContext.getMembershipStatus() != null) {
+            if (testContext.getMembershipStatus() == Boolean.TRUE) {
+                username = "brian";
+                userid = "U0LFDK199";
+            } else {
+                username = "dopferman";
+                userid = "UK0URM9JA";
+            }
+        }
+        final String message = "token=gIkuvaNzQIHg97ATvDxqgjtO\n" +
+                "&team_id=T0001\n" +
+                "&team_domain=example\n" +
+                "&enterprise_id=E0001\n" +
+                "&enterprise_name=Globular%20Construct%20Inc\n" +
+                "&channel_id=C2147483705\n" +
+                "&channel_name=test\n" +
+                "&user_id=" + userid + "\n" +
+                "&user_name=" + username + "\n" +
+                "&command=/gatecode\n" +
+                "&text=94070\n" +
+                "&response_url=https://hooks.slack.com/commands/1234/5678\n" +
+                "&trigger_id=13345224609.738474920.8088930838d88f008e0\n" +
+                "&api_app_id=A123456";
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .when()
+                .body(message)
+                .post( "/roster/slack")
                 .then().log().all());
     }
 
@@ -297,6 +333,13 @@ public class RosterSteps extends BaseSteps {
         testContext.getValidatableResponse()
                 .assertThat()
                 .body("size()", Matchers.greaterThan(1));
+    }
+
+    @Then("^I should receive a membership info message$")
+    public void iShouldReceiveAMembershipInfoMessage() {
+        testContext.getValidatableResponse()
+                .assertThat()
+                .body("text", Matchers.containsString("Your membership is set to expire on"));
     }
 
     /**

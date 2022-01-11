@@ -19,6 +19,12 @@ Feature: Reports
     When I request a new members report
     Then The request should be successful
 
+  @current
+  Scenario: Current members report
+    Given I am an unauthenticated user
+    When I request a current members report
+    Then The request should be successful
+
   @membership
   Scenario: Retrieve membership report
     Given I am an unauthenticated user
