@@ -155,16 +155,14 @@ Feature: Roster functions
   @slashCommand
   Scenario: Handle Slack /membership command for members
     Given I am an unauthenticated user
-    And the roster database is up-to-date
     And my membership is current
     When I request my membership info via Slack
     Then The request should be successful
     And I should receive a membership info message
 
   @slashCommand
-  Scenario: Handle Slack /membership command for members
+  Scenario: Handle Slack /membership command for non-members
     Given I am an unauthenticated user
-    And the roster database is up-to-date
     And my membership is unknown
     When I request my membership info via Slack
     Then The request should be successful
