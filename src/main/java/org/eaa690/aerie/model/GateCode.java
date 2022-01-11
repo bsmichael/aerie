@@ -66,7 +66,7 @@ public class GateCode extends BaseEntity implements Comparable<GateCode> {
                 date.toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate()
-                        .format(DateTimeFormatter.ofPattern("EEE. MMMMM dd, yyyy")),
+                        .format(DateTimeFormatter.ofPattern("EEE. MMM dd, yyyy")),
                 codeAt690AirportRd, codeAt770AirportRd);
     }
 
