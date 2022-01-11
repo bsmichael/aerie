@@ -153,7 +153,10 @@ public class SlackService {
         for (final String part : parts) {
             final String[] keyValuePair = part.split("=");
             final String key = keyValuePair[0].trim();
-            final String value = keyValuePair[1].trim();
+            String value = null;
+            if (keyValuePair.length == 2) {
+                value = keyValuePair[1].trim();
+            }
             switch (key) {
                 case "token":
                     slackCommand.setToken(value);
