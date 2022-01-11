@@ -14,43 +14,31 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie;
+package org.eaa690.aerie.model;
 
-import io.restassured.response.ValidatableResponse;
-import lombok.Getter;
-import lombok.Setter;
-import org.eaa690.aerie.model.Member;
+import org.springframework.data.repository.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
- * TestContext used in BDD tests.
+ * GateCodeRepository.
  */
-@Getter
-@Setter
-public class TestContext {
+public interface GateCodeRepository extends Repository<GateCode, Long> {
 
     /**
-     * Roster ID.
+     * Gets all gate codes.
+     *
+     * @return all gate codes
      */
-    private String rosterId;
+    Optional<List<GateCode>> findAll();
 
     /**
-     * Message ID.
+     * Saves a gate code.
+     *
+     * @param gateCode GateCode
+     * @return GateCode
      */
-    private Long messageId;
-
-    /**
-     * Member.
-     */
-    private Member member = new Member();
-
-    /**
-     * ValidatableResponse.
-     */
-    private ValidatableResponse validatableResponse;
-
-    /**
-     * Membership status boolean.
-     */
-    private Boolean membershipStatus = null;
+    GateCode save(GateCode gateCode);
 
 }

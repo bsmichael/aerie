@@ -23,12 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.config.SlackProperties;
 import org.eaa690.aerie.model.Message;
 import org.eaa690.aerie.model.MessageRepository;
+import org.eaa690.aerie.model.SlackRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Slack Service.
@@ -100,12 +101,12 @@ public class SlackService {
      *
      * @return list of users
      */
-    public List<String> allSlackUsers() {
-        final List<String> users = new ArrayList<>();
-        slackSession
+    public List<SlackRecord> allSlackUsers() {
+        return slackSession
                 .getUsers()
-                .forEach(user -> users.add(user.getRealName() + "|" + user.getUserName()));
-        return users;
+                .stream()
+                .map(user -> new SlackRecord(user.getId(), user.getRealName(), user.getUserName()))
+                .collect(Collectors.toList());
     }
 
     /**

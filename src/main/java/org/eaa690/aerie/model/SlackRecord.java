@@ -14,43 +14,33 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie;
+package org.eaa690.aerie.model;
 
-import io.restassured.response.ValidatableResponse;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.eaa690.aerie.model.Member;
 
 /**
- * TestContext used in BDD tests.
+ * SlackRecord.
  */
 @Getter
 @Setter
-public class TestContext {
+@AllArgsConstructor
+public class SlackRecord {
 
     /**
-     * Roster ID.
+     * ID.
      */
-    private String rosterId;
+    private String id;
 
     /**
-     * Message ID.
+     * Real name.
      */
-    private Long messageId;
+    private String realName;
 
     /**
-     * Member.
+     * User name.
      */
-    private Member member = new Member();
-
-    /**
-     * ValidatableResponse.
-     */
-    private ValidatableResponse validatableResponse;
-
-    /**
-     * Membership status boolean.
-     */
-    private Boolean membershipStatus = null;
+    private String userName;
 
 }

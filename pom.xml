@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.3</version>
+			<version>1.6.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ullink.slack</groupId>
@@ -128,19 +128,19 @@
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
-			<version>7.1.0</version>
+			<version>7.2.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-junit</artifactId>
-			<version>7.1.0</version>
+			<version>7.2.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-spring</artifactId>
-			<version>7.1.0</version>
+			<version>7.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

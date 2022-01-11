@@ -22,6 +22,7 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import org.eaa690.aerie.model.WeatherProductRepository;
 import org.eaa690.aerie.roster.RosterManager;
 import org.eaa690.aerie.service.EmailService;
+import org.eaa690.aerie.service.GateCodeService;
 import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.NotamService;
 import org.eaa690.aerie.service.RosterService;
@@ -167,6 +168,16 @@ public class ServiceConfig {
     @Bean
     public NotamService notamService() {
         return new NotamService();
+    }
+
+    /**
+     * GateCodeService.
+     *
+     * @return GateCodeService
+     */
+    @Bean
+    public GateCodeService gateCodeService() {
+        return new GateCodeService();
     }
 
     /**

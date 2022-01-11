@@ -38,6 +38,20 @@ public class CommonSteps extends BaseSteps {
         requestSpecification();
     }
 
+    @Given("^my membership is (.*)")
+    public void myMembershipIs(final String status) {
+        switch (status) {
+            case "current":
+                testContext.setMembershipStatus(Boolean.TRUE);
+                break;
+            case "expired":
+                testContext.setMembershipStatus(Boolean.FALSE);
+                break;
+            default:
+                testContext.setMembershipStatus(null);
+        }
+    }
+
     @Then("^The request should be successful$")
     public void requestSuccessful() {
         testContext.getValidatableResponse()
