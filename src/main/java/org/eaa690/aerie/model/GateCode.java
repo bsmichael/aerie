@@ -17,12 +17,16 @@
 package org.eaa690.aerie.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.eaa690.aerie.config.CommonConstants;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -32,12 +36,9 @@ import java.util.Date;
 @Table(name = "GATE_CODE")
 @Getter
 @Setter
-public class GateCode extends BaseEntity {
-
-    /**
-     * Date formatter.
-     */
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE. MMMMM dd, yyyy");
+@AllArgsConstructor
+@NoArgsConstructor
+public class GateCode extends BaseEntity implements Comparable<GateCode> {
 
     /**
      * Date gate code is active.
@@ -62,6 +63,71 @@ public class GateCode extends BaseEntity {
     @JsonIgnore
     public String getDisplayText() {
         return String.format("Beginning %s, the gate code at 690 Airport Rd is %s and the code at 770 Airport Rd is %s",
-                simpleDateFormat.format(date), codeAt690AirportRd, codeAt770AirportRd);
+                date.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                        .format(DateTimeFormatter.ofPattern("EEE. MMMMM dd, yyyy")),
+                codeAt690AirportRd, codeAt770AirportRd);
+    }
+
+    /**
+     * Compares GateCode records.
+     *
+     * @param o other GateCode
+     * @return comparison
+     */
+    @Override
+    public int compareTo(final GateCode o) {
+        if (o == null || date.before(o.getDate())) {
+            return -1;
+        } else if (date.after(o.getDate())) {
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
+     * Required implementation.
+     *
+     * @param o other Object
+     * @return comparison
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final GateCode gateCode = (GateCode) o;
+        if (compareTo(gateCode) == 0) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
+    /**
+     * Required implementation.
+     *
+     * @return hashCode
+     */
+    @Override
+    public int hashCode() {
+        int result = 0;
+        if (getDate() != null) {
+            result = getDate().hashCode();
+        }
+        int at770AirportRdResult = 0;
+        if (getCodeAt770AirportRd() != null) {
+            at770AirportRdResult = getCodeAt770AirportRd().hashCode();
+        }
+        result = CommonConstants.THIRTY_ONE * result + at770AirportRdResult;
+        int at690AirportRdResult = 0;
+        if (getCodeAt690AirportRd() != null) {
+            at690AirportRdResult = getCodeAt690AirportRd().hashCode();
+        }
+        result = CommonConstants.THIRTY_ONE * result + at690AirportRdResult;
+        return result;
     }
 }

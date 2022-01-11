@@ -22,6 +22,7 @@ import org.eaa690.aerie.model.GateCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -54,8 +55,15 @@ public class GateCodeService {
      * @param gateCode GateCode
      */
     public void setGateCode(final GateCode gateCode) {
-        // check if gate code is already set
-        gateCodeRepository.save(gateCode);
+        final GateCode toBeSaved = getAll()
+                .stream()
+                .filter(gc -> gc.equals(gateCode))
+                .findAny()
+                .orElse(new GateCode());
+        toBeSaved.setDate(gateCode.getDate());
+        toBeSaved.setCodeAt690AirportRd(gateCode.getCodeAt690AirportRd());
+        toBeSaved.setCodeAt770AirportRd(gateCode.getCodeAt770AirportRd());
+        gateCodeRepository.save(toBeSaved);
     }
 
     /**
@@ -73,35 +81,11 @@ public class GateCodeService {
      * @return GateCode
      */
     public GateCode getCurrentGateCode() {
-        final List<GateCode> codes = new ArrayList<>();
-        gateCodeRepository
-                .findAll()
-                .ifPresent(gateCodes -> gateCodes
-                        .stream()
-                        .filter(gc -> gc.getDate().before(new Date()))
-                        .forEach(codes::add));
-        if (!codes.isEmpty()) {
-            return codes.get(0);
-        }
-        return null;
+        return getAll()
+                .stream()
+                .filter(gc -> gc.getDate().before(new Date()))
+                .max(Comparator.naturalOrder())
+                .orElse(null);
     }
 
-    /**
-     * Gets the upcoming gate code, if available.
-     *
-     * @return GateCode
-     */
-    public GateCode getUpcomingGateCode() {
-        final List<GateCode> codes = new ArrayList<>();
-        gateCodeRepository
-                .findAll()
-                .ifPresent(gateCodes -> gateCodes
-                        .stream()
-                        .filter(gc -> gc.getDate().before(new Date()))
-                        .forEach(codes::add));
-        if (!codes.isEmpty()) {
-            return codes.get(0);
-        }
-        return null;
-    }
 }

@@ -41,6 +41,6 @@ public class SlackRecord {
     /**
      * User name.
      */
-    private String userName;
+    private String user;
 
 }

@@ -41,4 +41,12 @@ public interface GateCodeRepository extends Repository<GateCode, Long> {
      */
     GateCode save(GateCode gateCode);
 
+    /**
+     * Deletes a gate code.
+     *
+     * @param gateCode GateCode
+     * @return GateCode
+     */
+    GateCode delete(GateCode gateCode);
+
 }
