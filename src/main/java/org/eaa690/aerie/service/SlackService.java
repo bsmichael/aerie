@@ -97,6 +97,24 @@ public class SlackService {
     private boolean enabled = false;
 
     /**
+     * Gets SlackID for provided user name.
+     *
+     * @param userName user name
+     * @return id
+     */
+    public String getUserIDForUsername(final String userName) {
+        if (userName == null || "".equals(userName)) {
+            return null;
+        }
+        return allSlackUsers()
+                .stream()
+                .filter(record -> userName.equalsIgnoreCase(record.getUserName()))
+                .map(SlackRecord::getId)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
      * Gets all Slack users.
      *
      * @return list of users

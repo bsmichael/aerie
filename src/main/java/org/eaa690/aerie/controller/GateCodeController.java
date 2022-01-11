@@ -22,6 +22,7 @@ import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.SlackCommand;
 import org.eaa690.aerie.service.GateCodeService;
 import org.eaa690.aerie.service.RosterService;
+import org.eaa690.aerie.service.SlackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,6 +57,11 @@ public class GateCodeController {
     private RosterService rosterService;
 
     /**
+     * SlackService.
+     */
+    private org.eaa690.aerie.service.SlackService slackService;
+
+    /**
      * Sets GateCodeService.
      *
      * @param value GateCodeService
@@ -73,6 +79,16 @@ public class GateCodeController {
     @Autowired
     public void setRosterService(final RosterService value) {
         rosterService = value;
+    }
+
+    /**
+     * Sets SlackService.
+     *
+     * @param value SlackService
+     */
+    @Autowired
+    public void setSlackService(final SlackService value) {
+        slackService = value;
     }
 
     /**
@@ -97,11 +113,10 @@ public class GateCodeController {
     public String slashGateCode(@RequestBody final String message) {
         log.info("Received {}", message);
         final SlackCommand slackCommand = parseCommand(message);
-        log.info("slackCommand.getUserName()=" + slackCommand.getUserName());
         final Optional<Member> memberOpt = rosterService
                 .getAllMembers()
                 .stream()
-                .filter(m -> slackCommand.getUserName().equalsIgnoreCase(m.getSlack()))
+                .filter(m -> slackCommand.getUserId().equalsIgnoreCase(slackService.getUserIDForUsername(m.getSlack())))
                 .findFirst();
         if (memberOpt.isPresent()) {
             log.info("member found");
@@ -152,8 +167,8 @@ public class GateCodeController {
         final SlackCommand slackCommand = new SlackCommand();
         for (final String part : parts) {
             final String[] keyValuePair = part.split("=");
-            final String key = keyValuePair[0];
-            final String value = keyValuePair[1];
+            final String key = keyValuePair[0].trim();
+            final String value = keyValuePair[1].trim();
             switch (key) {
                 case "token":
                     slackCommand.setToken(value);
@@ -180,7 +195,7 @@ public class GateCodeController {
                     slackCommand.setUserId(value);
                     break;
                 case "user_name":
-                    slackCommand.setUserName(value);
+                    slackCommand.setUser(value);
                     break;
                 case "command":
                     slackCommand.setCommand(value);

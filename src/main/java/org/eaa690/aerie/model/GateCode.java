@@ -37,7 +37,7 @@ public class GateCode extends BaseEntity {
     /**
      * Date formatter.
      */
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("EEE. MMMMM dd, yyyy");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE. MMMMM dd, yyyy");
 
     /**
      * Date gate code is active.
@@ -62,6 +62,6 @@ public class GateCode extends BaseEntity {
     @JsonIgnore
     public String getDisplayText() {
         return String.format("Beginning %s, the gate code at 690 Airport Rd is %s and the code at 770 Airport Rd is %s",
-                SIMPLE_DATE_FORMAT.format(date), codeAt690AirportRd, codeAt770AirportRd);
+                simpleDateFormat.format(date), codeAt690AirportRd, codeAt770AirportRd);
     }
 }

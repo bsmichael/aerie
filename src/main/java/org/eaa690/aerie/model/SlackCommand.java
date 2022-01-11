@@ -73,7 +73,7 @@ public class SlackCommand {
     /**
      * User name.
      */
-    private String userName;
+    private String user;
 
     /**
      * Command.

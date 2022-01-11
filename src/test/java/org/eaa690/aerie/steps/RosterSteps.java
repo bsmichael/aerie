@@ -114,7 +114,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(SLACK)
-                .then().log().all());
+                .then());
     }
 
     @When("^I request an update of the roster data$")
@@ -165,7 +165,7 @@ public class RosterSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(ROSTER)
-                .then().log().all());
+                .then());
     }
 
     @When("^I submit a new membership Jot Form$")

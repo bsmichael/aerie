@@ -40,7 +40,7 @@ public class ReportSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get( "/reports/members")
-                .then().log().all());
+                .then());
     }
 
     @When("^I request a membership expiring report$")
@@ -49,7 +49,7 @@ public class ReportSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get( "/reports/members/expiring")
-                .then().log().all());
+                .then());
     }
 
     @When("^I request a membership expired report$")
@@ -58,7 +58,7 @@ public class ReportSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get( "/reports/members/expired")
-                .then().log().all());
+                .then());
     }
 
     @When("^I request a new members report$")
@@ -67,7 +67,16 @@ public class ReportSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get( "/reports/members/new")
-                .then().log().all());
+                .then());
+    }
+
+    @When("^I request a current members report$")
+    public void iRequestACurrentMembersReport() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .get( "/reports/members/current")
+                .then());
     }
 
 }

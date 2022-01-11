@@ -80,11 +80,14 @@ public class GateCodeSteps extends BaseSteps {
     @When("^I request the gate code via Slack$")
     public void iRequestTheGateCodeViaSlack() {
         String username = "test";
+        String userid = "unknown";
         if (testContext.getMembershipStatus() != null) {
             if (testContext.getMembershipStatus() == Boolean.TRUE) {
                 username = "brian";
+                userid = "U0LFDK199";
             } else {
-                username = "jerryfischer";
+                username = "dopferman";
+                userid = "UK0URM9JA";
             }
         }
         final String message = "token=gIkuvaNzQIHg97ATvDxqgjtO\n" +
@@ -94,7 +97,7 @@ public class GateCodeSteps extends BaseSteps {
                 "&enterprise_name=Globular%20Construct%20Inc\n" +
                 "&channel_id=C2147483705\n" +
                 "&channel_name=test\n" +
-                "&user_id=U2147483697\n" +
+                "&user_id=" + userid + "\n" +
                 "&user_name=" + username + "\n" +
                 "&command=/gatecode\n" +
                 "&text=94070\n" +
