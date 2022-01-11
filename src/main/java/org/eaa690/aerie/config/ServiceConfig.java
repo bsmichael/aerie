@@ -19,6 +19,7 @@ package org.eaa690.aerie.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
+import org.apache.catalina.connector.Connector;
 import org.eaa690.aerie.model.WeatherProductRepository;
 import org.eaa690.aerie.roster.RosterManager;
 import org.eaa690.aerie.service.EmailService;
@@ -31,8 +32,11 @@ import org.eaa690.aerie.service.TinyURLService;
 import org.eaa690.aerie.service.TrackingService;
 import org.eaa690.aerie.service.WeatherService;
 import org.eaa690.aerie.ssl.SSLUtilities;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -60,6 +64,12 @@ import java.time.Duration;
         SlackProperties.class,
         MembershipProperties.class})
 public class ServiceConfig {
+
+    /**
+     * HttpPort.
+     */
+    @Value("${http.port}")
+    private int httpPort;
 
     /**
      * SpringTemplateEngine.
@@ -258,4 +268,17 @@ public class ServiceConfig {
         return new SSLUtilities();
     }
 
+    /**
+     * Configuring additional connector to enable support for both HTTP and HTTPS.
+     *
+     * @return ServletWebServerFactory
+     */
+    @Bean
+    public ServletWebServerFactory servletContainer() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setPort(httpPort);
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+        tomcat.addAdditionalTomcatConnectors(connector);
+        return tomcat;
+    }
 }

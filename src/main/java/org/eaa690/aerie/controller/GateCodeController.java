@@ -21,6 +21,7 @@ import org.eaa690.aerie.model.GateCode;
 import org.eaa690.aerie.model.Member;
 import org.eaa690.aerie.model.SlackCommand;
 import org.eaa690.aerie.service.GateCodeService;
+import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.RosterService;
 import org.eaa690.aerie.service.SlackService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,11 @@ public class GateCodeController {
     private RosterService rosterService;
 
     /**
+     * JotFormService.
+     */
+    private JotFormService jotFormService;
+
+    /**
      * SlackService.
      */
     private org.eaa690.aerie.service.SlackService slackService;
@@ -69,6 +75,16 @@ public class GateCodeController {
     @Autowired
     public void setGateCodeService(final GateCodeService value) {
         gateCodeService = value;
+    }
+
+    /**
+     * Sets JotFormService.
+     *
+     * @param value JotFormService
+     */
+    @Autowired
+    public void setJotFormService(final JotFormService value) {
+        jotFormService = value;
     }
 
     /**
@@ -126,11 +142,17 @@ public class GateCodeController {
                         + "  \"text\": \"" + gateCode.getDisplayText() + "\"\n" + "}";
             } else {
                 return "{\n" + "  \"response_type\": \"ephemeral\",\n"
-                        + "  \"text\": \"Please renew your membership\"\n" + "}";
+                        + "  \"text\": \"The gate code is provided to chapter members only.  "
+                        + "Please renew your membership by going to "
+                        + jotFormService.buildRenewMembershipUrl(member)
+                        + "\"\n" + "}";
             }
         }
         return "{\n" + "  \"response_type\": \"ephemeral\",\n"
-                + "  \"text\": \"Please become a chapter member\"\n" + "}";
+                + "  \"text\": \"The gate code is provided to chapter members only.  "
+                + "To become a chapter member, go to "
+                + jotFormService.getNewMembershipUrl()
+                + "\"\n" + "}";
     }
 
     /**

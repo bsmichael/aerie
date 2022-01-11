@@ -90,7 +90,7 @@ public class GateCodeSteps extends BaseSteps {
                 userid = "UK0URM9JA";
             }
         }
-        final String message = "token=gIkuvaNzQIHg97ATvDxqgjtO\n" +
+        final String message = "token=token\n" +
                 "&team_id=T0001\n" +
                 "&team_domain=example\n" +
                 "&enterprise_id=E0001\n" +
@@ -133,14 +133,14 @@ public class GateCodeSteps extends BaseSteps {
     public void iShouldReceiveAMessageWithALinkToRenewMyMembership() {
         testContext.getValidatableResponse()
                 .assertThat()
-                .body("text", Matchers.containsString("Please renew your membership"));
+                .body("text", Matchers.containsString("renew your membership"));
     }
 
     @Then("^I should receive a message with a link to become a member$")
     public void iShouldReceiveAMessageWithALinkToBecomeAMember() {
         testContext.getValidatableResponse()
                 .assertThat()
-                .body("text", Matchers.containsString("Please become a chapter member"));
+                .body("text", Matchers.containsString("become a chapter member"));
     }
 
 }

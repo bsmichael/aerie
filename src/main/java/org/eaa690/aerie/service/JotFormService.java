@@ -121,6 +121,18 @@ public class JotFormService {
     }
 
     /**
+     * Gets URL to the new membership form.
+     *
+     * @return new membership URL
+     */
+    public String getNewMembershipUrl() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(jotFormProperties.getBaseUrl());
+        sb.append(jotFormProperties.getNewMemberFormId());
+        return tinyUrlService.getTinyURL(sb.toString());
+    }
+
+    /**
      * Builds a member's renew membership URL, complete with pre-populated fields.
      *
      * @param member Member

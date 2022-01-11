@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -129,14 +130,23 @@ public class RosterController {
                 .findFirst();
         if (memberOpt.isPresent()) {
             final Member member = memberOpt.get();
+            if (member.getExpiration().before(new Date())) {
+                return "{\n" + "  \"response_type\": \"ephemeral\",\n"
+                        + "  \"text\": \"Your membership expired on " + member.getExpiration().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                        .format(DateTimeFormatter.ofPattern("EEE. MMM dd, yyyy")) + "\"\n" + "}";
+            }
             return "{\n" + "  \"response_type\": \"ephemeral\",\n"
                     + "  \"text\": \"Your membership is set to expire on " + member.getExpiration().toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate()
-                    .format(DateTimeFormatter.ofPattern("EEE. MMMMM dd, yyyy")) + "\"\n" + "}";
+                    .format(DateTimeFormatter.ofPattern("EEE. MMM dd, yyyy")) + "\"\n" + "}";
         }
         return "{\n" + "  \"response_type\": \"ephemeral\",\n"
-                + "  \"text\": \"Please become a chapter member\"\n" + "}";
+                + "  \"text\": \"To become a chapter member, go to "
+                + jotFormService.getNewMembershipUrl()
+                + "\"\n" + "}";
     }
 
     /**
