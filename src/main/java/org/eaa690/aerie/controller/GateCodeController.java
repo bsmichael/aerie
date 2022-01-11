@@ -119,7 +119,6 @@ public class GateCodeController {
                 .filter(m -> slackCommand.getUserId().equalsIgnoreCase(slackService.getUserIDForUsername(m.getSlack())))
                 .findFirst();
         if (memberOpt.isPresent()) {
-            log.info("member found");
             final Member member = memberOpt.get();
             if (member.getExpiration().after(new Date())) {
                 final GateCode gateCode = gateCodeService.getCurrentGateCode();
