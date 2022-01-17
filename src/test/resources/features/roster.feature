@@ -160,6 +160,15 @@ Feature: Roster functions
     Then The request should be successful
     And I should receive a membership info message
 
+  @slashCommand @family
+  Scenario: Handle Slack /membership command for family members
+    Given I am an unauthenticated user
+    And my membership is current
+    And I am not the primary family member
+    When I request my membership info via Slack
+    Then The request should be successful
+    And I should receive a membership info message
+
   @slashCommand
   Scenario: Handle Slack /membership command for non-members
     Given I am an unauthenticated user

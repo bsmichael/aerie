@@ -16,6 +16,7 @@
 
 package org.eaa690.aerie.steps;
 
+//import io.cucumber.java.PendingException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.apache.http.HttpStatus;
@@ -50,6 +51,11 @@ public class CommonSteps extends BaseSteps {
             default:
                 testContext.setMembershipStatus(null);
         }
+    }
+
+    @Given("^I am not the primary family member$")
+    public void iAmNotThePrimaryFamilyMember() {
+        //throw new PendingException();
     }
 
     @Then("^The request should be successful$")

@@ -200,7 +200,7 @@ public class RosterSteps extends BaseSteps {
                 userid = "UK0URM9JA";
             }
         }
-        final String message = "token=gIkuvaNzQIHg97ATvDxqgjtO\n" +
+        final String message = "token=token\n" +
                 "&team_id=T0001\n" +
                 "&team_domain=example\n" +
                 "&enterprise_id=E0001\n" +

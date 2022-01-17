@@ -49,6 +49,11 @@ public class OtherInfoBuilder {
     private static Pattern slackPattern = Pattern.compile("Slack=\\[(.*?)\\]");
 
     /**
+     * Family Slack Pattern.
+     */
+    private static Pattern familySlackPattern = Pattern.compile("Family Slack=\\[(.*?)\\]");
+
+    /**
      * RFID Pattern.
      */
     private static Pattern rfidPattern = Pattern.compile("RFID=\\[(.*?)\\]");
@@ -67,6 +72,11 @@ public class OtherInfoBuilder {
      * Slack.
      */
     private String slack;
+
+    /**
+     * Family Slack.
+     */
+    private String familySlack;
 
     /**
      * Number of Family.
@@ -106,6 +116,9 @@ public class OtherInfoBuilder {
         if (slack != null) {
             parts.add(String.format("Slack=[%s]", slack));
         }
+        if (familySlack != null) {
+            parts.add(String.format("Family Slack=[%s]", familySlack));
+        }
         if (rfid != null) {
             parts.add(String.format("RFID=[%s]", rfid));
         }
@@ -136,7 +149,8 @@ public class OtherInfoBuilder {
                     matched = true;
                     log.debug("Set number of family to [" + getNumOfFamily() + "]");
                 } catch (NumberFormatException nfe) {
-                    log.info("Unable to parse number of family value=[" + numOfFamilyMatcher.group(1) + "]");
+                    log.info("Unable to parse number of family value={} from {}",
+                            numOfFamilyMatcher.group(1), raw);
                 }
             }
             final Matcher slackMatcher = slackPattern.matcher(raw);
@@ -144,6 +158,12 @@ public class OtherInfoBuilder {
                 matched = true;
                 setSlack(slackMatcher.group(1));
                 log.debug("Set Slack to [" + getSlack() + "]");
+            }
+            final Matcher familySlackMatcher = familySlackPattern.matcher(raw);
+            if (familySlackMatcher.find()) {
+                matched = true;
+                setFamilySlack(familySlackMatcher.group(1));
+                log.debug("Set Slack to [" + getFamilySlack() + "]");
             }
             final Matcher rfidMatcher = rfidPattern.matcher(raw);
             if (rfidMatcher.find()) {

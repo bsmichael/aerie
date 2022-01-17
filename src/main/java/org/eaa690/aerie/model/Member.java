@@ -65,6 +65,11 @@ public class Member extends BaseEntity implements Comparable<Member> {
     private String slack;
 
     /**
+     * Family Slack handle(s).
+     */
+    private String familySlack;
+
+    /**
      * First Name.
      */
     private String firstName;
@@ -152,7 +157,7 @@ public class Member extends BaseEntity implements Comparable<Member> {
     /**
      * Other Information.
      *
-     * "RFID=[ABC123ZXY43221]; Slack=[@brian]; Family=[Jennifer Michael, Billy Michael]; # of Family=[2]; Additional "
+     * "RFID=[ABC123ZXY43221]; Slack=[brian]; Family=[Jennifer Michael, Billy Michael]; # of Family=[2]; Additional "
      * "Info=[some random text]"
      */
     private String otherInfo;
@@ -230,17 +235,20 @@ public class Member extends BaseEntity implements Comparable<Member> {
     /**
      * EAA Membership Expiration Date.
      */
-    private String eaaExpiration;
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
+    private Date eaaExpiration;
 
     /**
      * Youth Protection Expiration Date.
      */
-    private String youthProtection;
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
+    private Date youthProtection;
 
     /**
      * Background Check Expiration Date.
      */
-    private String backgroundCheck;
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
+    private Date backgroundCheck;
 
     /**
      * EAA Number.

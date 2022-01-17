@@ -66,6 +66,18 @@ public class ReportController {
     }
 
     /**
+     * Non-National Membership Report.
+     *
+     * @param model Model
+     * @return report
+     */
+    @GetMapping({"/reports/nonnational"})
+    public String nonNationalMembershipReport(final Model model) {
+        model.addAttribute("members", rosterService.getNonNationalMembers());
+        return "nonnationalmembersreport";
+    }
+
+    /**
      * Member Search.
      *
      * @param firstName First name

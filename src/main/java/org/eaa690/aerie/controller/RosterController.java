@@ -278,6 +278,9 @@ public class RosterController {
                         m.getRosterId(),
                         m.getFirstName() + " " + m.getLastName(),
                         m.getExpiration(),
+                        m.getEaaExpiration(),
+                        m.getYouthProtection(),
+                        m.getBackgroundCheck(),
                         m.getRfid()))
                 .collect(Collectors.toList());
     }

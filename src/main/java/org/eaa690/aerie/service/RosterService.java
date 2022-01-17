@@ -244,6 +244,52 @@ public class RosterService {
      *
      * @return list of expiring members
      */
+    public List<Member> getNonNationalMembers() {
+        final List<Member> membersList = new ArrayList<>();
+        memberRepository
+                .findAll()
+                .ifPresent(members -> members
+                        .stream()
+                        .filter(member -> member.getMemberType() == MemberType.Regular
+                                || member.getMemberType() == MemberType.Family
+                                || member.getMemberType() == MemberType.Student)
+                        .filter(this::isCurrentChapterMember)
+                        .filter(m -> !isCurrentNationalEAAMember(m))
+                        .forEach(membersList::add));
+        return membersList;
+    }
+
+    /**
+     * Evaluates if the provided member is a current national member.
+     *
+     * @param member to be evaluated
+     * @return membership currency
+     */
+    public boolean isCurrentNationalEAAMember(final Member member) {
+        if (member.getEaaExpiration() == null) {
+            return Boolean.FALSE;
+        }
+        return member.getEaaExpiration().after(new Date());
+    }
+
+    /**
+     * Evaluates if the provided member is a current chapter member.
+     *
+     * @param member to be evaluated
+     * @return membership currency
+     */
+    public boolean isCurrentChapterMember(final Member member) {
+        if (member.getExpiration() == null) {
+            return Boolean.FALSE;
+        }
+        return member.getExpiration().after(new Date());
+    }
+
+    /**
+     * Gets the list of members who are about to expire.
+     *
+     * @return list of expiring members
+     */
     public List<Member> getExpiringMembers() {
         final List<Member> membersList = new ArrayList<>();
         memberRepository
@@ -273,10 +319,10 @@ public class RosterService {
                 .findAll()
                 .ifPresent(members -> members
                         .stream()
-                        .filter(m -> m.getExpiration().after(new Date()))
                         .filter(member -> member.getMemberType() == MemberType.Regular
                                 || member.getMemberType() == MemberType.Family
                                 || member.getMemberType() == MemberType.Student)
+                        .filter(this::isCurrentChapterMember)
                         .forEach(membersList::add));
         memberRepository
                 .findAll()
@@ -505,6 +551,9 @@ public class RosterService {
                             m.getRosterId(),
                             m.getFirstName() + " " + m.getLastName(),
                             m.getExpiration(),
+                            m.getEaaExpiration(),
+                            m.getYouthProtection(),
+                            m.getBackgroundCheck(),
                             m.getRfid()))
                     .collect(Collectors.toList()));
         }
@@ -515,6 +564,9 @@ public class RosterService {
                             m.getRosterId(),
                             m.getFirstName() + " " + m.getLastName(),
                             m.getExpiration(),
+                            m.getEaaExpiration(),
+                            m.getYouthProtection(),
+                            m.getBackgroundCheck(),
                             m.getRfid()))
                     .collect(Collectors.toList()));
         }
@@ -525,6 +577,9 @@ public class RosterService {
                             m.getRosterId(),
                             m.getFirstName() + " " + m.getLastName(),
                             m.getExpiration(),
+                            m.getEaaExpiration(),
+                            m.getYouthProtection(),
+                            m.getBackgroundCheck(),
                             m.getRfid()))
                     .collect(Collectors.toList()));
         }

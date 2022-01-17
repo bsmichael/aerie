@@ -25,6 +25,15 @@ Feature: Gate Codes
     Then The request should be successful
     And I should receive a gate code
 
+  @slashCommand @family
+  Scenario: Handle Slack /gatecode command for current family members
+    Given I am an unauthenticated user
+    And my membership is current
+    And I am not the primary family member
+    When I request the gate code via Slack
+    Then The request should be successful
+    And I should receive a gate code
+
   @slashCommand @expired
   Scenario: Handle Slack /gatecode command for expired members
     Given I am an unauthenticated user

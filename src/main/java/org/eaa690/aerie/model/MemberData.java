@@ -49,10 +49,28 @@ public class MemberData {
     private String name;
 
     /**
-     * Expiration date.
+     * Chapter membership expiration date.
      */
     @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
     private Date expirationDate;
+
+    /**
+     * EAA membership expiration date.
+     */
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
+    private Date eaaExpirationDate;
+
+    /**
+     * Youth protection expiration date.
+     */
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
+    private Date youthProtectionExpirationDate;
+
+    /**
+     * Background check expiration date.
+     */
+    @JsonFormat(pattern = "EEE. MMMMM dd, yyyy")
+    private Date backgroundCheckExpirationDate;
 
     /**
      * RFID.
