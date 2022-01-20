@@ -24,6 +24,9 @@ import org.eaa690.aerie.model.gs.QuestionRepository;
 import org.eaa690.aerie.ssl.GSDecryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,7 +146,20 @@ public class QuestionService {
      * Updates questions and answers.
      */
     public void update() {
-        // Do something
+        // Read all files in database dir
+        String jdbcUrl = "jdbc:sqlite:/<path>/PVT.db";
+        try {
+            DriverManager.registerDriver(new org.sqlite.JDBC());
+            Connection conn = DriverManager.getConnection(jdbcUrl);
+            if (conn != null) {
+                log.info("Connected to " + jdbcUrl);
+                // Pull data from database
+                conn.close();
+                // Delete file in database dir
+            }
+        } catch (SQLException sqle) {
+            log.error("Error: " + sqle.getMessage());
+        }
     }
 
 }
