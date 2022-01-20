@@ -26,11 +26,13 @@ import org.eaa690.aerie.service.EmailService;
 import org.eaa690.aerie.service.GateCodeService;
 import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.NotamService;
+import org.eaa690.aerie.service.QuestionService;
 import org.eaa690.aerie.service.RosterService;
 import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.TinyURLService;
 import org.eaa690.aerie.service.TrackingService;
 import org.eaa690.aerie.service.WeatherService;
+import org.eaa690.aerie.ssl.GSDecryptor;
 import org.eaa690.aerie.ssl.SSLUtilities;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -60,6 +62,7 @@ import java.time.Duration;
         JotFormProperties.class,
         EmailProperties.class,
         NotamProperties.class,
+        GroundSchoolProperties.class,
         TrackingProperties.class,
         SlackProperties.class,
         MembershipProperties.class})
@@ -171,6 +174,16 @@ public class ServiceConfig {
     }
 
     /**
+     * QuestionService.
+     *
+     * @return QuestionService
+     */
+    @Bean
+    public QuestionService questionService() {
+        return new QuestionService();
+    }
+
+    /**
      * NotamService.
      *
      * @return NotamService
@@ -266,6 +279,17 @@ public class ServiceConfig {
     @Bean
     public SSLUtilities sslUtilities() {
         return new SSLUtilities();
+    }
+
+    /**
+     * GroundSchool data decryptor.
+     *
+     * @param props GroundSchoolProperties
+     * @return GSDecryptor
+     */
+    @Bean
+    public GSDecryptor gsDecryptor(final GroundSchoolProperties props) {
+        return new GSDecryptor(props.getSecretKey(), props.getInitVector());
     }
 
     /**
