@@ -44,6 +44,11 @@ public class Question extends BaseEntity implements Comparable<Question> {
     private Long remoteId;
 
     /**
+     * Old Question ID.
+     */
+    private Long oldQuestionId;
+
+    /**
      * Question Text.
      */
     private String text;
