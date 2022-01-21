@@ -39,6 +39,11 @@ import java.util.Date;
 public class Question extends BaseEntity implements Comparable<Question> {
 
     /**
+     * Remote Question ID.
+     */
+    private Long remoteId;
+
+    /**
      * Question Text.
      */
     private String text;
