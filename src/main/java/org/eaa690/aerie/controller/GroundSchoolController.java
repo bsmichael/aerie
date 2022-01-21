@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,16 +56,6 @@ public class GroundSchoolController {
      */
     public GroundSchoolController(final QuestionService qService) {
         questionService = qService;
-    }
-
-    /**
-     * Updates questions and answers.
-     */
-    @PostMapping(path = {
-            "/update"
-    })
-    public void update() {
-        questionService.update();
     }
 
 }

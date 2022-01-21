@@ -21,12 +21,8 @@ import org.eaa690.aerie.model.gs.Answer;
 import org.eaa690.aerie.model.gs.AnswerRepository;
 import org.eaa690.aerie.model.gs.Question;
 import org.eaa690.aerie.model.gs.QuestionRepository;
-import org.eaa690.aerie.ssl.GSDecryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,12 +45,6 @@ public class QuestionService {
     private AnswerRepository answerRepository;
 
     /**
-     * GSDecryptor.
-     */
-    @Autowired
-    private GSDecryptor gsDecryptor;
-
-    /**
      * Sets QuestionRepository.
      * Note: mostly used for unit test mocks
      *
@@ -74,17 +64,6 @@ public class QuestionService {
     @Autowired
     public void setAnswerRepository(final AnswerRepository value) {
         answerRepository = value;
-    }
-
-    /**
-     * Sets GSDecryptor.
-     * Note: mostly used for unit test mocks
-     *
-     * @param value GSDecryptor
-     */
-    @Autowired
-    public void setGSDecryptor(final GSDecryptor value) {
-        gsDecryptor = value;
     }
 
     /**
@@ -140,26 +119,6 @@ public class QuestionService {
      */
     public List<Answer> getAllAnswers() {
         return answerRepository.findAll().orElse(new ArrayList<>());
-    }
-
-    /**
-     * Updates questions and answers.
-     */
-    public void update() {
-        // Read all files in database dir
-        String jdbcUrl = "jdbc:sqlite:/<path>/PVT.db";
-        try {
-            DriverManager.registerDriver(new org.sqlite.JDBC());
-            Connection conn = DriverManager.getConnection(jdbcUrl);
-            if (conn != null) {
-                log.info("Connected to " + jdbcUrl);
-                // Pull data from database
-                conn.close();
-                // Delete file in database dir
-            }
-        } catch (SQLException sqle) {
-            log.error("Error: " + sqle.getMessage());
-        }
     }
 
 }
