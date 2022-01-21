@@ -27,44 +27,13 @@ import java.util.Optional;
 public interface QuestionRepository extends Repository<Question, Long> {
 
     /**
-     * Gets a question by ID.
+     * Gets a question by remote ID.
      *
-     * @param id question ID
+     * @param id remote question ID
+     * @param course course
      * @return Question
      */
-    Optional<Question> findById(Long id);
-
-    /**
-     * Gets a question by chapter ID.
-     *
-     * @param id chapter ID
-     * @return Question
-     */
-    Optional<List<Question>> findByChapterId(Long id);
-
-    /**
-     * Gets a question by ACS ID.
-     *
-     * @param id ACS ID
-     * @return Question
-     */
-    Optional<List<Question>> findByAcsId(Long id);
-
-    /**
-     * Gets a question by learning statement code.
-     *
-     * @param code Learning Statement Code
-     * @return Question
-     */
-    Optional<List<Question>> findByLsc(String code);
-
-    /**
-     * Gets a question by source.
-     *
-     * @param src Source
-     * @return Question
-     */
-    Optional<List<Question>> findBySource(String src);
+    Optional<Question> findByRemoteIdAndCourse(Long id, String course);
 
     /**
      * Gets a question by course.
@@ -73,13 +42,6 @@ public interface QuestionRepository extends Repository<Question, Long> {
      * @return Question
      */
     Optional<List<Question>> findByCourse(String course);
-
-    /**
-     * Gets all questions.
-     *
-     * @return all questions
-     */
-    Optional<List<Question>> findAll();
 
     /**
      * Saves a question.

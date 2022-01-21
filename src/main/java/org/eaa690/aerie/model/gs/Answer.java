@@ -23,6 +23,7 @@ import lombok.Setter;
 import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.model.BaseEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
@@ -36,7 +37,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Answer extends BaseEntity implements Comparable<Answer> {
+public class Answer extends BaseEntity {
 
     /**
      * Remote Answer ID.
@@ -46,7 +47,13 @@ public class Answer extends BaseEntity implements Comparable<Answer> {
     /**
      * Answer Text.
      */
+    @Column(length = CommonConstants.TWO_THOUSAND)
     private String text;
+
+    /**
+     * Course.
+     */
+    private String course;
 
     /**
      * Question ID.
@@ -63,54 +70,4 @@ public class Answer extends BaseEntity implements Comparable<Answer> {
      */
     private Date lastModified;
 
-    /**
-     * Compares Answer records.
-     *
-     * @param o other Answer
-     * @return comparison
-     */
-    @Override
-    public int compareTo(final Answer o) {
-        if (o == null || getId() == null || getId() < o.getId()) {
-            return -1;
-        } else if (getId().equals(o.getId())) {
-            return 0;
-        }
-        return 1;
-    }
-
-    /**
-     * Required implementation.
-     *
-     * @param o other Object
-     * @return comparison
-     */
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Answer question = (Answer) o;
-        if (compareTo(question) == 0) {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
-    }
-
-    /**
-     * Required implementation.
-     *
-     * @return hashCode
-     */
-    @Override
-    public int hashCode() {
-        int result = 0;
-        if (getText() != null) {
-            result = getText().hashCode();
-        }
-        return CommonConstants.THIRTY_ONE * result;
-    }
 }

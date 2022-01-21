@@ -27,27 +27,22 @@ import java.util.Optional;
 public interface AnswerRepository extends Repository<Answer, Long> {
 
     /**
-     * Gets an answer by ID.
+     * Gets an answer by Remote ID and Course.
      *
-     * @param id answer ID
+     * @param id remote answer ID
+     * @param course course
      * @return Answer
      */
-    Optional<Answer> findById(Long id);
+    Optional<Answer> findByRemoteIdAndCourse(Long id, String course);
 
     /**
      * Gets an answer by question ID.
      *
      * @param id Question ID
+     * @param course course
      * @return Answer
      */
-    Optional<List<Answer>> findByQuestionId(Long id);
-
-    /**
-     * Gets all answers.
-     *
-     * @return all answers
-     */
-    Optional<List<Answer>> findAll();
+    Optional<List<Answer>> findByQuestionIdAndCourse(Long id, String course);
 
     /**
      * Saves an answer.

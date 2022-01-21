@@ -23,6 +23,7 @@ import lombok.Setter;
 import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.model.BaseEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
@@ -36,7 +37,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Question extends BaseEntity implements Comparable<Question> {
+public class Question extends BaseEntity {
 
     /**
      * Remote Question ID.
@@ -51,6 +52,7 @@ public class Question extends BaseEntity implements Comparable<Question> {
     /**
      * Question Text.
      */
+    @Column(length = CommonConstants.TWO_THOUSAND)
     private String text;
 
     /**
@@ -86,6 +88,7 @@ public class Question extends BaseEntity implements Comparable<Question> {
     /**
      * Explanation.
      */
+    @Column(length = CommonConstants.FIVE_HUNDRED_THOUSAND)
     private String explanation;
 
     /**
@@ -93,54 +96,4 @@ public class Question extends BaseEntity implements Comparable<Question> {
      */
     private String lsc;
 
-    /**
-     * Compares Question records.
-     *
-     * @param o other Question
-     * @return comparison
-     */
-    @Override
-    public int compareTo(final Question o) {
-        if (o == null || getId() == null || getId() < o.getId()) {
-            return -1;
-        } else if (getId().equals(o.getId())) {
-            return 0;
-        }
-        return 1;
-    }
-
-    /**
-     * Required implementation.
-     *
-     * @param o other Object
-     * @return comparison
-     */
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Question question = (Question) o;
-        if (compareTo(question) == 0) {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
-    }
-
-    /**
-     * Required implementation.
-     *
-     * @return hashCode
-     */
-    @Override
-    public int hashCode() {
-        int result = 0;
-        if (getText() != null) {
-            result = getText().hashCode();
-        }
-        return CommonConstants.THIRTY_ONE * result;
-    }
 }

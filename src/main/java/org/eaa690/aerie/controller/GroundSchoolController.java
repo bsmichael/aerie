@@ -17,11 +17,21 @@
 package org.eaa690.aerie.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eaa690.aerie.exception.ResourceNotFoundException;
+import org.eaa690.aerie.model.gs.Answer;
+import org.eaa690.aerie.model.gs.Question;
 import org.eaa690.aerie.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * GroundSchoolController.
@@ -56,6 +66,59 @@ public class GroundSchoolController {
      */
     public GroundSchoolController(final QuestionService qService) {
         questionService = qService;
+    }
+
+    /**
+     * Updates questions and answers.
+     */
+    @PostMapping(path = {
+            "/update"
+    })
+    public void update() {
+        questionService.update();
+    }
+
+    /**
+     * Finds questions.
+     *
+     * @param remoteQuestionId remote question ID
+     * @param course Course
+     * @return Question
+     * @throws ResourceNotFoundException when questions are not found
+     */
+    @GetMapping(path = {
+            "/questions"
+    })
+    public Question findQuestions(@RequestParam(name = "qid", required = false) final Long remoteQuestionId,
+                                  @RequestParam(name = "course", required = false) final String course)
+            throws ResourceNotFoundException {
+        try {
+            return questionService
+                    .getQuestionsForCourse(course)
+                    .stream()
+                    .filter(q -> Objects.equals(q.getRemoteId(), remoteQuestionId))
+                    .findFirst()
+                    .orElseThrow();
+        } catch (NoSuchElementException e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+    }
+
+    /**
+     * Finds answers.
+     *
+     * @param remoteQuestionId remote question ID
+     * @param course Course
+     * @return list of answers
+     * @throws ResourceNotFoundException when answers are not found
+     */
+    @GetMapping(path = {
+            "/answers"
+    })
+    public List<Answer> findAnswers(@RequestParam(name = "qid", required = false) final Long remoteQuestionId,
+                                    @RequestParam(name = "course", required = false) final String course)
+            throws ResourceNotFoundException {
+        return questionService.getAnswersForQuestion(remoteQuestionId, course);
     }
 
 }
