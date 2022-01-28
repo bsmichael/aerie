@@ -118,7 +118,12 @@ public class GroundSchoolController {
     public List<Answer> findAnswers(@RequestParam(name = "qid", required = false) final Long remoteQuestionId,
                                     @RequestParam(name = "course", required = false) final String course)
             throws ResourceNotFoundException {
-        return questionService.getAnswersForQuestion(remoteQuestionId, course);
+        try {
+            log.info("Finding answers for qid: {} and course: {}", remoteQuestionId, course);
+            return questionService.getAnswersForQuestion(remoteQuestionId, course);
+        } catch (NoSuchElementException e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
     }
 
 }

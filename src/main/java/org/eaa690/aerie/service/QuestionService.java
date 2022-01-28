@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.eaa690.aerie.config.CommonConstants;
 import org.eaa690.aerie.config.GroundSchoolProperties;
-import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.gs.Answer;
 import org.eaa690.aerie.model.gs.AnswerRepository;
 import org.eaa690.aerie.model.gs.Question;
@@ -38,8 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Question Service.
@@ -148,16 +145,8 @@ public class QuestionService {
      * @return list of answers
      */
     public List<Answer> getAnswersForQuestion(final Long questionId, final String course)
-            throws ResourceNotFoundException {
-        final Optional<List<Answer>> answersOpt = answerRepository.findByQuestionIdAndCourse(questionId, course);
-        if (answersOpt.isPresent()) {
-            return answersOpt
-                    .get()
-                    .stream()
-                    .filter(answer -> answer.getCourse().equals(course))
-                    .collect(Collectors.toList());
-        }
-        throw new ResourceNotFoundException(String.format("No answers found for %s in course %s", questionId, course));
+            throws NoSuchElementException {
+        return answerRepository.findByQuestionIdAndCourse(questionId, course).orElseThrow();
     }
 
     /**

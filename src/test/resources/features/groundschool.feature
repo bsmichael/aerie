@@ -22,7 +22,7 @@ Feature: GroundSchool
       | 1058             | CFI    |
       | 653              | FLE    |
       | 3286             | IOF    |
-      | 123              | MCI    |
+      | 1529             | MCI    |
       | 71               | MIL    |
       | 9857             | PAR    |
       | 565              | RDP    |
@@ -47,7 +47,7 @@ Feature: GroundSchool
       | 1058             | CFI    |
       | 653              | FLE    |
       | 3286             | IOF    |
-      | 123              | MCI    |
+      | 1529             | MCI    |
       | 71               | MIL    |
       | 9857             | PAR    |
       | 565              | RDP    |
