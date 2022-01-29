@@ -19,12 +19,16 @@ package org.eaa690.aerie.controller;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.model.JobStatus;
 import org.eaa690.aerie.service.TimedTasksService;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * TimedTasksController.
@@ -63,12 +67,25 @@ public class TimedTasksController {
     /**
      * Gets the status of the specified job.
      *
-     * @param jobId Job ID
+     * @param jobName Job name
      * @return JobStatus
      */
-    @GetMapping(path = {"/{jobId}/status" })
-    public JobStatus getJobStatus(@PathVariable("jobId") final String jobId) throws ResourceNotFoundException {
-        return timedTasksService.getJobStatus(jobId);
+    @GetMapping(path = {"/{jobName}/status" })
+    public List<JobStatus> getJobStatus(@PathVariable("jobName") final String jobName)
+            throws ResourceNotFoundException {
+        return timedTasksService.getJobStatus(jobName);
     }
 
+    /**
+     * Triggers execution of a task.
+     *
+     * @param task to be executed
+     * @return JobStatus
+     * @throws SchedulerException when things go wrong
+     */
+    @PostMapping(path = { "/{task}" })
+    public JobStatus triggerTask(@PathVariable("task") final String task)
+            throws SchedulerException, ResourceNotFoundException {
+        return timedTasksService.triggerJob(task);
+    }
 }

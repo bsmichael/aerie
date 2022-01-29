@@ -242,15 +242,10 @@ public class ServiceConfig {
      * @return SlackSession
      */
     @Bean(name = "membership")
-    public SlackSession slackSession(final SlackProperties slackProperties) {
-        try {
-            final SlackSession slackSession =
-                    SlackSessionFactory.createWebSocketSlackSession(slackProperties.getToken());
-            slackSession.connect();
-            return slackSession;
-        } catch (IOException e) {
-            return null;
-        }
+    public SlackSession slackSession(final SlackProperties slackProperties) throws IOException {
+        final SlackSession slackSession = SlackSessionFactory.createWebSocketSlackSession(slackProperties.getToken());
+        slackSession.connect();
+        return slackSession;
     }
 
     /**
@@ -296,4 +291,5 @@ public class ServiceConfig {
         tomcat.addAdditionalTomcatConnectors(connector);
         return tomcat;
     }
+
 }

@@ -16,42 +16,34 @@
 
 package org.eaa690.aerie.jobs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.service.RosterService;
 import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 
 /**
  * Sends membership renewal messages.
  */
+@Slf4j
 @DisallowConcurrentExecution
-public class SendMembershipRenewalMessages extends QuartzJobBean {
+public class SendMembershipRenewalMessages implements Job {
 
     /**
      * RosterService.
      */
-    private RosterService rosterService;
-
-    /**
-     * Sets RosterService.
-     *
-     * @param rService RosterService
-     */
     @Autowired
-    public void setRosterService(final RosterService rService) {
-        rosterService = rService;
-    }
+    private RosterService rosterService;
 
     /**
      * Required Implementation.
      *
      * @param context JobExecutionContext
-     * @throws JobExecutionException when things go wrong
      */
     @Override
-    protected void executeInternal(final JobExecutionContext context) throws JobExecutionException {
+    public void execute(final JobExecutionContext context) {
+        log.info("Sending membership renewal messages via Job");
         rosterService.sendMembershipRenewalMessages();
     }
 }

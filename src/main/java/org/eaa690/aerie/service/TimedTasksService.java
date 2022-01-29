@@ -17,8 +17,10 @@
 package org.eaa690.aerie.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.awaitility.Awaitility;
 import org.eaa690.aerie.config.TimedTaskProperties;
 import org.eaa690.aerie.exception.ResourceNotFoundException;
+import org.eaa690.aerie.jobs.CleanJobStatusRepo;
 import org.eaa690.aerie.jobs.GetJotFormSubmissions;
 import org.eaa690.aerie.jobs.SendMembershipRenewalMessages;
 import org.eaa690.aerie.jobs.UpdateRoster;
@@ -30,6 +32,7 @@ import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.JobKey;
 import org.quartz.JobListener;
 import org.quartz.ObjectAlreadyExistsException;
 import org.quartz.Scheduler;
@@ -42,7 +45,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Time Service.
@@ -117,6 +122,10 @@ public class TimedTasksService implements JobListener {
                     jobDetail = buildJobDetail(task, SendMembershipRenewalMessages.class);
                     trigger = buildTrigger(task, cron, jobDetail);
                     break;
+                case "clean-job-status-repo":
+                    jobDetail = buildJobDetail(task, CleanJobStatusRepo.class);
+                    trigger = buildTrigger(task, cron, jobDetail);
+                    break;
                 default:
                     log.info("Unknown task provided {}", task);
             }
@@ -143,6 +152,33 @@ public class TimedTasksService implements JobListener {
         } catch (ObjectAlreadyExistsException e) {
             log.debug("Task is already scheduled: {}", e.getMessage());
         }
+    }
+
+    /**
+     * Triggers a job to be executed.
+     *
+     * @param task to be executed
+     * @return JobStatus
+     * @throws SchedulerException when things go wrong
+     */
+    public JobStatus triggerJob(final String task) throws SchedulerException, ResourceNotFoundException {
+        final JobKey jobKey = new JobKey(task, DEFAULT_SERVICE_GROUP);
+        if (scheduler.checkExists(jobKey)) {
+            scheduler.triggerJob(jobKey);
+        }
+        Awaitility.with().atMost(1, TimeUnit.MINUTES).until(() -> {
+            try {
+                getJobStatus(task);
+                return Boolean.TRUE;
+            } catch (ResourceNotFoundException e) {
+                return Boolean.FALSE;
+            }
+        });
+        final List<JobStatus> jobStatuses = getJobStatus(task);
+        if (!jobStatuses.isEmpty()) {
+            return jobStatuses.get(0);
+        }
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -181,11 +217,11 @@ public class TimedTasksService implements JobListener {
     /**
      * Gets the status of the specified job.
      *
-     * @param jobId job ID
+     * @param jobName job name
      * @return JobStatus
      */
-    public JobStatus getJobStatus(final String jobId) throws ResourceNotFoundException {
-        return jobStatusRepository.findById(jobId).orElseThrow(ResourceNotFoundException::new);
+    public List<JobStatus> getJobStatus(final String jobName) throws ResourceNotFoundException {
+        return jobStatusRepository.findByJobName(jobName).orElseThrow(ResourceNotFoundException::new);
     }
 
     /**
@@ -211,7 +247,7 @@ public class TimedTasksService implements JobListener {
         } else {
             triggerKey = jobExecutionContext.getTrigger().getKey();
         }
-        jobExecutionStarted(triggerKey.getName());
+        jobExecutionStarted(triggerKey.getName(), getJobName(jobExecutionContext));
     }
 
     /**
@@ -238,21 +274,21 @@ public class TimedTasksService implements JobListener {
         } else {
             triggerKey = jobExecutionContext.getTrigger().getKey();
         }
-        jobExecutionFinished(triggerKey.getName(), e == null);
+        jobExecutionFinished(triggerKey.getName(), getJobName(jobExecutionContext), e == null);
     }
 
     /**
      * Updates a job's status as started.
      *
      * @param jobId Job ID
+     * @param jobName Job name
      */
     @Transactional
-    public void jobExecutionStarted(final String jobId) {
-        log.info("job {} started", jobId);
+    public void jobExecutionStarted(final String jobId, final String jobName) {
         try {
             jobStatusRepository.save(jobStatusRepository
                     .findById(jobId)
-                    .orElse(new JobStatus(jobId).jobCreated())
+                    .orElse(new JobStatus(jobId, jobName).jobCreated())
                     .jobStarted());
         } catch (RuntimeException e) {
             log.warn("Unable to update job started status for job: {}", jobId, e);
@@ -263,26 +299,50 @@ public class TimedTasksService implements JobListener {
      * Updates a job's status as finished.
      *
      * @param jobId ID
+     * @param jobName job name
      * @param success successful completion
      */
     @Transactional
-    public void jobExecutionFinished(final String jobId, final boolean success) {
-        log.info("job {} finished; success was {}", jobId, success);
+    public void jobExecutionFinished(final String jobId, final String jobName, final boolean success) {
         try {
             if (success) {
                 jobStatusRepository.save(jobStatusRepository
                         .findById(jobId)
-                        .orElse(new JobStatus(jobId).jobCreated().jobStarted())
+                        .orElse(new JobStatus(jobId, jobName).jobCreated().jobStarted())
                         .jobFinished()
                         .finishedSuccessfully());
             } else {
                 jobStatusRepository.save(jobStatusRepository
                         .findById(jobId)
-                        .orElse(new JobStatus(jobId).jobCreated().jobStarted())
+                        .orElse(new JobStatus(jobId, jobName).jobCreated().jobStarted())
                         .jobFinished());
             }
         } catch (RuntimeException e) {
             log.warn("Unable to update job finished status for job: {}", jobId, e);
         }
     }
+
+    /**
+     * Get job name from Job.
+     *
+     * @param jobExecutionContext JobExecutionContext
+     * @return job name
+     */
+    private String getJobName(final JobExecutionContext jobExecutionContext) {
+        switch (jobExecutionContext.getJobDetail().getJobClass().getSimpleName()) {
+            case "GetJotFormSubmissions":
+                return "get-jot-form-submissions";
+            case "SendMembershipRenewalMessages":
+                return "send-membership-renewal-messages";
+            case "UpdateRoster":
+                return "update-roster";
+            case "UpdateWeather":
+                return "update-weather";
+            case "CleanJobStatusRepo":
+                return "clean-job-status-repo";
+            default:
+                return null;
+        }
+    }
+
 }

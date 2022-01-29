@@ -17,24 +17,24 @@
 package org.eaa690.aerie.jobs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.eaa690.aerie.service.RosterService;
+import org.eaa690.aerie.model.JobStatusRepository;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Updates local database with data from EAA Roster Management database.
+ * Clean JobStatus Repository.
  */
 @Slf4j
 @DisallowConcurrentExecution
-public class UpdateRoster implements Job {
+public class CleanJobStatusRepo implements Job {
 
     /**
-     * RosterService.
+     * JobStatusRepository.
      */
     @Autowired
-    private RosterService rosterService;
+    private JobStatusRepository jobStatusRepository;
 
     /**
      * Required Implementation.
@@ -43,7 +43,12 @@ public class UpdateRoster implements Job {
      */
     @Override
     public void execute(final JobExecutionContext context) {
-        log.info("Updating roster via Job");
-        rosterService.update();
+        log.info("Cleaning job status repository");
+        jobStatusRepository
+                .findAll()
+                .stream()
+                .filter(jobStatus -> !jobStatus.getJobId().equals(jobStatus.getJobName()))
+                .forEach(jobStatus -> jobStatusRepository.delete(jobStatus));
     }
+
 }

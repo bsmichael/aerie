@@ -67,7 +67,7 @@ public class WeatherSteps extends BaseSteps {
                 .contentType(ContentType.JSON)
                 .when()
                 .get(WEATHER + "metars/" + icao)
-                .then().log().all());
+                .then());
     }
 
     @When("^I request a METAR for an unprovided station$")

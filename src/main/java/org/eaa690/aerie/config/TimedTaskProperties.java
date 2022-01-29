@@ -35,8 +35,4 @@ public class TimedTaskProperties {
      */
     private Map<String, String> tasks;
 
-    /**
-     * Number of days to keep job status'.
-     */
-    private int daysToExpiry;
 }

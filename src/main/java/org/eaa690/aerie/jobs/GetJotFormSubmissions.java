@@ -16,42 +16,35 @@
 
 package org.eaa690.aerie.jobs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.service.JotFormService;
 import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 
 /**
  * Retrieves JotForm submissions.
  */
+@Slf4j
 @DisallowConcurrentExecution
-public class GetJotFormSubmissions extends QuartzJobBean {
+public class GetJotFormSubmissions implements Job {
 
     /**
      * JotFormService.
      */
-    private JotFormService jotFormService;
-
-    /**
-     * Sets JotFormService.
-     *
-     * @param jfService JotFormService
-     */
     @Autowired
-    public void setJotFormService(final JotFormService jfService) {
-        jotFormService = jfService;
-    }
+    private JotFormService jotFormService;
 
     /**
      * Required Implementation.
      *
      * @param context JobExecutionContext
-     * @throws JobExecutionException when things go wrong
      */
     @Override
-    protected void executeInternal(final JobExecutionContext context) throws JobExecutionException {
+    public void execute(final JobExecutionContext context) {
+        log.info("Getting JotForm submissions via Job");
         jotFormService.getSubmissions();
     }
+
 }

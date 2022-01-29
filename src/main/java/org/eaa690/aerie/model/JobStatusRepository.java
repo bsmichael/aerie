@@ -19,10 +19,21 @@ package org.eaa690.aerie.model;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * JobStatusRepository.
  */
 @Repository
 public interface JobStatusRepository extends JpaRepository<JobStatus, String> {
+
+    /**
+     * Gets a JobStatus.
+     *
+     * @param name job name
+     * @return JobStatus
+     */
+    Optional<List<JobStatus>> findByJobName(String name);
 
 }

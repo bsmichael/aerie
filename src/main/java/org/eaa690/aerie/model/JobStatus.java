@@ -24,7 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * JobStatus.
@@ -43,22 +43,28 @@ public class JobStatus {
     private String jobId;
 
     /**
+     * Job Name.
+     */
+    @Column(name = "JOB_NAME")
+    private String jobName;
+
+    /**
      * Job Created.
      */
     @Column(name = "JOB_CREATED")
-    private ZonedDateTime jobCreated;
+    private Date jobCreated;
 
     /**
      * Job Started.
      */
     @Column(name = "JOB_STARTED")
-    private ZonedDateTime jobStarted;
+    private Date jobStarted;
 
     /**
      * Job Finished.
      */
     @Column(name = "JOB_FINISHED")
-    private ZonedDateTime jobFinished;
+    private Date jobFinished;
 
     /**
      * Finished Successfully.
@@ -71,9 +77,11 @@ public class JobStatus {
      * Constructor.
      *
      * @param id ID
+     * @param name job name
      */
-    public JobStatus(final String id) {
+    public JobStatus(final String id, final String name) {
         jobId = id;
+        jobName = name;
     }
 
     /**
@@ -82,7 +90,7 @@ public class JobStatus {
      * @return JobStatus
      */
     public JobStatus jobCreated() {
-        jobCreated = ZonedDateTime.now();
+        jobCreated = new Date();
         return this;
     }
 
@@ -92,7 +100,7 @@ public class JobStatus {
      * @return JobStatus
      */
     public JobStatus jobStarted() {
-        jobStarted = ZonedDateTime.now();
+        jobStarted = new Date();
         return this;
     }
 
@@ -102,7 +110,7 @@ public class JobStatus {
      * @return JobStatus
      */
     public JobStatus jobFinished() {
-        jobFinished = ZonedDateTime.now();
+        jobFinished = new Date();
         return this;
     }
 

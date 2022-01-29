@@ -16,42 +16,34 @@
 
 package org.eaa690.aerie.jobs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eaa690.aerie.service.WeatherService;
 import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 
 /**
  * Updates local database with data from EAA Roster Management database.
  */
+@Slf4j
 @DisallowConcurrentExecution
-public class UpdateWeather extends QuartzJobBean {
+public class UpdateWeather implements Job {
 
     /**
      * WeatherService.
      */
-    private WeatherService weatherService;
-
-    /**
-     * Sets WeatherService.
-     *
-     * @param wService WeatherService
-     */
     @Autowired
-    public void setWeatherService(final WeatherService wService) {
-        weatherService = wService;
-    }
+    private WeatherService weatherService;
 
     /**
      * Required Implementation.
      *
      * @param context JobExecutionContext
-     * @throws JobExecutionException when things go wrong
      */
     @Override
-    protected void executeInternal(final JobExecutionContext context) throws JobExecutionException {
+    public void execute(final JobExecutionContext context) {
+        log.info("Updating weather via Job");
         weatherService.update();
     }
 }

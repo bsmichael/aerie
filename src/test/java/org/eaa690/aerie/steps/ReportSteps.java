@@ -61,6 +61,15 @@ public class ReportSteps extends BaseSteps {
                 .then());
     }
 
+    @When("^I request a non-national members report$")
+    public void iRequestANonNationalMembershipReport() {
+        testContext.setValidatableResponse(requestSpecification()
+                .contentType(ContentType.JSON)
+                .when()
+                .get( "/reports/nonnational")
+                .then());
+    }
+
     @When("^I request a new members report$")
     public void iRequestANewMembersReport() {
         testContext.setValidatableResponse(requestSpecification()
