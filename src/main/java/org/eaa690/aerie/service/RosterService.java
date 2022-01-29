@@ -44,6 +44,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Logs into EAA's roster management system, downloads the EAA 690 records as an
  * Excel spreadsheet. Then parses the spreadsheet for member details, and
@@ -212,6 +214,7 @@ public class RosterService {
     /**
      * Updates local database with data from EAA Roster Management database.
      */
+    @PostConstruct
     public void update() {
         rosterManager.getAllEntries()
                 .forEach(member -> {

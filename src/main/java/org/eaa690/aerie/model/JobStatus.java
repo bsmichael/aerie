@@ -18,7 +18,6 @@ package org.eaa690.aerie.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,13 +41,6 @@ public class JobStatus {
     @Id
     @Column(name = "JOB_ID")
     private String jobId;
-
-    /**
-     * Job Name.
-     */
-    @NonNull
-    @Column(name = "JOB_NAME")
-    private String jobName;
 
     /**
      * Job Created.
@@ -79,11 +71,9 @@ public class JobStatus {
      * Constructor.
      *
      * @param id ID
-     * @param name Name
      */
-    public JobStatus(final String id, final String name) {
+    public JobStatus(final String id) {
         jobId = id;
-        jobName = name;
     }
 
     /**

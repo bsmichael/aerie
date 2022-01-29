@@ -128,7 +128,7 @@ public class RosterManagerHelper {
             httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             loggedIn = true;
         } catch (Exception e) {
-            log.error("[Login] Error", e);
+            log.error("[Login] Error: {}", e.getMessage());
         }
     }
 
@@ -162,7 +162,7 @@ public class RosterManagerHelper {
             httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             loggedIn = false;
         } catch (Exception e) {
-            log.error("[Logout] Error", e);
+            log.error("[Logout] Error: {}", e.getMessage());
         }
     }
 

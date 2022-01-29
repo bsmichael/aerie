@@ -18,9 +18,6 @@ package org.eaa690.aerie.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
 
 /**
  * JobStatusRepository.
@@ -28,11 +25,4 @@ import java.time.ZonedDateTime;
 @Repository
 public interface JobStatusRepository extends JpaRepository<JobStatus, String> {
 
-    /**
-     * Deletes JobStatus entries before the provided date.
-     *
-     * @param expiryDate ZonedDateTime
-     */
-    @Transactional
-    void deleteByJobCreatedBefore(ZonedDateTime expiryDate);
 }

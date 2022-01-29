@@ -16,12 +16,14 @@
 
 package org.eaa690.aerie.exception;
 
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * ResourceNotFoundException.
  */
+@NoArgsConstructor
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends Exception {
 

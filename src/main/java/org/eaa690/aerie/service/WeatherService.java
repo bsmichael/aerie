@@ -56,6 +56,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
+
 /**
  * WeatherService.
  */
@@ -150,6 +152,7 @@ public class WeatherService {
     /**
      * Updates weather from aviationweather.gov.
      */
+    @PostConstruct
     public void update() {
         getMETARsFromAviationWeather();
         // https://www.aviationweather.gov/cgi-bin/json/TafJSON.php?density=all&bbox=-85.6898,30.1588,-80.8209,35.1475
