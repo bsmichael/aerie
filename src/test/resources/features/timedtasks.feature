@@ -16,6 +16,7 @@ Feature: Gate Codes
       | get-jot-form-submissions         |
       | send-membership-renewal-messages |
       | clean-job-status-repo            |
+      | update-questions-and-answers     |
 
   @status
   Scenario Outline: Checks the status of a task
@@ -33,3 +34,4 @@ Feature: Gate Codes
       | get-jot-form-submissions         |
       | send-membership-renewal-messages |
       | clean-job-status-repo            |
+      | update-questions-and-answers     |

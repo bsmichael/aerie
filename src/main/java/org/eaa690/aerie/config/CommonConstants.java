@@ -264,9 +264,19 @@ public class CommonConstants {
     public static final int ONE_THOUSAND_TWENTY_FOUR = 1024;
 
     /**
+     * TWO_THOUSAND.
+     */
+    public static final int TWO_THOUSAND = 2000;
+
+    /**
      * TEN_THOUSAND.
      */
     public static final int TEN_THOUSAND = 10000;
+
+    /**
+     * FIVE_HUNDRED_THOUSAND.
+     */
+    public static final int FIVE_HUNDRED_THOUSAND = 500000;
 
     /**
      * METAR Key.

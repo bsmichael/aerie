@@ -23,6 +23,7 @@ import org.eaa690.aerie.exception.ResourceNotFoundException;
 import org.eaa690.aerie.jobs.CleanJobStatusRepo;
 import org.eaa690.aerie.jobs.GetJotFormSubmissions;
 import org.eaa690.aerie.jobs.SendMembershipRenewalMessages;
+import org.eaa690.aerie.jobs.UpdateQuestionsAndAnswers;
 import org.eaa690.aerie.jobs.UpdateRoster;
 import org.eaa690.aerie.jobs.UpdateWeather;
 import org.eaa690.aerie.model.JobStatus;
@@ -124,6 +125,10 @@ public class TimedTasksService implements JobListener {
                     break;
                 case "clean-job-status-repo":
                     jobDetail = buildJobDetail(task, CleanJobStatusRepo.class);
+                    trigger = buildTrigger(task, cron, jobDetail);
+                    break;
+                case "update-questions-and-answers":
+                    jobDetail = buildJobDetail(task, UpdateQuestionsAndAnswers.class);
                     trigger = buildTrigger(task, cron, jobDetail);
                     break;
                 default:
@@ -340,6 +345,8 @@ public class TimedTasksService implements JobListener {
                 return "update-weather";
             case "CleanJobStatusRepo":
                 return "clean-job-status-repo";
+            case "UpdateQuestionsAndAnswers":
+                return "update-questions-and-answers";
             default:
                 return null;
         }
