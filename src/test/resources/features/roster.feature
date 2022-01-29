@@ -16,7 +16,7 @@ Feature: Roster functions
   @email @renewmember
   Scenario: Send renew membership email
     Given I am an unauthenticated user
-    And email is enabled
+    And email is disabled
     And slack is disabled
     When I request a message be sent to member 42648 to renew their membership
     Then The request should be successful
@@ -107,7 +107,7 @@ Feature: Roster functions
   @email @newmember
   Scenario: Send new membership email
     Given I am an unauthenticated user
-    And email is enabled
+    And email is disabled
     When I request an email be sent to new member 42648
     Then The request should be successful
 

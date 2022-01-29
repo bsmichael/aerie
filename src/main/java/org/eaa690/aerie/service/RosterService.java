@@ -41,9 +41,10 @@ import org.eaa690.aerie.model.roster.MemberType;
 import org.eaa690.aerie.model.roster.Status;
 import org.eaa690.aerie.roster.RosterManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Logs into EAA's roster management system, downloads the EAA 690 records as an
@@ -211,11 +212,9 @@ public class RosterService {
     }
 
     /**
-     * Updates every 6 hours.
-     *
-     * second, minute, hour, day of month, month, day(s) of week
+     * Updates local database with data from EAA Roster Management database.
      */
-    @Scheduled(cron = "0 0 0,6,12,18 * * *")
+    @PostConstruct
     public void update() {
         rosterManager.getAllEntries()
                 .forEach(member -> {
@@ -230,11 +229,8 @@ public class RosterService {
     }
 
     /**
-     * Sends membership renewal messages on a scheduled basis.
-     *
-     * second, minute, hour, day of month, month, day(s) of week
+     * Sends membership renewal messages.
      */
-    @Scheduled(cron = "0 0 9 1,10,20 * *")
     public void sendMembershipRenewalMessages() {
         getExpiringMembers().forEach(this::sendRenewMembershipMsg);
     }

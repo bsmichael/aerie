@@ -14,31 +14,25 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.exception;
+package org.eaa690.aerie.config;
 
-import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.Map;
 
 /**
- * ResourceNotFoundException.
+ * Timed Task Properties.
  */
-@NoArgsConstructor
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends Exception {
+@Getter
+@Setter
+@ConfigurationProperties("aerie.timed-tasks")
+public class TimedTaskProperties {
 
     /**
-     * Default SerialVersionUID.
+     * Tasks Map.
      */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Initializes an instance of <code>ResourceNotFoundException</code> with the default data.
-     *
-     * @param message message
-     */
-    public ResourceNotFoundException(final String message) {
-        super(message);
-    }
+    private Map<String, String> tasks;
 
 }
