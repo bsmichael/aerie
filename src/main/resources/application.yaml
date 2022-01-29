@@ -25,27 +25,72 @@ aerie:
     new-member-form-id: <<form-id>>
     member-renewal-form-id: <<form-id>>
     base-url: https://form.jotform.com/
-  mailchimp:
-    api-key: <<api-key>>
-    members-list-id: <<list-id>>
-    non-members-list-id: <<list-id>>
   tinyurl:
     api-key: <<api-key>>
     create-url: https://api.tinyurl.com/create
+  email:
+    host: mail.eaa690.org
+    smtp-port: 587
+    letterhead: /Users/bmichael/aerie/images/eaa690_letterhead.png
+    template-path: /Users/bmichael/aerie/templates/
   membership:
+    host: http://aerie.eaa690.org
     username: <<username>>
     password: <<password>>
-    letterhead: <<path>>eaa690_letterhead.png
-    subject: EAA 690 Membership Renewal
-    body: <p>Hello {{firstName}} {{lastName}}</p><p>The time has come to renew your membership.  Your membership is set to expire on {{expirationDate}}.  Be sure to go to <a href="{{url}}">https://eaa690.org</a> soon to make sure you remain in good standing.</p><p>A few reasons to keep your membership current:</p><ul><li>Access to the chapter hangar at LZU</li><li>Receive our monthly newsletter</li><li>Help us educate, inspire, and share aviation with the local community</li></ul>
+    new-subject: Welcome to EAA 690
+    renew-subject: EAA 690 Membership Renewal
+  slack:
+    token: <<token>>
+    base-url: https://slack.com/api/
+    template-path: /Users/bmichael/aerie/templates/
+  tracking:
+    host: http://aerie.eaa690.org
+  groundschool:
+    secret-key: <<secret-key>>
+    init-vector: <<init-vector>>
+    db-location: /Users/bmichael/aerie/gs
+  timed-tasks:
+    tasks:
+      update-weather: 0 0,10,20,30,40,50 * * * ?
+      update-roster: 0 0 0,6,12,18 * * ?
+      update-questions-and-answers: 0 0 6 1,10,20 * ?
+      get-jot-form-submissions: 0 0 * * * ?
+      send-membership-renewal-messages: 0 0 9 1,10,20 * ?
+      clean-job-status-repo: 0 0 5 * * ?
+
+http:
+  port: 8081
+
+server:
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:keystore/aerie.p12
+    key-store-password: <<password>>
+    key-alias: aerie
+  port: 8443
 
 spring:
   h2:
     console:
       enabled: true
   datasource:
+    username: <<username>>
+    password: <<password>>
     url: jdbc:h2:mem:aerie
   data:
     jpa:
       repositories:
         bootstrap-mode: default
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          jobStore:
+            isClustered: true
+          scheduler:
+            instanceId: AUTO
+  thymeleaf:
+    template-loader-path: classpath:/templates
