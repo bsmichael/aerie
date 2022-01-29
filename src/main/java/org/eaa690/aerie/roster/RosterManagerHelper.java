@@ -128,7 +128,7 @@ public class RosterManagerHelper {
             httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             loggedIn = true;
         } catch (Exception e) {
-            log.error("[Login] Error", e);
+            log.error("[Login] Error: {}", e.getMessage());
         }
     }
 
@@ -162,7 +162,7 @@ public class RosterManagerHelper {
             httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             loggedIn = false;
         } catch (Exception e) {
-            log.error("[Logout] Error", e);
+            log.error("[Logout] Error: {}", e.getMessage());
         }
     }
 
@@ -194,7 +194,7 @@ public class RosterManagerHelper {
                     doc.getElementById(RosterConstants.VIEW_STATE_GENERATOR));
             headers.put(RosterConstants.VIEW_STATE, getViewStateValue(viewStateMap.get(RosterConstants.VIEW_STATE)));
         } catch (IOException | InterruptedException e) {
-            log.error("[Search Page] Error", e);
+            log.error("[Search Page] Error: {}", e.getMessage());
         }
     }
 
@@ -232,7 +232,7 @@ public class RosterManagerHelper {
             log.info("Received headers=" + response.headers());
             log.info("[Add member] response: " + response.body());
         } catch (IOException | InterruptedException e) {
-            log.error("[Add Member] Error", e);
+            log.error("[Add Member] Error: {}", e.getMessage());
         }
     }
 
@@ -318,7 +318,7 @@ public class RosterManagerHelper {
                 return m.group(1);
             }
         } catch (IOException | InterruptedException e) {
-            log.error("[startAddUser] Error", e);
+            log.error("[startAddUser] Error: {}", e.getMessage());
         }
         return null;
     }
@@ -351,7 +351,7 @@ public class RosterManagerHelper {
             log.info("Received status code=" + response.statusCode());
             sb.append(response.body());
         } catch (IOException | InterruptedException e) {
-            log.error("[fetchData] Error", e);
+            log.error("[fetchData] Error: {}", e.getMessage());
         }
         return sb.toString();
     }
@@ -379,7 +379,7 @@ public class RosterManagerHelper {
             final String cookieStr = responseHeaders.firstValue("set-cookie").orElse("");
             headers.put("cookie", cookieStr.substring(0, cookieStr.indexOf(";")));
         } catch (IOException | InterruptedException e) {
-            log.error("[getHttpHeaders] Error", e);
+            log.error("[getHttpHeaders] Error: {}", e.getMessage());
         }
         headers.put(RosterConstants.EVENT_TARGET, "");
         headers.put(RosterConstants.EVENT_ARGUMENT, "");

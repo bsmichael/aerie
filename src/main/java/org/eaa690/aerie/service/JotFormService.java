@@ -41,7 +41,6 @@ import org.eaa690.aerie.model.roster.State;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * Retrieves form submissions to JotForm.
@@ -105,10 +104,7 @@ public class JotFormService {
 
     /**
      * Retrieves JotForm submissions.
-     *
-     * second, minute, hour, day of month, month, day(s) of week
      */
-    @Scheduled(cron = "0 0 * * * *")
     public void getSubmissions() {
         try {
             final String dateStr = simpleDateFormat.format(new Date());
@@ -126,10 +122,7 @@ public class JotFormService {
      * @return new membership URL
      */
     public String getNewMembershipUrl() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(jotFormProperties.getBaseUrl());
-        sb.append(jotFormProperties.getNewMemberFormId());
-        return tinyUrlService.getTinyURL(sb.toString());
+        return tinyUrlService.getTinyURL(jotFormProperties.getBaseUrl() + jotFormProperties.getNewMemberFormId());
     }
 
     /**

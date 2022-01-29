@@ -14,31 +14,26 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie.exception;
+package org.eaa690.aerie.model;
 
-import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
- * ResourceNotFoundException.
+ * JobStatusRepository.
  */
-@NoArgsConstructor
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends Exception {
+@Repository
+public interface JobStatusRepository extends JpaRepository<JobStatus, String> {
 
     /**
-     * Default SerialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Initializes an instance of <code>ResourceNotFoundException</code> with the default data.
+     * Gets a JobStatus.
      *
-     * @param message message
+     * @param name job name
+     * @return JobStatus
      */
-    public ResourceNotFoundException(final String message) {
-        super(message);
-    }
+    Optional<List<JobStatus>> findByJobName(String name);
 
 }

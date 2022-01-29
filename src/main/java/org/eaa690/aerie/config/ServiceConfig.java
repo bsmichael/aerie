@@ -28,10 +28,12 @@ import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.NotamService;
 import org.eaa690.aerie.service.RosterService;
 import org.eaa690.aerie.service.SlackService;
+import org.eaa690.aerie.service.TimedTasksService;
 import org.eaa690.aerie.service.TinyURLService;
 import org.eaa690.aerie.service.TrackingService;
 import org.eaa690.aerie.service.WeatherService;
 import org.eaa690.aerie.ssl.SSLUtilities;
+import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -61,6 +63,7 @@ import java.time.Duration;
         EmailProperties.class,
         NotamProperties.class,
         TrackingProperties.class,
+        TimedTaskProperties.class,
         SlackProperties.class,
         MembershipProperties.class})
 public class ServiceConfig {
@@ -201,6 +204,18 @@ public class ServiceConfig {
     }
 
     /**
+     * TimedTasksService.
+     *
+     * @param props TimedTaskProperties
+     * @param scheduler Scheduler
+     * @return TimedTasksService
+     */
+    @Bean
+    public TimedTasksService timedTasksService(final Scheduler scheduler, final TimedTaskProperties props) {
+        return new TimedTasksService(scheduler, props);
+    }
+
+    /**
      * SlackService.
      *
      * @return SlackService
@@ -227,15 +242,10 @@ public class ServiceConfig {
      * @return SlackSession
      */
     @Bean(name = "membership")
-    public SlackSession slackSession(final SlackProperties slackProperties) {
-        try {
-            final SlackSession slackSession =
-                    SlackSessionFactory.createWebSocketSlackSession(slackProperties.getToken());
-            slackSession.connect();
-            return slackSession;
-        } catch (IOException e) {
-            return null;
-        }
+    public SlackSession slackSession(final SlackProperties slackProperties) throws IOException {
+        final SlackSession slackSession = SlackSessionFactory.createWebSocketSlackSession(slackProperties.getToken());
+        slackSession.connect();
+        return slackSession;
     }
 
     /**
@@ -281,4 +291,5 @@ public class ServiceConfig {
         tomcat.addAdditionalTomcatConnectors(connector);
         return tomcat;
     }
+
 }
