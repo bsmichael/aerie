@@ -29,6 +29,7 @@ aerie:
     api-key: <<api-key>>
     create-url: https://api.tinyurl.com/create
   email:
+    enabled: false
     host: mail.eaa690.org
     smtp-port: 587
     letterhead: /Users/bmichael/aerie/images/eaa690_letterhead.png
@@ -40,6 +41,7 @@ aerie:
     new-subject: Welcome to EAA 690
     renew-subject: EAA 690 Membership Renewal
   slack:
+    enabled: false
     token: <<token>>
     base-url: https://slack.com/api/
     template-path: /Users/bmichael/aerie/templates/

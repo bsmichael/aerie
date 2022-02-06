@@ -210,11 +210,14 @@ public class ServiceConfig {
     /**
      * EmailService.
      *
+     * @param props EmailProperties
      * @return EmailService
      */
     @Bean
-    public EmailService emailService() {
-        return new EmailService();
+    public EmailService emailService(final EmailProperties props) {
+        final EmailService emailService = new EmailService();
+        emailService.setEnabled(props.getEnabled());
+        return emailService;
     }
 
     /**
@@ -232,11 +235,14 @@ public class ServiceConfig {
     /**
      * SlackService.
      *
+     * @param props SlackProperties
      * @return SlackService
      */
     @Bean
-    public SlackService slackService() {
-        return new SlackService();
+    public SlackService slackService(final SlackProperties props) {
+        final SlackService slackService = new SlackService();
+        slackService.setEnabled(props.getEnabled());
+        return slackService;
     }
 
     /**

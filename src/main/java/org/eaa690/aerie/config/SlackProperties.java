@@ -29,6 +29,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SlackProperties {
 
     /**
+     * Enabled.
+     */
+    private Boolean enabled;
+
+    /**
      * Token.
      */
     private String token;

@@ -29,6 +29,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class EmailProperties {
 
     /**
+     * Enabled.
+     */
+    private Boolean enabled;
+
+    /**
      * letterhead.
      */
     private String letterhead;
