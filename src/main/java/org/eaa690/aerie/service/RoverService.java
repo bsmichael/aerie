@@ -106,15 +106,16 @@ public class RoverService {
      * @return image resource
      */
     public Resource getLatestImageAsResource(final Long teamId) {
+        final Path teamLocation = rootLocation.resolve(teamId.toString());
         final TreeMap<Long, Resource> resourceTree = new TreeMap<>();
         loadAll(teamId).forEach(file -> {
             try {
-                final Resource resource = new UrlResource(file.toUri());
+                final Resource resource = new UrlResource(teamLocation.resolve(file.getFileName()).toUri());
                 if (resource.exists() && resource.isFile()) {
                     log.info("Adding resource with lastModified: {} to TreeMap", resource.lastModified());
                     resourceTree.put(resource.lastModified(), resource);
                 } else {
-                    log.info("Not file found at: {}", file.toUri());
+                    log.info("No file found for: {}", resource);
                 }
             } catch (IOException e) {
                 log.error("Could not read file: " + file);
