@@ -22,20 +22,23 @@ import org.eaa690.aerie.service.RoverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-@Controller
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+@RestController
+@RequestMapping({ "/rover" })
 public class RoverController {
 
     /**
@@ -63,23 +66,11 @@ public class RoverController {
     }
 
     /**
-     * Gets rover dashboard.
-     *
-     * @param model Model
-     * @return dashboard
-     */
-    @GetMapping("/rover/dashboard")
-    public String dashboard(final Model model) {
-        model.addAttribute("", "");
-        return "roverDashboard";
-    }
-
-    /**
      * Gets list of rover teams.
      *
      * @return teams list
      */
-    @GetMapping("/rover/teams")
+    @GetMapping("/teams")
     public List<Team> getTeams() {
         return roverService.getTeams();
     }
@@ -90,7 +81,7 @@ public class RoverController {
      * @param teamId ID
      * @return Team
      */
-    @GetMapping("/rover/{teamId}")
+    @GetMapping("/{teamId}")
     public Team getTeam(@PathVariable("teamId") final Long teamId) {
         return roverService.getTeam(teamId);
     }
@@ -101,7 +92,7 @@ public class RoverController {
      * @param team Team
      * @return Team
      */
-    @PostMapping("/rover/teams")
+    @PostMapping("/teams")
     public Team addTeam(@RequestBody final Team team) {
         return roverService.addTeam(team);
     }
@@ -112,7 +103,7 @@ public class RoverController {
      * @param teamId ID
      * @return image
      */
-    @GetMapping("/rover/{teamId}/latest")
+    @GetMapping("/{teamId}/latest")
     @ResponseBody
     public ResponseEntity<Resource> teamLatest(@PathVariable final Long teamId) {
         final Resource file = roverService.getLatestImageAsResource(teamId);
@@ -129,7 +120,7 @@ public class RoverController {
      * @param file image
      * @param redirectAttributes RedirectAttributes
      */
-    @PostMapping("/rover/{teamId}")
+    @PostMapping("/{teamId}")
     public void upload(@PathVariable("teamId") final Long teamId,
                        @RequestParam("file") final MultipartFile file,
                        final RedirectAttributes redirectAttributes) {
