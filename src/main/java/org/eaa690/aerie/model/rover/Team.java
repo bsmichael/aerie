@@ -14,48 +14,47 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie;
+package org.eaa690.aerie.model.rover;
 
-import io.restassured.response.ValidatableResponse;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.eaa690.aerie.model.Member;
+import org.eaa690.aerie.model.BaseEntity;
 
-/**
- * TestContext used in BDD tests.
- */
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "ROVER_TEAM")
 @Getter
 @Setter
-public class TestContext {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Team extends BaseEntity implements Comparable<Team> {
 
     /**
-     * Roster ID.
+     * Team name.
      */
-    private String rosterId;
+    private String name;
 
     /**
-     * Message ID.
+     * Rover IP Address.
      */
-    private Long messageId;
+    private String roverIPAddress;
 
     /**
-     * Rover Team ID.
+     * Compares GateCode records.
+     *
+     * @param o other GateCode
+     * @return comparison
      */
-    private Long roverTeamId;
-
-    /**
-     * Member.
-     */
-    private Member member = new Member();
-
-    /**
-     * ValidatableResponse.
-     */
-    private ValidatableResponse validatableResponse;
-
-    /**
-     * Membership status boolean.
-     */
-    private Boolean membershipStatus = null;
-
+    @Override
+    public int compareTo(final Team o) {
+        if (o == null) {
+            return -1;
+        } else {
+            return name.compareTo(o.getName());
+        }
+    }
 }

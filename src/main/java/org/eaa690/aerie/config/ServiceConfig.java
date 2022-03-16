@@ -28,6 +28,7 @@ import org.eaa690.aerie.service.JotFormService;
 import org.eaa690.aerie.service.NotamService;
 import org.eaa690.aerie.service.QuestionService;
 import org.eaa690.aerie.service.RosterService;
+import org.eaa690.aerie.service.RoverService;
 import org.eaa690.aerie.service.SlackService;
 import org.eaa690.aerie.service.TimedTasksService;
 import org.eaa690.aerie.service.TinyURLService;
@@ -61,6 +62,7 @@ import java.time.Duration;
         WeatherProperties.class,
         TinyUrlProperties.class,
         RosterProperties.class,
+        RoverProperties.class,
         JotFormProperties.class,
         EmailProperties.class,
         NotamProperties.class,
@@ -185,6 +187,17 @@ public class ServiceConfig {
     @Bean
     public QuestionService questionService(final GroundSchoolProperties properties) {
         return new QuestionService(properties);
+    }
+
+    /**
+     * M.A.R.S. Rover service.
+     *
+     * @param props RoverProperties
+     * @return RoverService
+     */
+    @Bean
+    public RoverService roverService(final RoverProperties props) {
+        return new RoverService(props);
     }
 
     /**

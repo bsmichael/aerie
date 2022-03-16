@@ -14,48 +14,23 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie;
+package org.eaa690.aerie.config;
 
-import io.restassured.response.ValidatableResponse;
 import lombok.Getter;
 import lombok.Setter;
-import org.eaa690.aerie.model.Member;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * TestContext used in BDD tests.
+ * Roover Service Properties.
  */
 @Getter
 @Setter
-public class TestContext {
+@ConfigurationProperties("aerie.rover")
+public class RoverProperties {
 
     /**
-     * Roster ID.
+     * Location.
      */
-    private String rosterId;
-
-    /**
-     * Message ID.
-     */
-    private Long messageId;
-
-    /**
-     * Rover Team ID.
-     */
-    private Long roverTeamId;
-
-    /**
-     * Member.
-     */
-    private Member member = new Member();
-
-    /**
-     * ValidatableResponse.
-     */
-    private ValidatableResponse validatableResponse;
-
-    /**
-     * Membership status boolean.
-     */
-    private Boolean membershipStatus = null;
+    private String location = "rover-upload-dir";
 
 }

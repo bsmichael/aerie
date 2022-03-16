@@ -14,48 +14,39 @@
  *  limitations under the License.
  */
 
-package org.eaa690.aerie;
+package org.eaa690.aerie.model.rover;
 
-import io.restassured.response.ValidatableResponse;
-import lombok.Getter;
-import lombok.Setter;
-import org.eaa690.aerie.model.Member;
+import org.springframework.data.repository.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
- * TestContext used in BDD tests.
+ * TeamRepository.
  */
-@Getter
-@Setter
-public class TestContext {
+public interface TeamRepository extends Repository<Team, Long> {
 
     /**
-     * Roster ID.
+     * Gets a team.
+     *
+     * @param id ID
+     * @return Team
      */
-    private String rosterId;
+    Optional<Team> findById(Long id);
 
     /**
-     * Message ID.
+     * Gets all teams.
+     *
+     * @return all teams
      */
-    private Long messageId;
+    Optional<List<Team>> findAll();
 
     /**
-     * Rover Team ID.
+     * Saves a team.
+     *
+     * @param team Team
+     * @return Team
      */
-    private Long roverTeamId;
-
-    /**
-     * Member.
-     */
-    private Member member = new Member();
-
-    /**
-     * ValidatableResponse.
-     */
-    private ValidatableResponse validatableResponse;
-
-    /**
-     * Membership status boolean.
-     */
-    private Boolean membershipStatus = null;
+    Team save(Team team);
 
 }
