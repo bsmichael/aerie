@@ -127,7 +127,7 @@ public class RoverService {
             }
             log.error("Could not read file: " + resource);
         }
-        log.warn("Returning null");
+        log.warn("[getLatestImageAsResource] Returning null");
         return null;
     }
 
@@ -171,10 +171,12 @@ public class RoverService {
         try {
             return Files.walk(teamLocation, 1)
                     .filter(path -> !path.equals(teamLocation))
-                    .map(teamLocation::relativize);
+                    .map(teamLocation::relativize)
+                    .peek(path -> log.info("Path found: {}", path));
         } catch (IOException e) {
             log.error("Failed to read stored files", e);
         }
+        log.info("[loadAll] Returning null");
         return null;
     }
 
