@@ -111,6 +111,7 @@ public class RoverService {
             try {
                 final Resource resource = new UrlResource(file.toUri());
                 if (resource.exists() && resource.isFile()) {
+                    log.info("Adding resource with lastModified: {} to TreeMap", resource.lastModified());
                     resourceTree.put(resource.lastModified(), resource);
                 }
             } catch (IOException e) {
@@ -121,10 +122,12 @@ public class RoverService {
         if (entry != null) {
             final Resource resource = entry.getValue();
             if (resource.exists() || resource.isReadable()) {
+                log.info("Returning resource: {}", resource.getFilename());
                 return resource;
             }
             log.error("Could not read file: " + resource);
         }
+        log.warn("Returning null");
         return null;
     }
 
