@@ -113,7 +113,7 @@ public class RoverController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                     .body(file);
         }
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.notFound().build();
     }
 
     /**
