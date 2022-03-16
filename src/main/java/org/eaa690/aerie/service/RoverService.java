@@ -113,6 +113,8 @@ public class RoverService {
                 if (resource.exists() && resource.isFile()) {
                     log.info("Adding resource with lastModified: {} to TreeMap", resource.lastModified());
                     resourceTree.put(resource.lastModified(), resource);
+                } else {
+                    log.info("Not file found at: {}", file.toUri());
                 }
             } catch (IOException e) {
                 log.error("Could not read file: " + file);
