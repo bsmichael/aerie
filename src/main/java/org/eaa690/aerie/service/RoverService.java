@@ -135,15 +135,16 @@ public class RoverService {
      * @param file image
      */
     public void store(final Long teamId, final MultipartFile file) {
+        final Path teamLocation = rootLocation.resolve(teamId.toString());
         try {
             if (file.isEmpty()) {
                 log.error("Failed to store empty file.");
             }
-            final Path destinationFile = rootLocation
-                    .resolve(Paths.get(teamId + "/" + file.getOriginalFilename()))
+            final Path destinationFile = teamLocation
+                    .resolve(Paths.get(file.getOriginalFilename()))
                     .normalize()
                     .toAbsolutePath();
-            if (!destinationFile.getParent().equals(rootLocation.toAbsolutePath())) {
+            if (!destinationFile.getParent().equals(teamLocation.toAbsolutePath())) {
                 // This is a security check
                 log.error("Cannot store file outside current directory.");
             }
