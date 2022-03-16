@@ -35,6 +35,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
@@ -116,11 +117,14 @@ public class RoverService {
                 log.error("Could not read file: " + file);
             }
         });
-        final Resource resource = resourceTree.lastEntry().getValue();
-        if (resource.exists() || resource.isReadable()) {
-            return resource;
+        final Map.Entry<Long, Resource> entry = resourceTree.lastEntry();
+        if (entry != null) {
+            final Resource resource = entry.getValue();
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+            log.error("Could not read file: " + resource);
         }
-        log.error("Could not read file: " + resource);
         return null;
     }
 

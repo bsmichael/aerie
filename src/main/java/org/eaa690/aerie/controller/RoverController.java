@@ -107,10 +107,13 @@ public class RoverController {
     @ResponseBody
     public ResponseEntity<Resource> teamLatest(@PathVariable final Long teamId) {
         final Resource file = roverService.getLatestImageAsResource(teamId);
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .body(file);
+        if (file != null) {
+            return ResponseEntity
+                    .ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .body(file);
+        }
+        return ResponseEntity.ok().body(null);
     }
 
     /**
