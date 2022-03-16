@@ -77,6 +77,11 @@ import java.time.Duration;
 public class ServiceConfig {
 
     /**
+     * Max Upload Size.
+     */
+    private static final Long MAX_UPLOAD_SIZE = 52428800L;
+
+    /**
      * HttpPort.
      */
     @Value("${http.port}")
@@ -339,12 +344,17 @@ public class ServiceConfig {
         return tomcat;
     }
 
+    /**
+     * MultipartResolver.
+     *
+     * @return MultipartResolver
+     */
     @Bean
     public MultipartResolver multipartResolver() {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
         resolver.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
-        resolver.setMaxUploadSize(52428800L); //50MB
-        resolver.setMaxUploadSizePerFile(52428800L); //50MB
+        resolver.setMaxUploadSize(MAX_UPLOAD_SIZE); //50MB
+        resolver.setMaxUploadSizePerFile(MAX_UPLOAD_SIZE); //50MB
         return resolver;
     }
 
