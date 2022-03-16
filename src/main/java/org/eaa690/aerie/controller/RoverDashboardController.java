@@ -57,7 +57,7 @@ public class RoverDashboardController {
      */
     @GetMapping("/rover/dashboard")
     public String dashboard(final Model model) {
-        model.addAttribute("", "");
+        model.addAttribute("teams", roverService.getTeams());
         return "roverDashboard";
     }
 
