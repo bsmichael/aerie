@@ -11,7 +11,6 @@
 #
 #======================================================================
 
-
 #======================================================================
 # General Functions
 # (Both versions)
@@ -20,7 +19,6 @@
 # cleanup(). Sets all motors and LEDs off and sets GPIO to standard values
 # version(). Returns 4 for M.A.R.S. Rover. Invalid until after init() has been called
 #======================================================================
-
 
 #======================================================================
 # Motor Functions
@@ -33,7 +31,6 @@
 # turnForward(leftSpeed, rightSpeed, duration): Moves forwards in an arc by setting different speeds for duration seconds. 0 <= leftSpeed,rightSpeed <= 100
 # turnreverse(leftSpeed, rightSpeed, duration): Moves backwards in an arc by setting different speeds for duration seconds. 0 <= leftSpeed,rightSpeed <= 100
 #======================================================================
-
 
 #======================================================================
 # FIRELED Functions
@@ -48,13 +45,11 @@
 # wheel(pos): Generates rainbow colors across 0-255 positions
 #======================================================================
 
-
 #======================================================================
 # UltraSonic Functions
 #
 # getDistance(). Returns the distance in cm to the nearest reflecting object. 0 == no object
 #======================================================================
-
 
 #======================================================================
 # Servo Functions
@@ -67,13 +62,17 @@
 # getBattery(). Returns the voltage of the battery pack (>7.2V is good, less is bad)
 #======================================================================
 
-
 #======================================================================
 # Keypad Functions
 #
 # getSwitch(). Returns the value of the tact switch: True==pressed
 #======================================================================
 
+#======================================================================
+# Camera Functions
+#
+# takePicture(). Takes a picture, then uploads the picture to aerie.eaa690.org
+#======================================================================
 
 # Import all necessary libraries
 import RPi.GPIO as GPIO, sys, time, os, requests
@@ -179,7 +178,6 @@ def init(brightness, PiBit=False):
 
     loadOffsets()
 
-
 # cleanup(). Sets all motors and LEDs off and sets GPIO to standard values
 def cleanup():
     global running
@@ -198,7 +196,6 @@ def version():
 
 # End of General Functions
 #======================================================================
-
 
 #======================================================================
 # Motor Functions
@@ -237,7 +234,8 @@ def forward(speed, duration):
     a.ChangeFrequency(max(speed/2, 10))
     lDir = 1
     rDir = 1
-    time.sleep(duration)
+    if duration > 0
+      time.sleep(duration)
 
 # reverse(speed): Sets both motors to reverse for duration seconds at speed. 0 <= speed <= 100
 def reverse(speed, duration):
@@ -253,7 +251,8 @@ def reverse(speed, duration):
     b.ChangeFrequency(max(speed/2, 10))
     lDir = -1
     rDir = -1
-    time.sleep(duration)
+    if duration > 0
+      time.sleep(duration)
 
 # spinLeft(speed): Sets motors to turn opposite directions for duration seconds at speed. 0 <= speed <= 100
 def spinLeft(speed, duration):
@@ -269,7 +268,8 @@ def spinLeft(speed, duration):
     a.ChangeFrequency(min(speed+5, 20))
     lDir = -1
     rDir = 1
-    time.sleep(duration)
+    if duration > 0
+      time.sleep(duration)
 
 # spinRight(speed): Sets motors to turn opposite directions for duration seconds at speed. 0 <= speed <= 100
 def spinRight(speed, duration):
@@ -285,7 +285,8 @@ def spinRight(speed, duration):
     b.ChangeFrequency(min(speed+5, 20))
     lDir = 1
     rDir = -1
-    time.sleep(duration)
+    if duration > 0
+      time.sleep(duration)
 
 # turnForward(leftSpeed, rightSpeed): Moves forwards in an arc by setting different speeds for duration seconds. 0 <= leftSpeed,rightSpeed <= 100
 def turnForward(leftSpeed, rightSpeed, duration):
@@ -301,7 +302,8 @@ def turnForward(leftSpeed, rightSpeed, duration):
     a.ChangeFrequency(min(rightSpeed+5, 20))
     lDir = 1
     rDir = 1
-    time.sleep(duration)
+    if duration > 0
+      time.sleep(duration)
 
 # turnReverse(leftSpeed, rightSpeed): Moves backwards in an arc by setting different speeds for duration seconds. 0 <= leftSpeed,rightSpeed <= 100
 def turnReverse(leftSpeed, rightSpeed, duration):
@@ -317,11 +319,11 @@ def turnReverse(leftSpeed, rightSpeed, duration):
     b.ChangeFrequency(min(rightSpeed+5, 20))
     lDir = -1
     rDir = -1
-    time.sleep(duration)
+    if duration > 0
+      time.sleep(duration)
 
 # End of Motor Functions
 #======================================================================
-
 
 #======================================================================
 # Wheel Sensor Functions
