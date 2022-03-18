@@ -1,0 +1,141 @@
+<html>
+  <head>Rover API</head>
+  <body>
+    <table border="1">
+        <tr><th colspan="2">General Functions</th></tr>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>init(brightness)</td>
+            <td>Initialises GPIO pins, switches motors and LEDs Off. If brightness is 0, no LEDs are initialised</td>
+        </tr>
+        <tr>
+            <td>cleanup()</td>
+            <td>Sets all motors and LEDs off and sets GPIO to standard values</td>
+        </tr>
+        <tr>
+            <td>version()</td>
+            <td>Returns 4 for M.A.R.S. Rover. Invalid until after init() has been called</td>
+        </tr>
+        <tr><th colspan="2">Camera Functions</th></tr>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>takePicture()</td>
+            <td>Takes a picture, then uploads the picture to aerie.eaa690.org</td>
+        </tr>
+        <tr><th colspan="2">Motor Functions</th></tr>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>stop()</td>
+            <td>Stops all motors</td>
+        </tr>
+        <tr>
+            <td>forward(speed, duration)</td>
+            <td>Sets all motors to move forward for duration seconds at speed. 0 <= speed <= 100</td>
+        </tr>
+        <tr>
+            <td>reverse(speed, duration)</td>
+            <td>Sets all motors to reverse for duration seconds at speed. 0 <= speed <= 100</td>
+        </tr>
+        <tr>
+            <td>spinLeft(speed, duration)</td>
+            <td>Sets motors to turn opposite directions for duration seconds at speed. 0 <= speed <= 100</td>
+        </tr>
+        <tr>
+            <td>spinRight(speed, duration)</td>
+            <td>Sets motors to turn opposite directions for duration seconds at speed. 0 <= speed <= 100</td>
+        </tr>
+        <tr>
+            <td>turnForward(leftSpeed, rightSpeed, duration)</td>
+            <td>Moves forwards in an arc by setting different speeds for duration seconds. 0 <= leftSpeed,rightSpeed <= 100</td>
+        </tr>
+        <tr>
+            <td>turnreverse(leftSpeed, rightSpeed, duration)</td>
+            <td>Moves backwards in an arc by setting different speeds for duration seconds. 0 <= leftSpeed,rightSpeed <= 100</td>
+        </tr>
+        <tr><th colspan="2">FIRELED Functions</th></tr>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>setColor(color)</td>
+            <td>Sets all LEDs to color - requires show()</td>
+        </tr>
+        <tr>
+            <td>setPixel(ID, color)</td>
+            <td>Sets pixel ID to color - requires show()</td>
+        </tr>
+        <tr>
+            <td>show()</td>
+            <td>Updates the LEDs with state of LED array</td>
+        </tr>
+        <tr>
+            <td>clear()</td>
+            <td>Clears all LEDs to off - requires show()</td>
+        </tr>
+        <tr>
+            <td>rainbow()</td>
+            <td>Sets the LEDs to rainbow colors - requires show()</td>
+        </tr>
+        <tr>
+            <td>fromRGB(red, green, blue)</td>
+            <td>Creates a color value from R, G and B values</td>
+        </tr>
+        <tr>
+            <td>toRGB(color)</td>
+            <td>Converts a color value to separate R, G and Bs</td>
+        </tr>
+        <tr>
+            <td>wheel(pos)</td>
+            <td>Generates rainbow colors across 0-255 positions</td>
+        </tr>
+        <tr><th colspan="2">UltraSonic Functions</th></tr>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>getDistance()</td>
+            <td>Returns the distance in cm to the nearest reflecting object. 0 == no object</td>
+        </tr>
+        <tr><th colspan="2">Servo Functions</th></tr>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>getLight(Sensor)</td>
+            <td>Returns the value 0..1023 for the selected sensor, 0 <= Sensor <= 3</td>
+        </tr>
+        <tr>
+            <td>getLightFL()</td>
+            <td>Returns the value 0..1023 for Front-Left light sensor</td>
+        </tr>
+        <tr>
+            <td>getLightFR()</td>
+            <td>Returns the value 0..1023 for Front-Right light sensor</td>
+        </tr>
+        <tr>
+            <td>getLightBL()</td>
+            <td>Returns the value 0..1023 for Back-Left light sensor</td>
+        </tr>
+        <tr>
+            <td>getLightBR()</td>
+            <td>Returns the value 0..1023 for Back-Right light sensor</td>
+        </tr>
+        <tr>
+            <td>getBattery()</td>
+            <td>Returns the voltage of the battery pack (>7.2V is good, less is bad)</td>
+        </tr>
+    </table>
+  </body>
+</html>
