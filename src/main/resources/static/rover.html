@@ -1,11 +1,11 @@
 <html>
   <body>
     <table border="1">
-        <tr><th colspan="2">General Functions</th></tr>
         <tr>
             <th>Function</th>
             <th>Description</th>
         </tr>
+        <tr><th colspan="2">General Functions</th></tr>
         <tr>
             <td>init(brightness)</td>
             <td>Initialises GPIO pins, switches motors and LEDs Off. If brightness is 0, no LEDs are initialised</td>
@@ -20,18 +20,10 @@
         </tr>
         <tr><th colspan="2">Camera Functions</th></tr>
         <tr>
-            <th>Function</th>
-            <th>Description</th>
-        </tr>
-        <tr>
             <td>takePicture()</td>
             <td>Takes a picture, then uploads the picture to aerie.eaa690.org</td>
         </tr>
         <tr><th colspan="2">Motor Functions</th></tr>
-        <tr>
-            <th>Function</th>
-            <th>Description</th>
-        </tr>
         <tr>
             <td>stop()</td>
             <td>Stops all motors</td>
@@ -61,10 +53,6 @@
             <td>Moves backwards in an arc by setting different speeds for duration seconds. 0 <= leftSpeed,rightSpeed <= 100</td>
         </tr>
         <tr><th colspan="2">FIRELED Functions</th></tr>
-        <tr>
-            <th>Function</th>
-            <th>Description</th>
-        </tr>
         <tr>
             <td>setColor(color)</td>
             <td>Sets all LEDs to color - requires show()</td>
@@ -99,18 +87,10 @@
         </tr>
         <tr><th colspan="2">UltraSonic Functions</th></tr>
         <tr>
-            <th>Function</th>
-            <th>Description</th>
-        </tr>
-        <tr>
             <td>getDistance()</td>
             <td>Returns the distance in cm to the nearest reflecting object. 0 == no object</td>
         </tr>
         <tr><th colspan="2">Servo Functions</th></tr>
-        <tr>
-            <th>Function</th>
-            <th>Description</th>
-        </tr>
         <tr>
             <td>getLight(Sensor)</td>
             <td>Returns the value 0..1023 for the selected sensor, 0 <= Sensor <= 3</td>
